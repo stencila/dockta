@@ -6,19 +6,31 @@
  */
 
 class Thing {
-  static readonly type: string = 'Thing'
+  readonly type: string = 'Thing'
 
   description?: string
 }
 
 export class CreativeWork extends Thing {
-  static readonly type: string = 'CreativeWork'
+  readonly type: string = 'CreativeWork'
 
   author: Array<string> = []
+  text: string = ''
 }
 
 export class SoftwareSourceCode extends CreativeWork {
-  static readonly type: string = 'SoftwareSourceCode'
+  readonly type: string = 'SoftwareSourceCode'
 
   programmingLanguage: string = ''
+  id: string = ''
+  messages: Array<SoftwareSourceCodeMessage> = []
+}
+
+export class SoftwareSourceCodeMessage extends Thing {
+  // readonly type: string = 'SoftwareSourceCodeMessage'
+
+  level?: string
+  line?: number
+  column?: number
+  message?: string
 }

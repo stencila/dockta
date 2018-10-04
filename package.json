@@ -28,7 +28,9 @@
   },
   "homepage": "https://github.com/stencila/docker-compiler#readme",
   "devDependencies": {
+    "@types/dockerode": "^2.5.5",
     "@types/jest": "^23.3.3",
+    "@types/tmp": "0.0.33",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.3",
     "tslint": "^5.11.0",
@@ -37,6 +39,8 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "docker-file-parser": "^1.0.4"
+    "docker-file-parser": "^1.0.4",
+    "dockerode": "^2.5.7",
+    "tmp": "0.0.33"
   }
 }
