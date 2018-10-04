@@ -11,6 +11,9 @@ export default class Compiler {
    * - extracts a `maintainer` label from any deprecated
    *   [`MAINTAINER` directives](https://docs.docker.com/engine/reference/builder/#maintainer-deprecated)
    *
+   * See also [best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#label)
+   * for labels.
+   *
    * @param content The content to load
    * @param type The type of content
    */
@@ -22,31 +25,33 @@ export default class Compiler {
     let directives = parser.parse(content)
 
     // Process LABEL directives
-    directives
-      .filter(directive => directive.name === 'LABEL')
-      .map(directive => {
-        Object.entries(directive.args).map(([key, value]) => {
-          // Unquote value if necessary
-          if (value.startsWith('"')) value = value.substring(1)
-          if (value.endsWith('"')) value = value.slice(0, -1)
-          switch (key) {
-            case 'maintainer':
-              node.author.push(value)
-              break
-          }
-        })
-      })
+    for (let directive of directives.filter(directive => directive.name === 'LABEL')) {
+      for (let [key, value] of Object.entries(directive.args)) {
+        // Unquote value if necessary
+        if (value.startsWith('"')) value = value.substring(1)
+        if (value.endsWith('"')) value = value.slice(0, -1)
+        // Unescape spaces
+        value = value.replace(/\\ /, ' ')
+        
+        switch (key) {
+          case 'description':
+            node.description = value
+            break
+          case 'maintainer':
+            node.author.push(value)
+            break
+        }
+      }
+    }
 
     // Process MAINTAINER directives
-    directives
-      .filter(directive => directive.name === 'MAINTAINER')
-      .map(directive => {
-        const args = directive.args
-        if (typeof args === 'string') return args
-        else if (Array.isArray(args)) return args.join(', ')
-        else throw new Error(`Unexpected type of directive arguments ${typeof args}`)
-      })
-      .map(author => node.author.push(author))
+    for (let directive of directives.filter(directive => directive.name === 'MAINTAINER')) {
+      let author = ''
+      if (typeof directive.args === 'string') author = directive.args
+      else if (Array.isArray(directive.args)) author = directive.args.join(', ')
+      else throw new Error(`Unexpected type of directive arguments ${typeof directive.args}`)
+      node.author.push(author)
+    }
 
     return node
   }

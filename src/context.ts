@@ -7,6 +7,8 @@
 
 class Thing {
   static readonly type: string = 'Thing'
+
+  description?: string
 }
 
 export class CreativeWork extends Thing {
