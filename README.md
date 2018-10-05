@@ -31,11 +31,11 @@ You will need to [install Docker](https://docs.docker.com/install/) if you don't
 
 This package is primarily designed to be used a compiler service within a Stencila deployment (e.g. `stencila/cloud`). But you can also use it standalone via the API or command line interface. 
 
-## CLI
+### CLI
 
 The command line interface (CLI) is a good way to get an understanding of what this package does. Essentially, it just exposes the compiler API on the command line.
 
-### Compiling a Dockerfile
+#### Compiling an environment
 
 The most basic thing that this package does is to read a `Dockerfile`, parse it to extract metadata, build a Docker image for it, and run that image as a Docker container.
 
@@ -70,6 +70,10 @@ node-docker compile Dockerfile > environ.jsonld
 > 🔧 Replace this JSON output when a more final version available.
 
 The default CLI output format is JSON but you can get YAML, which is easier to read, by using the `--format=yaml` option. You can turn off building of the Docker image (to just extract meta-data) using `--build=false`. Use `node-docker compile --help` for more help.
+
+#### Executing an environment
+
+
 
 ```bash
 node-docker execute environ.jsonld

@@ -1,9 +1,9 @@
-import Compiler from '../src'
+import Compiler from '../src/DockerCompiler'
 
 /**
  * Tests of extracting meta-data during compilation
  */
-test('compile:meta-data', async () => {
+test.skip('compile:meta-data', async () => {
   const compiler = new Compiler()
   let node
 
@@ -54,7 +54,7 @@ test('compile:meta-data', async () => {
 /**
  * Tests of building Docker image during compilation
  */
-test('compile:build', async () => {
+test.skip('compile:build', async () => {
   const compiler = new Compiler()
   let node
 
@@ -76,4 +76,20 @@ test('compile:build', async () => {
   // Bad RUN command
   node = await compiler.compile('FROM ubuntu\nRUN foo')
   expect(node.messages[0].message).toEqual("The command '/bin/sh -c foo' returned a non-zero code: 127")
+})
+
+/**
+ * Tests of execution
+ */
+test('execute', async () => {
+  const compiler = new Compiler()
+  let node
+
+  jest.setTimeout(60000) // Increase timeout (in milliseconds) to allow for Docker build
+
+  // Compile from file
+  node = await compiler.execute('file://tests/fixtures/dockerfile-date/Dockerfile')
+  expect(node.description[0].substring(0, 23)).toEqual('Prints the current date')
+  expect(node.author[0].name[0]).toEqual('Nokome Bentley')
+  expect(node.author[0].email[0]).toEqual('nokome@stenci.la')
 })

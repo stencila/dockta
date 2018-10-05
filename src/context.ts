@@ -96,6 +96,9 @@ export class SoftwareSourceCode extends CreativeWork {
   programmingLanguage: string = ''
   id: string = ''
   messages: Array<SoftwareSourceCodeMessage> = []
+
+  handle: string = '' // The sha used to identify the image
+  output: string = '' // Output of executing the container
 }
 
 export class SoftwareSourceCodeMessage extends Thing {
