@@ -1,18 +1,33 @@
+# Use Node.js 8 and cache packages
 language: node_js
-
 node_js:
   - 8
-
-services:
-  docker
-
 cache:
   directories:
     - node_modules
 
+# Require docker servie for building images during tests
+services:
+  docker
+
+# Do linting, coverage, and build docs (to upload to github pages)
 script:
   - make lint
   - make cover
+  - make build
+  - make docs
 
-after_script:
-  - curl -s https://codecov.io/bash | bash
+# Upload test coverage to codecov
+# See https://docs.codecov.io/v5.0.0/docs/about-the-codecov-bash-uploader
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+# Deploy documentation to Github Pages
+# See https://docs.travis-ci.com/user/deployment/pages/
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  local-dir: docs
+  on:
+    branch: master

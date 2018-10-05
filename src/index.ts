@@ -5,7 +5,10 @@ import fs from 'fs'
 import path from 'path'
 import tmp from 'tmp'
 
-import { SoftwareSourceCode } from './context'
+import {
+  Person, pushAuthor,
+  SoftwareSourceCode, SoftwareSourceCodeMessage
+} from './context'
 
 export default class Compiler {
 
@@ -16,10 +19,15 @@ export default class Compiler {
    * @param build Should the Docker image be built?
    */
   async load (content: string, build: boolean = true): Promise<SoftwareSourceCode> {
+    if (content.substring(0, 7) === 'file://') {
+      const path = content.substring(7)
+      content = fs.readFileSync(path, 'utf8')
+    }
+
     const node = new SoftwareSourceCode()
     node.programmingLanguage = 'Dockerfile'
     node.text = content
-    return this.compile(node, build)
+    return node
   }
 
   /**
@@ -35,10 +43,14 @@ export default class Compiler {
    * See also [best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#label)
    * for labels.
    *
-   * @param node The `SoftwareSourceCode` node to compile
+   * @param source The `SoftwareSourceCode` node to compile
    * @param build Should the Docker image be built?
    */
-  async compile (node: SoftwareSourceCode, build: boolean = true): Promise<SoftwareSourceCode> {
+  async compile (source: string | SoftwareSourceCode, build: boolean = true): Promise<SoftwareSourceCode> {
+    let node: SoftwareSourceCode
+    if (typeof source === 'string') node = await this.load(source)
+    else node = source
+
     assert.strictEqual(node.type, 'SoftwareSourceCode')
     assert.strictEqual(node.programmingLanguage, 'Dockerfile')
 
@@ -56,10 +68,11 @@ export default class Compiler {
 
         switch (key) {
           case 'description':
-            node.description = value
+            node.description.push(value)
             break
           case 'maintainer':
-            node.author.push(value)
+          case 'author':
+            pushAuthor(node, value)
             break
         }
       }
@@ -70,7 +83,7 @@ export default class Compiler {
       let author = ''
       if (typeof directive.args === 'string') author = directive.args
       else throw new Error(`Unexpected type of directive arguments ${typeof directive.args}`)
-      node.author.push(author)
+      pushAuthor(node, author)
     }
 
     if (!build) return node
@@ -97,12 +110,11 @@ export default class Compiler {
         line = parseInt(match[1], 0)
         message = match[2]
       }
-      node.messages.push({
-        type: 'SoftwareSourceCodeMessage',
-        level: 'error',
-        line,
-        message
-      })
+      const msg = new SoftwareSourceCodeMessage()
+      msg.level = 'error'
+      msg.line = line
+      msg.message = message
+      node.messages.push(msg)
     })
     if (!stream) return node
 
@@ -110,11 +122,10 @@ export default class Compiler {
       stream.on('data', data => {
         data = JSON.parse(data)
         if (data.error) {
-          node.messages.push({
-            type: 'SoftwareSourceCodeMessage',
-            level: 'error',
-            message: data.error
-          })
+          const msg = new SoftwareSourceCodeMessage()
+          msg.level = 'error'
+          msg.message = data.error
+          node.messages.push(msg)
         } else if (data.aux && data.aux.ID) {
           // TODO Unique identifier for Docker images based
           // on repository and sha256
