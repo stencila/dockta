@@ -83,6 +83,25 @@ node-docker execute environ.jsonld
 node-docker execute Dockerfile
 ```
 
+### R
+
+To define an R environment create a `DESCRIPTION` file.
+
+```
+Package: myrproject
+Version: 1.0.0
+Date: 2017-10-01
+Imports:
+   ggplot2
+```
+
+The `Package` and `Version` fields are required. The package . For more on authoring R package `DESCRIPTION` files see [this](http://r-pkgs.had.co.nz/description.html).
+
+MRAN daily snapshots began [2014-09-08](https://cran.microsoft.com/snapshot/2014-09-08). If you specify a data before that you'll get a build error  🦄.
+
+## Crosswalks
+
+http://label-schema.org/rc1/
 
 ## Develop
 
@@ -124,6 +143,14 @@ open docs/index.html
 ```
 
 Linting, test coverage, package building, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/node-docker).
+
+To run the CLI during development use, `npm run cli -- <args>` e.g.
+
+```bash
+npm run cli -- compile tests/fixtures/dockerfile-date/Dockerfile
+```
+
+This uses `ts-node` to compile and run Typescript on the fly so that you don't need to do a build step first.
 
 ## See also
 

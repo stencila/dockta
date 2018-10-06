@@ -9,7 +9,7 @@ const compiler = new Compiler()
 yargs
   .usage('$0 <cmd> [args]')
 
-  .command('compile [path] [build] [format]', 'Compile a file or folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
+  .command('compile [path] [build] [format]', 'Compile a file or folder to a JSON-LD `SoftwareEnvironment` node', (yargs: any) => {
     yargs.positional('path', {
       type: 'string',
       default: '.',
@@ -25,12 +25,12 @@ yargs
       default: 'json',
       describe: 'Format to output: json or yaml'
     })
-  }, async args => {
+  }, async (args: any) => {
     const node = await compiler.compile('file://' + args.path, args.build).catch(error)
     output(node, args.format)
   })
 
-  .command('execute [path] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
+  .command('execute [path] [format]', 'Execute a `SoftwareEnvironment` node', (yargs: any) => {
     yargs.positional('path', {
       type: 'string',
       default: '.',
@@ -41,17 +41,17 @@ yargs
       default: 'json',
       describe: 'Format to output: json or yaml'
     })
-  }, async args => {
+  }, async (args: any) => {
     const node = await compiler.execute('file://' + args.path).catch(error)
     output(node, args.format)
   })
 
   .parse()
 
-function output (node, format) {
+function output (node: Object, format: string) {
   console.log(format === 'yaml' ? yaml.safeDump(node, {lineWidth: 120}) : JSON.stringify(node, null, '  '))
 }
 
-function error (error) {
+function error (error: Error) {
   console.error(error)
 }
