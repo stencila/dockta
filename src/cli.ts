@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs')
-const yaml = require('js-yaml')
+import yargs from 'yargs'
+import yaml from 'js-yaml'
 
-const Compiler = require('../dist').default
-const compiler = new Compiler()
+import DockerCompiler from './DockerCompiler'
+const compiler = new DockerCompiler()
 
 yargs
   .usage('$0 <cmd> [args]')
 
-  .command('compile [path] [build] [format]', 'Compile a file or folder to a JSON-LD `SoftwareEnvironment` node', (yargs: any) => {
+  //@ts-ignore
+  .command('compile [path] [build] [format]', 'Compile a file or folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
     yargs.positional('path', {
       type: 'string',
       default: '.',
@@ -30,7 +31,8 @@ yargs
     output(node, args.format)
   })
 
-  .command('execute [path] [format]', 'Execute a `SoftwareEnvironment` node', (yargs: any) => {
+  //@ts-ignore
+  .command('execute [path] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
     yargs.positional('path', {
       type: 'string',
       default: '.',
@@ -48,7 +50,7 @@ yargs
 
   .parse()
 
-function output (node: Object, format: string) {
+function output (node: any, format: string) {
   console.log(format === 'yaml' ? yaml.safeDump(node, { lineWidth: 120 }) : JSON.stringify(node, null, '  '))
 }
 
