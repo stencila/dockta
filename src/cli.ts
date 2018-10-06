@@ -49,7 +49,7 @@ yargs
   .parse()
 
 function output (node: Object, format: string) {
-  console.log(format === 'yaml' ? yaml.safeDump(node, {lineWidth: 120}) : JSON.stringify(node, null, '  '))
+  console.log(format === 'yaml' ? yaml.safeDump(node, { lineWidth: 120 }) : JSON.stringify(node, null, '  '))
 }
 
 function error (error: Error) {

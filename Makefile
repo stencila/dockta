@@ -17,6 +17,7 @@ cover:
 
 build:
 	npm run build
+	chmod +x dist/cli.js
 
 docs:
 	npm run docs
