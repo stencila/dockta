@@ -1,8 +1,10 @@
+> 🔧 This is a work in progress, to do items are noted like this
+
 # dockter
 
-> 🔧 Add screenshot/gif: dir tree, then compile and execute?
+> Reproducible Docker images without the wait
 
-> 🔧 Setup badges; add others
+> 🔧 Add logo (something with a whale and a doctor?)
 
 [![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/dockter/)
 [![NPM](http://img.shields.io/npm/v/@stencila/dockter.svg?style=flat)](https://www.npmjs.com/package/@stencila/dockter)
@@ -11,13 +13,59 @@
 [![Dependency status](https://david-dm.org/stencila/dockter.svg)](https://david-dm.org/stencila/dockter)
 [![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
 
+> 🔧 Setup these badges; add others
+
+> 🔧 Add TOC
+
+
 ## Features
+
+### More efficient Dockerfile updates
+
+```Dockerfile
+FROM python:3.7.0
+
+COPY requirements.xt
+RUN pip install -r requirements.txt
+```
+
+```bash
+dockter build .
+```
+
+> 🔧 Finish description of commit-based approach and illustrate speed up over normal Docker builds
 
 For example, see [this issue](https://github.com/npm/npm/issues/11446) as an example of the workarounds used by Node.js developers.
 
-> 🔧 Add crosswalk table
+### JSON-LD based API
+
+Dockter has been built to expose a JSON-LD API so that it works with other tools. It will parse a Dockerfile into a JSON-LD [`SoftwareSourceCode`](https://schema.org/SoftwareSourceCode) node extracting meta-data about the Dockerfile and build it into a `SoftwareEnvironment` node with links to the source files and the build image.
+
+> 🔧 Replace this JSON-LD with final version
+
+```json
+{
+  "@context": "https://schema.stenci.la",
+  "type": "SoftwareSourceCode",
+  "id": "https://hub.docker.com/#sha256:27d6e441706e89dac442c69c3565fc261b9830dd313963cb5488ba418afa3d02",
+  "author": [],
+  "text": "FROM busybox\nLABEL description=\"Prints the current date and time at UTC, to the nearest second, in ISO-8601 format\" \\\n      author=\"Nokome Bentley <nokome@stenci.la>\"\nCMD date -u -Iseconds\n",
+  "programmingLanguage": "Dockerfile",
+  "messages": [],
+  "description": "Prints the current date and time at UTC, to the nearest second, in ISO-8601 format"
+}
+```
 
 ## Install
+
+Dockter is available as pre-compiled, standalone command line tool, or as an Node.js package.
+
+### CLI
+
+> 🔧 Add `pkg`-based binary builds
+> 🔧 Add download instructions
+
+### Package
 
 > 🔧 Register package on NPM; add publishing and release commands to npm scripts and Makefile and travis.yml
 
@@ -75,8 +123,6 @@ The default CLI output format is JSON but you can get YAML, which is easier to r
 
 #### Executing an environment
 
-
-
 ```bash
 dockter execute environ.jsonld
 ```
@@ -124,12 +170,13 @@ const { docker } = require('@stencila/dockter')
 const app = express()
 app.use('/docker', docker)
 app.listen(3000)
-``
-
+```
 
 ## Crosswalks
 
-http://label-schema.org/rc1/
+> 🔧 Add crosswalk table for Dockerfile LABEL and MAINTAINER directives
+
+> 🔧 Add crosswalk table for http://label-schema.org/rc1/
 
 ## Develop
 
@@ -180,8 +227,8 @@ This uses `ts-node` to compile and run Typescript on the fly so that you don't n
 
 Related Stencila packages include:
 
-- [`stencila/node-nix`](https://github.com/stencila/node-nix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
-- [`stencila/node-kube`](https://github.com/stencila/node-kube): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
+- 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
+- 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
 
 Related external projects include:
 
@@ -196,4 +243,8 @@ Unicorn emoji are used to indicate features that are in development or are plann
 
 ### Why is this a Node.js package?
 
-We've implemented this as a Node.js package for easier integrration into Stecnila's Node.js based desktop and cloud deployments.
+We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments.
+
+## Acknowledgments
+
+Dockter was inspired by similar tools including [`binder`](https://github.com/binder-project/binder), [`repro2docker`](https://github.com/jupyter/repo2docker), and [`source-to-image`](https://github.com/openshift/source-to-image). It relies on [`dockerode`](https://www.npmjs.com/package/dockerode), [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser), and of course [Docker](https://www.docker.com/).
