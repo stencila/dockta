@@ -9,7 +9,7 @@ const compiler = new DockerCompiler()
 yargs
   .usage('$0 <cmd> [args]')
 
-  //@ts-ignore
+  // @ts-ignore
   .command('compile [path] [build] [format]', 'Compile a file or folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
     yargs.positional('path', {
       type: 'string',
@@ -31,7 +31,7 @@ yargs
     output(node, args.format)
   })
 
-  //@ts-ignore
+  // @ts-ignore
   .command('execute [path] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
     yargs.positional('path', {
       type: 'string',

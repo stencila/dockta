@@ -9,7 +9,6 @@
 type Text = string
 
 class Thing {
-  readonly '@context': string = 'https://schema.stenci.la'
   readonly type: string = 'Thing'
   id: string = ''
 

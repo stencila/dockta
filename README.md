@@ -116,15 +116,11 @@ npm install
 Then take a look at the docs ([online](https://stencila.github.io/node-docker/) or inline) and start hacking! Please check that your changes pass linting and unit tests,
 
 ```bash
-npm run lint
-npm test
+npm run lint # or, make lint
+npm test # or, make text
 ```
 
-Or, if you prefer,
-
-```bash
-make lint test
-```
+Use `npm test -- <test file path>` to run a single test file
 
 You can setup a Git pre-commit hook to perform these checks automatically before each commit using `make hooks`.
 
