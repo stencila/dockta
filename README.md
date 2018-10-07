@@ -1,17 +1,19 @@
-# node-docker
+# dockter
 
 > 🔧 Add screenshot/gif: dir tree, then compile and execute?
 
 > 🔧 Setup badges; add others
 
-[![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/node-docker/)
-[![NPM](http://img.shields.io/npm/v/@stencila/node-docker.svg?style=flat)](https://www.npmjs.com/package/@stencila/node-docker)
-[![Build status](https://travis-ci.org/stencila/node-docker.svg?branch=master)](https://travis-ci.org/stencila/node-docker)
-[![Code coverage](https://codecov.io/gh/stencila/node-docker/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/node-docker)
-[![Dependency status](https://david-dm.org/stencila/node-docker.svg)](https://david-dm.org/stencila/node-docker)
+[![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/dockter/)
+[![NPM](http://img.shields.io/npm/v/@stencila/dockter.svg?style=flat)](https://www.npmjs.com/package/@stencila/dockter)
+[![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
+[![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
+[![Dependency status](https://david-dm.org/stencila/dockter.svg)](https://david-dm.org/stencila/dockter)
 [![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
 
-## Purpose
+## Features
+
+For example, see [this issue](https://github.com/npm/npm/issues/11446) as an example of the workarounds used by Node.js developers.
 
 > 🔧 Add crosswalk table
 
@@ -20,7 +22,7 @@
 > 🔧 Register package on NPM; add publishing and release commands to npm scripts and Makefile and travis.yml
 
 ```bash
-npm install @stencila/node-docker
+npm install @stencila/dockter
 ```
 
 You will need to [install Docker](https://docs.docker.com/install/) if you don't already have it on your system.
@@ -51,7 +53,7 @@ CMD date -u -Iseconds
 You can use the `compile` command to a Dockerfile like this into a JSON-LD `SoftwareEnvironment` node,
 
 ```bash
-node-docker compile Dockerfile > environ.jsonld
+dockter compile Dockerfile > environ.jsonld
 ```
 
 ```json
@@ -69,18 +71,18 @@ node-docker compile Dockerfile > environ.jsonld
 
 > 🔧 Replace this JSON output when a more final version available.
 
-The default CLI output format is JSON but you can get YAML, which is easier to read, by using the `--format=yaml` option. You can turn off building of the Docker image (to just extract meta-data) using `--build=false`. Use `node-docker compile --help` for more help.
+The default CLI output format is JSON but you can get YAML, which is easier to read, by using the `--format=yaml` option. You can turn off building of the Docker image (to just extract meta-data) using `--build=false`. Use `dockter compile --help` for more help.
 
 #### Executing an environment
 
 
 
 ```bash
-node-docker execute environ.jsonld
+dockter execute environ.jsonld
 ```
 
 ```bash
-node-docker execute Dockerfile
+dockter execute Dockerfile
 ```
 
 ### R
@@ -99,6 +101,32 @@ The `Package` and `Version` fields are required. The package . For more on autho
 
 MRAN daily snapshots began [2014-09-08](https://cran.microsoft.com/snapshot/2014-09-08). If you specify a data before that you'll get a build error  🦄.
 
+## Router and server
+
+The [Express](https://expressjs.com) router provides `PUT /compile` and `PUT /execute` endpoints (which do the same thing as the corresponding CLI commands). You can serve them using,
+
+```bash
+npm start
+```
+
+Or, during development using,
+
+```bash
+npm run server
+```
+
+A minimal example of how to integrate the router into your own Express server,
+
+```js
+const app = require('express')()
+const { docker } = require('@stencila/dockter')
+
+const app = express()
+app.use('/docker', docker)
+app.listen(3000)
+``
+
+
 ## Crosswalks
 
 http://label-schema.org/rc1/
@@ -108,12 +136,12 @@ http://label-schema.org/rc1/
 We 💕 contributions! To get started,
 
 ```bash
-git clone https://github.com/stencila/node-docker
-cd node-docker
+git clone https://github.com/stencila/dockter
+cd dockter
 npm install
 ```
 
-Then take a look at the docs ([online](https://stencila.github.io/node-docker/) or inline) and start hacking! Please check that your changes pass linting and unit tests,
+Then take a look at the docs ([online](https://stencila.github.io/dockter/) or inline) and start hacking! Please check that your changes pass linting and unit tests,
 
 ```bash
 npm run lint # or, make lint
@@ -138,7 +166,7 @@ npm run docs # or, make docs
 open docs/index.html
 ```
 
-Linting, test coverage, package building, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/node-docker).
+Linting, test coverage, package building, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/dockter).
 
 To run the CLI during development use, `npm run cli -- <args>` e.g.
 

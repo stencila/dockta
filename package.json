@@ -1,11 +1,11 @@
 {
-  "name": "@stencila/node-docker",
+  "name": "@stencila/dockter",
   "version": "1.0.0",
   "description": "A compiler for JSON-LD `SoftwareEnvironment` and `SoftwareSourceCode` nodes targetting Docker",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "node-docker": "./dist/cli.js"
+    "dockter": "./dist/cli.js"
   },
   "scripts": {
     "lint": "tslint --project tsconfig.json --fix --format stylish ./src/**/*.ts",
@@ -13,11 +13,13 @@
     "cover": "jest --collectCoverage",
     "build": "tsc",
     "docs": "typedoc --readme README.md --out ./docs ./src",
-    "cli": "ts-node src/cli.ts"
+    "cli": "ts-node src/cli.ts",
+    "server": "ts-node src/server.ts",
+    "start": "node ./dist/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stencila/node-docker.git"
+    "url": "git+https://github.com/stencila/dockter.git"
   },
   "keywords": [
     "JSON-LD",
@@ -26,14 +28,15 @@
     "Docker",
     "compiler"
   ],
-  "author": "Contributors (https://github.com/stencila/node-docker/contributors)",
+  "author": "Contributors (https://github.com/stencila/dockter/contributors)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stencila/node-docker/issues"
+    "url": "https://github.com/stencila/dockter/issues"
   },
-  "homepage": "https://github.com/stencila/node-docker#readme",
+  "homepage": "https://github.com/stencila/dockter#readme",
   "devDependencies": {
     "@types/dockerode": "^2.5.5",
+    "@types/express": "^4.16.0",
     "@types/jest": "^23.3.3",
     "@types/js-yaml": "^3.11.2",
     "@types/tar-stream": "^1.6.0",
@@ -50,6 +53,7 @@
   "dependencies": {
     "docker-file-parser": "^1.0.4",
     "dockerode": "^2.5.7",
+    "express": "^4.16.3",
     "js-yaml": "^3.12.0",
     "tar-stream": "^1.6.2",
     "tmp": "0.0.33",
