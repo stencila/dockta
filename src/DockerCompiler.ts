@@ -10,7 +10,7 @@ import {
   SoftwareSourceCode, SoftwareSourceCodeMessage
 } from './context'
 
-import SuperBuilder from './SuperBuilder'
+import SuperWriter from './SuperWriter'
 
 export default class DockerCompiler {
 
@@ -29,7 +29,7 @@ export default class DockerCompiler {
       } else if (fs.existsSync(path.join(pat, 'Dockerfile'))) {
         dockerfile = fs.readFileSync(path.join(pat, 'Dockerfile'), 'utf8')
       } else if (fs.statSync(pat).isDirectory()) {
-        dockerfile = new SuperBuilder(pat).dockerfile()
+        dockerfile = new SuperWriter(pat).dockerfile()
       }
     } else {
       dockerfile = content

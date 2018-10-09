@@ -1,6 +1,6 @@
-import Builder from './Builder'
+import Writer from './Writer'
 
-export default class PythonBuilder extends Builder {
+export default class PythonWriter extends Writer {
 
   matchPaths (): Array<string> {
     return ['requirements.txt', 'cmd.py']

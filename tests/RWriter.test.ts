@@ -1,16 +1,16 @@
-import RBuilder from '../src/RBuilder'
+import RWriter from '../src/RWriter'
 import fixture from './fixture'
 
 test('empty', () => {
-  const builder = new RBuilder(fixture('empty'))
-  expect(builder.active).toEqual(false)
+  const writer = new RWriter(fixture('empty'))
+  expect(writer.active).toEqual(false)
 })
 
 test('r-date', async () => {
-  const builder = new RBuilder(fixture('r-date'))
-  expect(builder.active).toEqual(true)
+  const writer = new RWriter(fixture('r-date'))
+  expect(writer.active).toEqual(true)
 
-  const dockerfile = builder.dockerfile()
+  const dockerfile = writer.dockerfile()
   expect(dockerfile).toEqual(`
 FROM ubuntu:16.04
 
@@ -34,6 +34,4 @@ COPY cmd.R .
 
 CMD Rscript cmd.R
 `)
-
- await builder.build(dockerfile)
 })

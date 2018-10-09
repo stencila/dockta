@@ -1,6 +1,6 @@
-import Builder from './Builder'
+import Writer from './Writer'
 
-export default class RBuilder extends Builder {
+export default class RWriter extends Writer {
 
   readonly date: string
 
