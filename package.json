@@ -39,6 +39,7 @@
     "@types/express": "^4.16.0",
     "@types/jest": "^23.3.3",
     "@types/js-yaml": "^3.11.2",
+    "@types/tar-fs": "^1.16.1",
     "@types/tar-stream": "^1.6.0",
     "@types/tmp": "0.0.33",
     "@types/yargs": "^12.0.1",
@@ -55,6 +56,7 @@
     "dockerode": "^2.5.7",
     "express": "^4.16.3",
     "js-yaml": "^3.12.0",
+    "tar-fs": "^1.16.3",
     "tar-stream": "^1.6.2",
     "tmp": "0.0.33",
     "yargs": "^12.0.2"

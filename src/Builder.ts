@@ -1,139 +1,66 @@
+import crypto from 'crypto'
 import Docker from 'dockerode'
 import fs from 'fs'
+import parser from 'docker-file-parser'
 import path from 'path'
-import stream, { Stream } from 'stream'
-import tarStream from 'tar-stream'
-import tmp from 'tmp'
-import { rejects } from 'assert'
+import tarFs from 'tar-fs'
 
 export default class Builder {
 
-  /**
-   * Filesystem path to the source files for the image
-   */
-  private path: string
+  private docker: Docker
 
-  /**
-   * Is this builder active?
-   *
-   * A builder is only active it determines that it
-   * applies to the images source files e.g. by filename matching
-   */
-  readonly active: boolean = false
+  constructor () {
+    this.docker = new Docker()
+  }
 
-  /**
-   * The image id
-   *
-   * The actual SHA256 id of the image. This will change when it is
-   * injected or executed into.
-   */
-  readonly image: string = 'some-unique-name'
+  async build (dir: string, name?: string) {
+    if (!name) {
+      const hash = crypto.createHash('md5').update(dir).digest('hex')
+      name = 'dockter-' + hash
+    }
 
-  constructor (path: string) {
-    this.path = path
+    const dockerfile = fs.readFileSync(path.join(dir, 'Dockerfile'), 'utf8')
+    let instructions = parser.parse(dockerfile, { includeComments: true })
 
-    for (let path of this.matchPaths()) {
-      if (this.exists(path)) {
-        this.active = true
-        break
+    // Collect all instructions prior to any `# dockter` comment into a
+    // new Dockerfile and store remaining instructions for special handling
+    let newDockerfile = ''
+    let index = 0
+    for (let instruction of instructions) {
+      if (instruction.name === 'COMMENT') {
+        const arg = instruction.args as string
+        if (arg.match(/^# *dockter/)) {
+          instructions = instructions.slice(index + 1)
+          break
+        }
       }
+      newDockerfile += instruction.raw + '\n'
+      index += 1
     }
-  }
 
-  exists (subpath: string): boolean {
-    return fs.existsSync(path.join(this.path, subpath))
-  }
-
-  read (subpath: string): string {
-    return fs.readFileSync(path.join(this.path, subpath), 'utf8')
-  }
-
-  /**
-   * Build a Dockerfile
-   */
-  dockerfile (): string {
-    let dockerfile = ''
-
-    const sysVersion = this.sysVersion()
-
-    dockerfile += `
-FROM ubuntu:${sysVersion}
-`
-
-    const aptRepos = this.aptRepos(sysVersion)
-    if (aptRepos.length) {
-      // Install system packages required for adding repos
-      dockerfile += `
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      apt-transport-https \\
-      ca-certificates \\
-      software-properties-common
-`
-
-      // Add each repository and fetch signing key if defined
-      for (let [deb, key] of aptRepos) {
-        dockerfile += `
-RUN apt-add-repository "${deb}"${key ? ` \\\n && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}` : ''}
-`
+    // Pack the directory and replace the Dockerfile with the new one
+    const pack = tarFs.pack(dir, {
+      ignore: name => {
+        // Ignore original Dockerfile
+        // TODO: implement `.dockerignore` behavior
+        return path.relative(name, dir) === 'Dockerfile'
+      },
+      finalize: false,
+      finish: pack => {
+        // Add new Dockerfile
+        pack.entry({ name: 'Dockerfile' }, newDockerfile)
+        pack.finalize()
       }
-    }
-
-    let aptPackages = this.aptPackages(sysVersion)
-    if (aptPackages.length) {
-      dockerfile += `
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      ${aptPackages.join(' \\\n      ')} \\
- && apt-get autoremove -y \\
- && apt-get clean \\
- && rm -rf /var/lib/apt/lists/*
-`
-    }
-
-    // Copy any files over
-    // Use COPY instead of ADD since the latter can add a file from a URL so is
-    // not reproducible
-    const copyFiles = this.copyFiles(sysVersion)
-    if (copyFiles) {
-      dockerfile += `
-COPY ${copyFiles.join('')} .
-`
-    }
-
-    // Add any CMD
-    const command = this.command(sysVersion)
-    if (command) {
-      dockerfile += `
-CMD ${command}
-`
-    }
-
-    return dockerfile
-  }
-
-  async build (dockerfile: string) {
-    // Build the Docker image
-    const docker = new Docker()
-
-    // Put the Dockerfile into a temporary folder
-    const tempDir = tmp.dirSync().name
-    fs.writeFileSync(path.join(tempDir, 'Dockerfile'), dockerfile)
-    const copyFiles = this.copyFiles(this.sysVersion())
-    for (let file of copyFiles) {
-      const from = path.join(this.path, file)
-      const to = path.join(tempDir, file)
-      fs.writeFileSync(to, fs.readFileSync(from))
-    }
+    })
+    // The following line can be useful in debugging the
+    // above tar stream generation
+    // pack.pipe(tarFs.extract('/tmp/dockter-builder-debug-1'))
 
     const messages: Array<Object> = []
-    const stream = await docker.buildImage({
-      context: tempDir,
-      src: ['Dockerfile', ...copyFiles]
-    }, {
+    const stream = await this.docker.buildImage(pack, {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
-      t: this.image
+      t: name + ':system'
     }).catch(error => {
       let line
       let message = error.message
@@ -149,9 +76,12 @@ CMD ${command}
       })
     })
 
+    // If there were any errors then return
     if (!stream) return
 
-    await new Promise((resolve, reject) => {
+    // Wait for build to finish and record the id of the system layer
+    let currentSystemLayer = await new Promise<string>((resolve, reject) => {
+      let id: string
       stream.on('data', data => {
         data = JSON.parse(data)
         if (data.error) {
@@ -161,114 +91,105 @@ CMD ${command}
           })
           console.error(data.error)
         } else if (data.aux && data.aux.ID) {
-          // node.handle = data.aux.ID
-          // TODO Unique identifier for Docker images based
-          // on repository and sha256
-          // node.id = `https://hub.docker.com/#${data.aux.ID}`
+          id = data.aux.ID
         } else {
           // We could keep track of data that looks like this
           //  {"stream":"Step 2/2 : RUN foo"}
-          // to match any errors with lines in the Dockefile content
+          // to match any errors with lines in the Dockerfile content
           console.error(data.stream)
         }
       })
-      stream.on('end', () => resolve())
+      stream.on('end', () => resolve(id))
       stream.on('error', reject)
     })
 
-    const { files, command } = this.installPackages(this.sysVersion())
-    await this.inject(files, command)
-  }
+    // Get information on the current
+    const image = this.docker.getImage(name + ':latest')
+    let appLayer
+    let lastSystemLayer
+    try {
+      const imageInfo = await image.inspect()
+      appLayer = imageInfo.Id
+      lastSystemLayer = imageInfo.Config.Labels && imageInfo.Config.Labels.systemLayer
+    } catch (error) {
+      // No existing image, just continue
+    }
 
-  async inject (content: {[key: string]: string}, command: Array<string> = [], env: Array<string> = []) {
-    const docker = new Docker()
+    // If the foundation image has changed then use the new version,
+    // otherwise use the existing one
+    let layer
+    if (lastSystemLayer) {
+      if (lastSystemLayer !== currentSystemLayer) layer = currentSystemLayer
+      else layer = appLayer
+    } else {
+      layer = currentSystemLayer
+    }
 
-    // Create a container from the image
-    let container = await docker.createContainer({
-      Image: this.image,
+    // Create a container from the layer and start it up
+    let container = await this.docker.createContainer({
+      Image: layer,
       Tty: true,
       Cmd: ['/bin/bash']
     })
-
-    // Put injected files into a tar archive
-    const pack = tarStream.pack()
-    for (let [key, value] of Object.entries(content)) {
-      pack.entry({ name: key }, value)
-    }
-    pack.finalize()
-    await container.putArchive(pack, { path: '.' })
-
-    if (command.length === 0) return
-
     await container.start()
 
-    // Create an execution in the container
-    const exec = await container.exec({
-      Cmd: command,
-      Env: env,
-      AttachStdout: true,
-      AttachStderr: true
-    })
-    await exec.start()
+    // Handle the remaining instructions
+    for (let instruction of instructions) {
+      switch (instruction.name) {
+        case 'COPY':
+        case 'ADD':
+          // Add files/subdirs to the container
+          // TODO: only copy files if they have changed
+          // TODO: to be consistent with Docker ADD should handle urls
+          const add = instruction.args as Array<string>
+          const to = add.pop()
+          const pack = tarFs.pack(dir, {
+            ignore: name => {
+              const relativePath = path.relative(dir, name)
+              return !add.includes(relativePath)
+            }
+          })
+          await container.putArchive(pack, { path: to })
+          break
 
-    // TODO: do something with stdout and stderr?
-    container.modem.demuxStream(exec.output, process.stdout, process.stderr)
+        case 'RUN':
+          // Execute code in the container
+          const script = instruction.args as string
+          console.log(script)
+          const cmd = script.split(' ')
+          const exec = await container.exec({
+            Cmd: cmd,
+            AttachStdout: true,
+            AttachStderr: true,
+            Tty: true
+          })
+          await exec.start()
 
-    // Wait until the exec has finished running, checking every
-    // 100ms
-    // TODO: abort after an amount of time
-    while (true) {
-      let status = await exec.inspect()
-      if (status.Running === false) break
-      await new Promise(resolve => setTimeout(resolve, 100))
+          // TODO: do something with stdout and stderr?
+          exec.output.pipe(process.stdout)
+
+          // Wait until the exec has finished running, checking every 100ms
+          // TODO: abort after an amount of time
+          while (true) {
+            let status = await exec.inspect()
+            if (status.Running === false) break
+            await new Promise(resolve => setTimeout(resolve, 100))
+          }
+          break
+      }
     }
 
-    // Create an image from the container
+    // Create an image from the modified container
     const data = await container.commit({
       // Options to commit
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageCommit
-      // Use tag for this builder
-      repo: this.image,
-      comment: 'Updated image'
+      repo: name + ':latest',
+      comment: 'Updated application layer',
+      Labels: {
+        systemLayer: currentSystemLayer
+      }
     })
 
     await container.stop()
-  }
-
-  matchPaths (): Array<string> {
-    return []
-  }
-
-  sysVersion (): number {
-    return 18.04
-  }
-
-  sysVersionName (sysVersion: number): string {
-    const lookup: {[key: string]: string} = {
-      '14.04': 'trusty',
-      '16.04': 'xenial',
-      '18.04': 'bionic'
-    }
-    return lookup[sysVersion]
-  }
-
-  aptRepos (sysVersion: number): Array<[string, string]> {
-    return []
-  }
-
-  aptPackages (sysVersion: number): Array<string> {
-    return []
-  }
-
-  installPackages (sysVersion: number): { files: {}, command: Array<string>} {
-    return { files: {}, command: [] }
-  }
-
-  copyFiles (sysVersion: number): Array<string> {
-    return []
-  }
-
-  command (sysVersion: number): string | undefined {
-    return
   }
 }

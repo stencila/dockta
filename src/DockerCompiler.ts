@@ -11,6 +11,7 @@ import {
 } from './context'
 
 import SuperWriter from './SuperWriter'
+import Builder from './Builder'
 
 export default class DockerCompiler {
 
@@ -66,7 +67,8 @@ export default class DockerCompiler {
     assert.strictEqual(node.programmingLanguage, 'Dockerfile')
 
     // Parse instructions from the Dockerfile
-    let instructions = parser.parse(node.text)
+    const dockerfile = node.text
+    let instructions = parser.parse(dockerfile)
 
     // Process LABEL instructions
     for (let instruction of instructions.filter(instruction => instruction.name === 'LABEL')) {
@@ -98,6 +100,9 @@ export default class DockerCompiler {
     }
 
     if (!build) return node
+
+    const builder = new Builder()
+    await builder.build((source as string).substring(7))
 
     return node
   }
