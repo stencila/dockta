@@ -46,10 +46,10 @@ export default class DockerCompiler {
    *
    * Parse the `node.text` Dockerfile content to:
    *
-   * - extract labels from [`LABEL` directives](https://docs.docker.com/engine/reference/builder/#label)
+   * - extract labels from [`LABEL` instructions](https://docs.docker.com/engine/reference/builder/#label)
    *
    * - extract a `maintainer` label from any deprecated
-   *   [`MAINTAINER` directives](https://docs.docker.com/engine/reference/builder/#maintainer-deprecated)
+   *   [`MAINTAINER` instructions](https://docs.docker.com/engine/reference/builder/#maintainer-deprecated)
    *
    * See also [best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#label)
    * for labels.
@@ -65,12 +65,12 @@ export default class DockerCompiler {
     assert.strictEqual(node.type, 'SoftwareSourceCode')
     assert.strictEqual(node.programmingLanguage, 'Dockerfile')
 
-    // Parse directives from the Dockerfile
-    let directives = parser.parse(node.text)
+    // Parse instructions from the Dockerfile
+    let instructions = parser.parse(node.text)
 
-    // Process LABEL directives
-    for (let directive of directives.filter(directive => directive.name === 'LABEL')) {
-      for (let [key, value] of Object.entries(directive.args)) {
+    // Process LABEL instructions
+    for (let instruction of instructions.filter(instruction => instruction.name === 'LABEL')) {
+      for (let [key, value] of Object.entries(instruction.args)) {
         // Unquote value if necessary
         if (value.startsWith('"')) value = value.substring(1)
         if (value.endsWith('"')) value = value.slice(0, -1)
@@ -89,11 +89,11 @@ export default class DockerCompiler {
       }
     }
 
-    // Process MAINTAINER directives
-    for (let directive of directives.filter(directive => directive.name === 'MAINTAINER')) {
+    // Process MAINTAINER instructions
+    for (let instruction of instructions.filter(instruction => instruction.name === 'MAINTAINER')) {
       let author = ''
-      if (typeof directive.args === 'string') author = directive.args
-      else throw new Error(`Unexpected type of directive arguments ${typeof directive.args}`)
+      if (typeof instruction.args === 'string') author = instruction.args
+      else throw new Error(`Unexpected type of instruction arguments ${typeof instruction.args}`)
       pushAuthor(node, author)
     }
 
