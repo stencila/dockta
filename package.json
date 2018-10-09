@@ -12,7 +12,7 @@
     "test": "jest",
     "cover": "jest --collectCoverage",
     "build": "tsc",
-    "docs": "typedoc --readme README.md --out ./docs ./src",
+    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
     "start": "node ./dist/server.js"
@@ -44,6 +44,7 @@
     "@types/tmp": "0.0.33",
     "@types/yargs": "^12.0.1",
     "jest": "^23.6.0",
+    "markdown-toc": "^1.2.0",
     "ts-jest": "^23.10.3",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
