@@ -78,13 +78,26 @@ RUN apt-get update \\
 `
     }
 
+    // Add Dockter special comment for managed builds
+    dockerfile += `
+# dockter
+`
+
     // Copy any files over
     // Use COPY instead of ADD since the latter can add a file from a URL so is
     // not reproducible
     const copyFiles = this.copyFiles(sysVersion)
     if (copyFiles) {
       dockerfile += `
-COPY ${copyFiles.join('')} .
+COPY ${copyFiles.join(' ')} .
+`
+    }
+
+    // Run installation instructions
+    const installPackages = this.installPackages(sysVersion)
+    if (this.installPackages) {
+      dockerfile += `
+RUN ${installPackages.join(' \\\n    ')}
 `
     }
 
@@ -98,6 +111,8 @@ CMD ${command}
 
     return dockerfile
   }
+
+  // Methods that are overridden in derived classes
 
   matchPaths (): Array<string> {
     return []
@@ -124,12 +139,12 @@ CMD ${command}
     return []
   }
 
-  installPackages (sysVersion: number): { files: {}, command: Array<string>} {
-    return { files: {}, command: [] }
+  installPackages (sysVersion: number): Array<string> {
+    return []
   }
 
   copyFiles (sysVersion: number): Array<string> {
-    return []
+    return ['.']
   }
 
   command (sysVersion: number): string | undefined {

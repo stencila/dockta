@@ -5,7 +5,7 @@ import parser from 'docker-file-parser'
 import path from 'path'
 import tarFs from 'tar-fs'
 
-export default class Builder {
+export default class DockerBuilder {
 
   private docker: Docker
 
@@ -13,18 +13,18 @@ export default class Builder {
     this.docker = new Docker()
   }
 
-  async build (dir: string, name?: string) {
+  async build (dir: string, name?: string, dockerfile: string = 'Dockerfile') {
     if (!name) {
       const hash = crypto.createHash('md5').update(dir).digest('hex')
       name = 'dockter-' + hash
     }
 
-    const dockerfile = fs.readFileSync(path.join(dir, 'Dockerfile'), 'utf8')
-    let instructions = parser.parse(dockerfile, { includeComments: true })
+    const content = fs.readFileSync(path.join(dir, dockerfile), 'utf8')
+    let instructions = parser.parse(content, { includeComments: true })
 
     // Collect all instructions prior to any `# dockter` comment into a
     // new Dockerfile and store remaining instructions for special handling
-    let newDockerfile = ''
+    let newContent = ''
     let index = 0
     for (let instruction of instructions) {
       if (instruction.name === 'COMMENT') {
@@ -34,7 +34,7 @@ export default class Builder {
           break
         }
       }
-      newDockerfile += instruction.raw + '\n'
+      newContent += instruction.raw + '\n'
       index += 1
     }
 
@@ -48,7 +48,7 @@ export default class Builder {
       finalize: false,
       finish: pack => {
         // Add new Dockerfile
-        pack.entry({ name: 'Dockerfile' }, newDockerfile)
+        pack.entry({ name: 'Dockerfile' }, newContent)
         pack.finalize()
       }
     })

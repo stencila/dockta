@@ -30,7 +30,11 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-COPY cmd.R .
+# dockter
+
+COPY . .
+
+RUN Rscript install.R
 
 CMD Rscript cmd.R
 `)

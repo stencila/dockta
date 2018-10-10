@@ -10,8 +10,8 @@ import {
   SoftwareSourceCode, SoftwareSourceCodeMessage
 } from './context'
 
-import SuperWriter from './SuperWriter'
-import Builder from './Builder'
+import DockerWriter from './DockerWriter'
+import DockerBuilder from './DockerBuilder'
 
 export default class DockerCompiler {
 
@@ -30,7 +30,7 @@ export default class DockerCompiler {
       } else if (fs.existsSync(path.join(pat, 'Dockerfile'))) {
         dockerfile = fs.readFileSync(path.join(pat, 'Dockerfile'), 'utf8')
       } else if (fs.statSync(pat).isDirectory()) {
-        dockerfile = new SuperWriter(pat).dockerfile()
+        dockerfile = new DockerWriter(pat).dockerfile()
       }
     } else {
       dockerfile = content
@@ -66,8 +66,20 @@ export default class DockerCompiler {
     assert.strictEqual(node.type, 'SoftwareSourceCode')
     assert.strictEqual(node.programmingLanguage, 'Dockerfile')
 
+    // FIXME
+    const dir = (source as string).substring(7) // assumes a dir source
+    let dockerfile
+    let dockerfileName
+    if (fs.existsSync(path.join(dir, 'Dockerfile'))) {
+      dockerfile = fs.readFileSync(path.join(dir, 'Dockerfile'), 'utf8')
+      dockerfileName = 'Dockerfile'
+    } else {
+      dockerfile = new DockerWriter(dir).dockerfile()
+      fs.writeFileSync(path.join(dir, '.Dockerfile'), dockerfile)
+      dockerfileName = '.Dockerfile'
+    }
+
     // Parse instructions from the Dockerfile
-    const dockerfile = node.text
     let instructions = parser.parse(dockerfile)
 
     // Process LABEL instructions
@@ -101,8 +113,8 @@ export default class DockerCompiler {
 
     if (!build) return node
 
-    const builder = new Builder()
-    await builder.build((source as string).substring(7))
+    const builder = new DockerBuilder()
+    await builder.build(dir, undefined, dockerfileName)
 
     return node
   }

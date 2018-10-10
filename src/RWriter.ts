@@ -1,11 +1,14 @@
 import Writer from './Writer'
 
+/**
+ * A Dockerfile writer for R
+ */
 export default class RWriter extends Writer {
 
   readonly date: string
 
-  constructor (pat: string) {
-    super(pat)
+  constructor (dir: string) {
+    super(dir)
 
     let date
     if (this.exists('DESCRIPTION')) {
@@ -26,6 +29,8 @@ export default class RWriter extends Writer {
     this.date = date.toISOString().substring(0,10)
   }
 
+  // Methods that override those in `Writer`
+
   matchPaths (): Array<string> {
     return ['DESCRIPTION', 'cmd.R']
   }
@@ -40,7 +45,6 @@ export default class RWriter extends Writer {
 
   aptRepos (sysVersion: number): Array<[string, string]> {
     // TODO if no date, then use cran
-    // TODO parameterize the date!
     const sysVersionName = this.sysVersionName(sysVersion)
     return [
       [
@@ -54,21 +58,14 @@ export default class RWriter extends Writer {
     return ['r-base']
   }
 
-  installPackages (sysVersion: number) {
+  installPackages (sysVersion: number): Array<string> {
     // If there is an `install.R` file in the path then use that
     // otherwise use special `install.R` which reads from `DESCRIPTION`
-    return {
-      files: {
-        'install.R': 'file.create("foo.txt")',
-        'DESCRIPTION': ''
-      },
-      command: ['Rscript', 'install.R']
-    }
+    return ['Rscript install.R']
   }
 
   copyFiles (sysVersion: number): Array<string> {
-    if (this.exists('cmd.R')) return ['cmd.R']
-    else return []
+    return ['.']
   }
 
   command (sysVersion: number): string | undefined {

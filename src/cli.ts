@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-//@ts-ignore
+// @ts-ignore
 import yargonaut from 'yargonaut'
 import yargs from 'yargs'
 import yaml from 'js-yaml'
