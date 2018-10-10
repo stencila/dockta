@@ -1,4 +1,7 @@
-> 🔧 This is a work in progress, to do items are noted like this
+> This is a work in progress
+> 🔧 To do items are noted like this
+> 🦄 Longer term ideas are noted like this
+> We'll remove any of these that are remaining into Github issues prior to releasing
 
 > 🔧 Add logo (something with a whale and a doctor?)
 
@@ -71,11 +74,15 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 🦄 If the folder does not contain either of those files then Dockter will scan all the folder's `.py` files for `import` statements and create a `.requirements.txt` file for you.
 
+> 🔧 See https://github.com/browserify/detective/issues/8 as an example of using JS regexes to parse for requires. A similar approach could be used for Python import statements. Since we wont have a python AST to walk in TypeScript.
+
 #### Node.js
 
 🦄 If the folder contains a [`package.json`](https://docs.npmjs.com/files/package.json) file, Dockter will copy it into the Docker image and use `npm` to install the specified packages.
 
 🦄 If the folder does not contain a `package.json` file then Dockter will scan all the folder's `.js` files for `require` statements and create a `.package.json` file for you.
+
+> 🔧 See https://github.com/browserify/detective for extracting required packages from source code
 
 ### Efficiently handling of updates to project code
 
@@ -304,21 +311,26 @@ Related Stencila packages include:
 - 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
 - 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
 
-Related external projects include:
+There are several other projects that build Docker images from source code, including:
 
-- [`jupyter/repro2docker`](https://github.com/jupyter/repo2docker): _Turn git repositories into Jupyter enabled Docker Images_
-- [`openshift/source-to-image`](https://github.com/openshift/source-to-image): _A toolkit and workflow for building reproducible Docker images from source code_
+- [`alibaba/derrick`](https://github.com/alibaba/derrick)
+- [`jupyter/repro2docker`](https://github.com/jupyter/repo2docker)
+- [`Gueils/whales`](https://github.com/Gueils/whales)
+- [`o2r-project/containerit`](https://github.com/o2r-project/containerit)
+- [`openshift/source-to-image`](https://github.com/openshift/source-to-image)
+
+Dockter is similar to `repro2docker` and `containerit` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repro2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code and managed builds.
 
 ## FAQ
 
-##### What's with all the unicorns 🦄?
+*What's with all the unicorns 🦄?*
 
 Unicorn emoji are used to indicate features that are in development or are planned. They're useful for sketching out what this package will eventually look like.
 
-##### Why is this a Node.js package?
+*Why is this a Node.js package?*
 
 We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments.
 
 ## Acknowledgments
 
-Dockter was inspired by similar tools including [`binder`](https://github.com/binder-project/binder), [`repro2docker`](https://github.com/jupyter/repo2docker), and [`source-to-image`](https://github.com/openshift/source-to-image). It relies on [`dockerode`](https://www.npmjs.com/package/dockerode), [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser), and of course [Docker](https://www.docker.com/).
+Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder) and [`repro2docker`](https://github.com/jupyter/repo2docker). It relies on [`dockerode`](https://www.npmjs.com/package/dockerode), [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser), and of course [Docker](https://www.docker.com/).
