@@ -1,12 +1,20 @@
 #!/usr/bin/env node
 
+//@ts-ignore
+import yargonaut from 'yargonaut'
 import yargs from 'yargs'
 import yaml from 'js-yaml'
 
 import DockerCompiler from './DockerCompiler'
 const compiler = new DockerCompiler()
 
+yargonaut
+  .style('blue')
+  .helpStyle('green')
+  .errorsStyle('red')
+
 yargs
+  .scriptName('dockter')
   .usage('$0 <cmd> [args]')
 
   // @ts-ignore
