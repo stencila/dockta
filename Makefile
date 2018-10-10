@@ -17,7 +17,7 @@ cover:
 
 build:
 	npm run build
-	chmod +x dist/cli.js
+.PHONY: build
 
 docs:
 	npm run docs
