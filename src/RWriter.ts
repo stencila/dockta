@@ -5,28 +5,64 @@ import Writer from './Writer'
  */
 export default class RWriter extends Writer {
 
+  /**
+   * The date to use to version R and packages
+   */
   readonly date: string
 
   constructor (dir: string) {
     super(dir)
 
-    let date
+    // Read DESCRIPTION file if one exists
+    let desc = ''
     if (this.exists('DESCRIPTION')) {
-      const desc = this.read('DESCRIPTION')
-      const match = desc.match(/Date:\ *(.+)/)
-      if (match) {
-        date = Date.parse(match[1])
-        if (isNaN(date)) {
-          throw new Error('Unable to parse date in DESCRIPTION file: ' + match[1])
-        } else {
-          date = new Date(date)
-        }
-      }
+      desc = this.read('DESCRIPTION')
     }
 
-    if (!date) date = new Date(Date.now() - 24 * 3600 * 1000)
+    // TODO Create a `.DESCRIPTION` file by scanning .R and .Rmd files
 
+    // Get `date` from DESCRIPTION file
+    let date
+    const match1 = desc.match(/Date:\ *(.+)/)
+    if (match1) {
+      date = Date.parse(match1[1])
+      if (isNaN(date)) {
+        throw new Error('Unable to parse date in DESCRIPTION file: ' + match1[1])
+      } else {
+        date = new Date(date)
+      }
+    }
+    // If no date then use yesterday's date
+    if (!date) date = new Date(Date.now() - 24 * 3600 * 1000)
     this.date = date.toISOString().substring(0,10)
+
+    // Get package imports from the description file
+    let packages = []
+    const start = /^Imports:[ \t]*\n/gm.exec(desc)
+    if (start) {
+      // Find next unindented line or use end of string
+      let match = desc.substring(start.index + start[0].length).match(/\n^\w/m)
+      let end
+      if (match) end = match.index
+      else end = desc.length -1
+      const imports = desc.substring(start.index + start[0].length, end)
+      for (let imported of imports.split(',')) {
+        let pkg
+        const match = imported.match(/^\s*(\w+).*/)
+        if (match) {
+          pkg = match[1]
+        } else pkg = imported.trim()
+        packages.push(pkg)
+      }
+    }
+    
+    // For each package, query the CRANDB to get a manifest including it's own
+    // dependencies and convert it to JSON-LD
+    for (let pkg of packages) {
+      fetch(`http://crandb.r-pkg.org/${pkg}`).then(value => {
+        console.log(value)
+      })
+    }
   }
 
   // Methods that override those in `Writer`

@@ -234,7 +234,7 @@ dockter execute environ.jsonld
 dockter execute Dockerfile
 ```
 
-## Router and server
+### Router and server
 
 The [Express](https://expressjs.com) router provides `PUT /compile` and `PUT /execute` endpoints (which do the same thing as the corresponding CLI commands). You can serve them using,
 

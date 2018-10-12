@@ -29,7 +29,7 @@ export default class DockerWriter extends Writer {
    * Collect arrays of string from each child writer
    * and flatten them into an array of strings.
    * Used below for method overrides.
-   * 
+   *
    * @param func The child writer method to call
    */
   private collect (func: any): Array<any> {

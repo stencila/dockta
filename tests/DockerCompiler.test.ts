@@ -46,7 +46,7 @@ test('compile:meta-data', async () => {
   expect(node.author[2].name[0]).toEqual('Capt Hook')
 
   // Compile from file
-  node = await compiler.compile('file://tests/fixtures/dockerfile-date/Dockerfile', false)
+  node = await compiler.compile('file://tests/fixtures/dockerfile-date', false)
   expect(node.description[0].substring(0, 23)).toEqual('Prints the current date')
   expect(node.author[0].name[0]).toEqual('Nokome Bentley')
   expect(node.author[0].email[0]).toEqual('nokome@stenci.la')
