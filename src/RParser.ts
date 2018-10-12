@@ -1,9 +1,9 @@
-import Writer from './Writer'
+import Parser from './Parser'
 
 /**
  * A Dockerfile writer for R
  */
-export default class RWriter extends Writer {
+export default class RParser extends Parser {
 
   /**
    * The date to use to version R and packages
@@ -44,7 +44,7 @@ export default class RWriter extends Writer {
       let match = desc.substring(start.index + start[0].length).match(/\n^\w/m)
       let end
       if (match) end = match.index
-      else end = desc.length -1
+      else end = desc.length - 1
       const imports = desc.substring(start.index + start[0].length, end)
       for (let imported of imports.split(',')) {
         let pkg
@@ -55,7 +55,7 @@ export default class RWriter extends Writer {
         packages.push(pkg)
       }
     }
-    
+
     // For each package, query the CRANDB to get a manifest including it's own
     // dependencies and convert it to JSON-LD
     for (let pkg of packages) {
@@ -65,7 +65,7 @@ export default class RWriter extends Writer {
     }
   }
 
-  // Methods that override those in `Writer`
+  // Methods that override those in `Parser`
 
   matchPaths (): Array<string> {
     return ['DESCRIPTION', 'cmd.R']

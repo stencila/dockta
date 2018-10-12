@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 
-export default class Writer {
+export default class Parser {
 
   /**
    * Filesystem path to the source files for the image

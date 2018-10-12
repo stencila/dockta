@@ -1,6 +1,6 @@
-import Writer from './Writer'
+import Parser from './Parser'
 
-export default class PythonWriter extends Writer {
+export default class PythonParser extends Parser {
 
   matchPaths (): Array<string> {
     return ['requirements.txt', 'cmd.py']

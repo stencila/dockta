@@ -1,13 +1,13 @@
-import RWriter from '../src/RWriter'
+import RParser from '../src/RParser'
 import fixture from './fixture'
 
 test('empty', () => {
-  const writer = new RWriter(fixture('empty'))
+  const writer = new RParser(fixture('empty'))
   expect(writer.active).toEqual(false)
 })
 
 test('r-date', async () => {
-  const writer = new RWriter(fixture('r-date'))
+  const writer = new RParser(fixture('r-date'))
   expect(writer.active).toEqual(true)
 
   const dockerfile = writer.dockerfile()
