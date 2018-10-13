@@ -108,3 +108,7 @@ export class SoftwareSourceCodeMessage extends Thing {
   column?: number
   message?: string
 }
+
+export class SoftwareEnvironment {
+
+}

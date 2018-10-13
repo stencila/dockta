@@ -1,23 +1,36 @@
 import fs from 'fs'
 import path from 'path'
 
+/**
+ * A base class for language parsers
+ * 
+ * A language `Parser` generates a JSON-LD `SoftwareApplication` instance based on the
+ * contents of a directory. It is responsible for determining which packages the application
+ * needs, resolving the dependencies of those packages (both system and language packages) and
+ * turning those into a JSON-LD `SoftwareApplication` instance.
+ * 
+ * If the `Parser` finds a corresponding requirements file for the language (e.g. `requirements.txt` for Python),
+ * then it uses that to determine the language packages to install. If no requirements file is found, 
+ * it scans for source code files for package import statements (e.g. `library(package)` in `.R` files),
+ * generates a package list from those statements and creates a requirements file.
+ */
 export default class Parser {
 
   /**
-   * Filesystem path to the source files for the image
+   * The directory to scan for relevant files
    */
-  private path: string
+  private folder: string
 
   /**
-   * Is this builder active?
+   * Is this parser active?
    *
-   * A builder is only active it determines that it
-   * applies to the images source files e.g. by filename matching
+   * Each parser class decides if it is active by matching
+   * paths within the folder
    */
   readonly active: boolean = false
 
-  constructor (path: string) {
-    this.path = path
+  constructor (folder: string) {
+    this.folder = folder
 
     for (let path of this.matchPaths()) {
       if (this.exists(path)) {
@@ -28,126 +41,11 @@ export default class Parser {
   }
 
   exists (subpath: string): boolean {
-    return fs.existsSync(path.join(this.path, subpath))
+    return fs.existsSync(path.join(this.folder, subpath))
   }
 
   read (subpath: string): string {
-    return fs.readFileSync(path.join(this.path, subpath), 'utf8')
+    return fs.readFileSync(path.join(this.folder, subpath), 'utf8')
   }
 
-  /**
-   * Build a Dockerfile
-   */
-  dockerfile (): string {
-    let dockerfile = ''
-
-    const sysVersion = this.sysVersion()
-
-    dockerfile += `
-FROM ubuntu:${sysVersion}
-`
-
-    const aptRepos = this.aptRepos(sysVersion)
-    if (aptRepos.length) {
-      // Install system packages required for adding repos
-      dockerfile += `
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      apt-transport-https \\
-      ca-certificates \\
-      software-properties-common
-`
-
-      // Add each repository and fetch signing key if defined
-      for (let [deb, key] of aptRepos) {
-        dockerfile += `
-RUN apt-add-repository "${deb}"${key ? ` \\\n && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}` : ''}
-`
-      }
-    }
-
-    let aptPackages = this.aptPackages(sysVersion)
-    if (aptPackages.length) {
-      dockerfile += `
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      ${aptPackages.join(' \\\n      ')} \\
- && apt-get autoremove -y \\
- && apt-get clean \\
- && rm -rf /var/lib/apt/lists/*
-`
-    }
-
-    // Add Dockter special comment for managed builds
-    dockerfile += `
-# dockter
-`
-
-    // Copy any files over
-    // Use COPY instead of ADD since the latter can add a file from a URL so is
-    // not reproducible
-    const copyFiles = this.copyFiles(sysVersion)
-    if (copyFiles) {
-      dockerfile += `
-COPY ${copyFiles.join(' ')} .
-`
-    }
-
-    // Run installation instructions
-    const installPackages = this.installPackages(sysVersion)
-    if (this.installPackages) {
-      dockerfile += `
-RUN ${installPackages.join(' \\\n    ')}
-`
-    }
-
-    // Add any CMD
-    const command = this.command(sysVersion)
-    if (command) {
-      dockerfile += `
-CMD ${command}
-`
-    }
-
-    return dockerfile
-  }
-
-  // Methods that are overridden in derived classes
-
-  matchPaths (): Array<string> {
-    return []
-  }
-
-  sysVersion (): number {
-    return 18.04
-  }
-
-  sysVersionName (sysVersion: number): string {
-    const lookup: {[key: string]: string} = {
-      '14.04': 'trusty',
-      '16.04': 'xenial',
-      '18.04': 'bionic'
-    }
-    return lookup[sysVersion]
-  }
-
-  aptRepos (sysVersion: number): Array<[string, string]> {
-    return []
-  }
-
-  aptPackages (sysVersion: number): Array<string> {
-    return []
-  }
-
-  installPackages (sysVersion: number): Array<string> {
-    return []
-  }
-
-  copyFiles (sysVersion: number): Array<string> {
-    return ['.']
-  }
-
-  command (sysVersion: number): string | undefined {
-    return
-  }
 }
