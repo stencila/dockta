@@ -2,14 +2,18 @@ import DockerParser from '../src/DockerParser'
 import {Person, SoftwareEnvironment} from '../src/context'
 import fixture from './fixture'
 
-test('strings', async () => {
+/**
+ * When passed Dockerfile strings, parse should extract LABEL
+ * and MAINTAINER instructions.
+ */
+test('parse:strings', async () => {
   const parser = new DockerParser('')
   let environ
 
   environ = await parser.parse('FROM ubuntu') as SoftwareEnvironment
   expect(environ.authors).toEqual([])
 
-  // Label
+  // Single label
   environ = await parser.parse('LABEL maintainer="Joe Bloggs <joe@bloggs.com> (https://bloggs.com/joe)"') as SoftwareEnvironment
   expect(environ.authors[0].name).toEqual('Joe Bloggs')
   const author = environ.authors[0] as Person
@@ -32,7 +36,7 @@ test('strings', async () => {
   expect(environ.description).toEqual('My image')
   expect(environ.authors[0].name).toEqual('Joe Bloggs')
 
-  // Deprecated MAINTAINER directive
+  // Deprecated MAINTAINER instruction
   environ = await parser.parse('MAINTAINER Peter Pan') as SoftwareEnvironment
   expect(environ.authors[0].name).toEqual('Peter Pan')
 
@@ -44,17 +48,27 @@ test('strings', async () => {
   expect(environ.authors[2].name).toEqual('Capt Hook')
 })
 
-test('empty', async () => {
+/**
+ * When applied to an empty folder, parse should return null.
+ */
+test('parse:empty', async () => {
   const parser = new DockerParser(fixture('empty'))
   expect(await parser.parse()).toBeNull()
 })
 
-test('r-date', async () => {
+/**
+ * When applied to a folder without a Dockerfile, parse should return null.
+ */
+test('parse:r-date', async () => {
   const parser = new DockerParser(fixture('r-date'))
   expect(await parser.parse()).toBeNull()
 })
 
-test('dockerfile-date', async () => {
+/**
+ * When applied to a folder with a Dockerfile, parse should return a
+ * `SoftwareEnvironment` based upon it.
+ */
+test('parse:dockerfile-date', async () => {
   const parser = new DockerParser(fixture('dockerfile-date'))
   const environ = await parser.parse() as SoftwareEnvironment
   expect(environ.description.substring(0, 23)).toEqual('Prints the current date')
