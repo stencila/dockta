@@ -1,4 +1,4 @@
-Package: dater
+Package: rdate
 Version: 1.0.0
 Date: 2018-10-05
 Imports:
