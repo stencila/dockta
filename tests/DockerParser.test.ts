@@ -36,6 +36,12 @@ test('parse:strings', async () => {
   expect(environ.description).toEqual('My image')
   expect(environ.authors[0].name).toEqual('Joe Bloggs')
 
+  // Prefixed labels
+  for (let prefix of ['org.opencontainers.image', 'org.label-schema']) {
+    environ = await parser.parse(`LABEL ${prefix}.description="My image"`) as SoftwareEnvironment
+    expect(environ.description).toEqual('My image')
+  }
+
   // Deprecated MAINTAINER instruction
   environ = await parser.parse('MAINTAINER Peter Pan') as SoftwareEnvironment
   expect(environ.authors[0].name).toEqual('Peter Pan')

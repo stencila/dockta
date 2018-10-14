@@ -52,6 +52,10 @@ export default class DockerParser extends Parser {
     // Process LABEL instructions
     for (let instruction of instructions.filter(instruction => instruction.name === 'LABEL')) {
       for (let [key, value] of Object.entries(instruction.args)) {
+        // Remove recognised prefixes from key
+        const match = key.match(/^(org\.opencontainers\.image|org\.label-schema)\.([^ ]+)$/)
+        if (match) key = match[2]
+
         // Unquote value if necessary
         if (value.startsWith('"')) value = value.substring(1)
         if (value.endsWith('"')) value = value.slice(0, -1)
@@ -59,10 +63,13 @@ export default class DockerParser extends Parser {
         value = value.replace(/\\ /, ' ')
 
         switch (key) {
+          case 'name':
+            environ.name = value
           case 'description':
-          environ.description = value
+            environ.description = value
             break
           case 'maintainer':
+            // TODO should push to a `maintainers` property
           case 'author':
             environ.authors.push(Person.fromText(value))
             break
