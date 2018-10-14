@@ -1,15 +1,14 @@
 import RParser from '../src/RParser'
 import fixture from './fixture'
-import { SoftwareApplication } from '../src/context';
+import { SoftwareApplication, SoftwareEnvironment } from '../src/context';
 
 test('empty', async () => {
   const parser = new RParser(fixture('empty'))
-  const environ = await parser.parse()
-  expect(environ.softwareRequirements).toEqual([])
+  expect(await parser.parse()).toBeNull()
 })
 
 test('r-date', async () => {
   const parser = new RParser(fixture('r-date'))
-  const environ = await parser.parse()
+  const environ = await parser.parse() as SoftwareEnvironment
   expect(environ.softwareRequirements).toEqual([])
 })

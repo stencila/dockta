@@ -10,9 +10,7 @@ export default class RParser extends Parser {
    * Parse a folder by detecting any R requirements or souce code files
    * and return a `SoftwareEnvironment` instance
    */
-  async parse (): Promise<SoftwareEnvironment> {
-    const environ = new SoftwareEnvironment()
-
+  async parse (): Promise<SoftwareEnvironment | null> {
     // Read DESCRIPTION file if it exists
     let desc = ''
     if (this.exists('DESCRIPTION')) {
@@ -22,7 +20,9 @@ export default class RParser extends Parser {
     // TODO Create a `.DESCRIPTION` file by scanning .R and .Rmd files
 
     // If no R files detected, return empty environments
-    if (!desc) return environ
+    if (!desc) return null
+
+    const environ = new SoftwareEnvironment()
 
     // Get `date` from DESCRIPTION file
     let date

@@ -2,57 +2,6 @@ import Compiler from '../src/DockerCompiler'
 import fixture from './fixture'
 
 /**
- * Tests of extracting meta-data during compilation
- */
-test('compile:meta-data', async () => {
-  const compiler = new Compiler()
-  let node
-
-  node = await compiler.compile('FROM ubuntu', false)
-  expect(node.programmingLanguage).toEqual('Dockerfile')
-  expect(node.author).toEqual([])
-
-  // Label
-  node = await compiler.compile('LABEL maintainer="Joe Bloggs <joe@bloggs.com> (https://bloggs.com/joe)"', false)
-  expect(node.author[0].name[0]).toEqual('Joe Bloggs')
-  expect(node.author[0].givenName[0]).toEqual('Joe')
-  expect(node.author[0].familyName[0]).toEqual('Bloggs')
-  expect(node.author[0].email[0]).toEqual('joe@bloggs.com')
-  expect(node.author[0].url[0]).toEqual('https://bloggs.com/joe')
-
-  // Mutiple labels
-  node = await compiler.compile('LABEL maintainer="Joe Bloggs" description="My image"', false)
-  expect(node.description[0]).toEqual('My image')
-  expect(node.author[0].name[0]).toEqual('Joe Bloggs')
-
-  // Mutiple labels using same key - last wins
-  node = await compiler.compile('LABEL maintainer="Joe Bloggs" maintainer="Peter Pan"', false)
-  expect(node.author[0].name[0]).toEqual('Peter Pan')
-
-  // Muti-label with back slashes for spaces and line continuations
-  node = await compiler.compile('LABEL maintainer=Joe\\ Bloggs \\\ndescription="My image"', false)
-  expect(node.description[0]).toEqual('My image')
-  expect(node.author[0].name[0]).toEqual('Joe Bloggs')
-
-  // Deprecated MAINTAINER directive
-  node = await compiler.compile('MAINTAINER Peter Pan', false)
-  expect(node.author[0].name[0]).toEqual('Peter Pan')
-
-  // Using multiple MAINTAINERS does result in multiple authors
-  node = await compiler.compile('LABEL maintainer="Joe Bloggs"\n MAINTAINER Peter Pan\n MAINTAINER Capt Hook', false)
-  expect(node.author.length).toEqual(3)
-  expect(node.author[0].name[0]).toEqual('Joe Bloggs')
-  expect(node.author[1].name[0]).toEqual('Peter Pan')
-  expect(node.author[2].name[0]).toEqual('Capt Hook')
-
-  // Compile from file
-  node = await compiler.compile('file://tests/fixtures/dockerfile-date', false)
-  expect(node.description[0].substring(0, 23)).toEqual('Prints the current date')
-  expect(node.author[0].name[0]).toEqual('Nokome Bentley')
-  expect(node.author[0].email[0]).toEqual('nokome@stenci.la')
-})
-
-/**
  * Tests of compiling Dockerfile
  */
 test('compile:dockerfile', async () => {

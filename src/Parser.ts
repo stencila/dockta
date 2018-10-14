@@ -54,6 +54,6 @@ export default abstract class Parser {
     })
   }
 
-  abstract async parse (): Promise<SoftwareEnvironment>
+  abstract async parse (): Promise<SoftwareEnvironment | null>
 
 }

@@ -1,5 +1,4 @@
 import assert from 'assert'
-import parser from 'docker-file-parser'
 import fs from 'fs'
 import path from 'path'
 import stream from 'stream'
@@ -10,7 +9,7 @@ import {
   SoftwareSourceCode, SoftwareSourceCodeMessage
 } from './context'
 
-import DockerWriter from './DockerWriter'
+import DockerWriter from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
 
 export default class DockerCompiler {
@@ -77,38 +76,6 @@ export default class DockerCompiler {
       dockerfile = new DockerWriter(dir).dockerfile()
       fs.writeFileSync(path.join(dir, '.Dockerfile'), dockerfile)
       dockerfileName = '.Dockerfile'
-    }
-
-    // Parse instructions from the Dockerfile
-    let instructions = parser.parse(dockerfile)
-
-    // Process LABEL instructions
-    for (let instruction of instructions.filter(instruction => instruction.name === 'LABEL')) {
-      for (let [key, value] of Object.entries(instruction.args)) {
-        // Unquote value if necessary
-        if (value.startsWith('"')) value = value.substring(1)
-        if (value.endsWith('"')) value = value.slice(0, -1)
-        // Unescape spaces
-        value = value.replace(/\\ /, ' ')
-
-        switch (key) {
-          case 'description':
-            node.description.push(value)
-            break
-          case 'maintainer':
-          case 'author':
-            pushAuthor(node, value)
-            break
-        }
-      }
-    }
-
-    // Process MAINTAINER instructions
-    for (let instruction of instructions.filter(instruction => instruction.name === 'MAINTAINER')) {
-      let author = ''
-      if (typeof instruction.args === 'string') author = instruction.args
-      else throw new Error(`Unexpected type of instruction arguments ${typeof instruction.args}`)
-      pushAuthor(node, author)
     }
 
     if (!build) return node

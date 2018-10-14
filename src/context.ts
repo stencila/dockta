@@ -16,13 +16,10 @@ type Date = string
 class Thing {
   id?: string
   
-  description?: Text
-
-  identifiers?: Array<Text | URL>
-  
-  name?: Text
-  
-  urls?: Array<URL>
+  description: Text = ''
+  identifiers: Array<Text | URL> = []
+  name: Text = ''
+  urls: Array<URL> = []
 }
 
 class Intangible extends Thing {
@@ -34,9 +31,9 @@ export class Organization extends Thing {
 }
 
 export class Person extends Thing {
-  emails?: Array<Text>
-  familyNames?: Array<Text>
-  givenNames?: Array<Text>
+  emails: Array<Text> = []
+  familyNames: Array<Text> = []
+  givenNames: Array<Text> = []
 
   // Function to take
   // a string like "Nokome Bentley <nokome@stenci.la> (https://stenci.la)" and parse
@@ -65,12 +62,12 @@ export class ComputerLanguage extends Intangible {
 
 
 export class CreativeWork extends Thing {
-  authors?: Array<Organization  | Person>
-  contributors?: Array<Organization  | Person>
-  creators?: Array<Organization  | Person>
-  text?: Text
-  datePublished?: Date
-  license?: CreativeWork | URL
+  authors: Array<Organization  | Person> = []
+  contributors: Array<Organization  | Person> = []
+  creators: Array<Organization  | Person> = []
+  text: Text = ''
+  datePublished: Date = ''
+  license: CreativeWork | URL = ''
 }
 
 // https://schema.org/SoftwareSourceCode
