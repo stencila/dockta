@@ -1,5 +1,13 @@
 import fs from 'fs'
 import path from 'path'
+import request from 'request'
+// @ts-ignore
+import cachedRequest from 'cached-request'
+
+import { SoftwareEnvironment } from './context'
+
+const requestCache = cachedRequest(request)
+requestCache.setCacheDirectory('/tmp/dockter-request-cache')
 
 /**
  * A base class for language parsers
@@ -14,30 +22,15 @@ import path from 'path'
  * it scans for source code files for package import statements (e.g. `library(package)` in `.R` files),
  * generates a package list from those statements and creates a requirements file.
  */
-export default class Parser {
+export default abstract class Parser {
 
   /**
    * The directory to scan for relevant files
    */
   private folder: string
 
-  /**
-   * Is this parser active?
-   *
-   * Each parser class decides if it is active by matching
-   * paths within the folder
-   */
-  readonly active: boolean = false
-
   constructor (folder: string) {
     this.folder = folder
-
-    for (let path of this.matchPaths()) {
-      if (this.exists(path)) {
-        this.active = true
-        break
-      }
-    }
   }
 
   exists (subpath: string): boolean {
@@ -47,5 +40,20 @@ export default class Parser {
   read (subpath: string): string {
     return fs.readFileSync(path.join(this.folder, subpath), 'utf8')
   }
+
+  fetch (url: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      requestCache({
+        url,
+        json: true,
+        ttl: 60 * 60 * 1000 // Milliseconds to cache responses for
+      }, (error: Error, response: any, body: any) => {
+        if (error) return reject(error)
+        resolve(body)
+      })
+    })
+  }
+
+  abstract async parse (): Promise<SoftwareEnvironment>
 
 }

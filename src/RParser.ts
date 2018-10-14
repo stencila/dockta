@@ -1,25 +1,28 @@
 import Parser from './Parser'
+import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } from './context'
 
 /**
- * A Dockerfile writer for R
+ * Dockter `Parser` class for R requirements files and source code
  */
 export default class RParser extends Parser {
 
   /**
-   * The date to use to version R and packages
+   * Parse a folder by detecting any R requirements or souce code files
+   * and return a `SoftwareEnvironment` instance
    */
-  readonly date: string
+  async parse (): Promise<SoftwareEnvironment> {
+    const environ = new SoftwareEnvironment()
 
-  constructor (dir: string) {
-    super(dir)
-
-    // Read DESCRIPTION file if one exists
+    // Read DESCRIPTION file if it exists
     let desc = ''
     if (this.exists('DESCRIPTION')) {
       desc = this.read('DESCRIPTION')
     }
 
     // TODO Create a `.DESCRIPTION` file by scanning .R and .Rmd files
+
+    // If no R files detected, return empty environments
+    if (!desc) return environ
 
     // Get `date` from DESCRIPTION file
     let date
@@ -34,7 +37,7 @@ export default class RParser extends Parser {
     }
     // If no date then use yesterday's date
     if (!date) date = new Date(Date.now() - 24 * 3600 * 1000)
-    this.date = date.toISOString().substring(0,10)
+    date = date.toISOString().substring(0,10)
 
     // Get package imports from the description file
     let packages = []
@@ -57,15 +60,59 @@ export default class RParser extends Parser {
     }
 
     // For each package, query the CRANDB to get a manifest including it's own
-    // dependencies and convert it to JSON-LD
-    for (let pkg of packages) {
-      fetch(`http://crandb.r-pkg.org/${pkg}`).then(value => {
-        console.log(value)
+    // dependencies and convert it to a `SoftwareApplication` using the CodeMeta
+    // crosswalk.
+    await Promise.all(packages.map(async name => {
+      const info = await this.fetch(`http://crandb.r-pkg.org/${name}`)
+            
+      // Create a `SoftwarePackage` instance to respresent each package
+      // using crosswalks from column "R Package Description" in https://github.com/codemeta/codemeta/blob/master/crosswalk.csv
+      // and ordered from general, to more specific, classes: 
+      //    Thing > CreativeWork > SoftwareSourceCode > SoftwarePackage
+      const pkg = new SoftwarePackage()
+
+      // schema:Thing
+      pkg.description = info.Description
+      pkg.identifiers = [info.Package]
+      pkg.name = info.Title
+      pkg.urls = info.URL.split(',')
+      
+      // schema:CreativeWork
+      info.Author.split(',\n').map((author: string) => {
+        const match = author.match(/^([^\[]+?) \[([^\]]+)\]/)
+        if (match) {
+          const name = match[1]
+          const person = Person.fromText(name)
+          const roles = match[2].split(', ')
+          if (roles.includes('aut')) push(pkg, 'authors', person)
+          if (roles.includes('ctb')) push(pkg, 'contributors', person)
+          if (roles.includes('cre')) push(pkg, 'creators', person)
+        } else {
+          push(pkg, 'authors', Person.fromText(author))
+        }
       })
-    }
+      pkg.datePublished = info['Date/Publication']
+      pkg.license = info.License // TODO parse license string into a URL or CreativeWork
+
+      // schema:SoftwareSourceCode
+      pkg.codeRepository = info.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
+
+      // stencila:SoftwarePackage
+      // R packages required 
+      for (let [name, version] of Object.entries(info.Imports)) {
+        const required = new SoftwarePackage()
+        required.programmingLanguages = [ComputerLanguage.r]
+        required.identifiers = [name]
+        pkg.softwareRequirements.push(required)
+      }
+      
+      return pkg
+    }))
+
+    return environ
   }
 
-  // Methods that override those in `Parser`
+  /*
 
   matchPaths (): Array<string> {
     return ['DESCRIPTION', 'cmd.R']
@@ -107,4 +154,6 @@ export default class RParser extends Parser {
   command (sysVersion: number): string | undefined {
     if (this.exists('cmd.R')) return 'Rscript cmd.R'
   }
+
+  */
 }

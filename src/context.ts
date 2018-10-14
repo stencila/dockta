@@ -7,51 +7,127 @@
 
 // Data types
 type Text = string
+type URL = string
+
+// A date value in ISO 8601 date format.
+// https://schema.org/Date
+type Date = string
 
 class Thing {
-  readonly type: string = 'Thing'
-  id: string = ''
+  id?: string
+  
+  description?: Text
 
-  description: Array<Text> = []
+  identifiers?: Array<Text | URL>
+  
+  name?: Text
+  
+  urls?: Array<URL>
 }
 
-// https://schema.org/author
-type author = Person // should be Organization|Person|Array<Organization|Person>
+class Intangible extends Thing {
 
-// Would be good to have a `authorParse` function to take
-// a string like "Nokome Bentley <nokome@stenci.la> (https://stenci.la)" and parse
-// out givenName familyName email etc
+}
+
+export class Organization extends Thing {
+
+}
 
 export class Person extends Thing {
-  readonly type: string = 'Person'
+  emails?: Array<Text>
+  familyNames?: Array<Text>
+  givenNames?: Array<Text>
 
-  name: Array<Text> = []
-  givenName: Array<Text> = []
-  familyName: Array<Text> = []
-  email: Array<Text> = []
-  url: Array<Text> = []
-}
-
-function compilePerson (source: string | Person, format: string = 'text'): Person {
-  if (source instanceof Person) return source
-
-  let name
-  let givenName
-  let familyName
-  let email
-  let url
-  const match = source.match(/^([^\s]*)\s+([^\s]+)?\s*(<([^>]*)>)?\s*(\(([^)]*)\))?/)
-  if (match) {
-    givenName = match[1]
-    familyName = match[2]
-    name = givenName + ' ' + familyName
-    email = match[4]
-    url = match[6]
-  } else {
-    name = source
+  // Function to take
+  // a string like "Nokome Bentley <nokome@stenci.la> (https://stenci.la)" and parse
+  // out givenName familyName email etc
+  static fromText (text: Text): Person {
+    const person = new Person()
+    const match = text.match(/^([^\s]*)\s+([^\s]+)?\s*(<([^>]*)>)?\s*(\(([^)]*)\))?/)
+    if (match) {
+      person.givenNames = [match[1]]
+      person.familyNames = [match[2]]
+      person.name = person.givenNames.join(' ') + ' ' + person.familyNames.join(' ')
+      person.emails = [match[4]]
+      person.urls = [match[6]]
+    } else {
+      person.name = text
+    }
+    return person
   }
-  return create(Person, { name, givenName, familyName, email, url })
 }
+
+export class ComputerLanguage extends Intangible {
+
+ static r: ComputerLanguage = new ComputerLanguage()
+ static py: ComputerLanguage = new ComputerLanguage()
+}
+
+
+export class CreativeWork extends Thing {
+  authors?: Array<Organization  | Person>
+  contributors?: Array<Organization  | Person>
+  creators?: Array<Organization  | Person>
+  text?: Text
+  datePublished?: Date
+  license?: CreativeWork | URL
+}
+
+// https://schema.org/SoftwareSourceCode
+export class SoftwareSourceCode extends CreativeWork {
+  codeRepository?: URL
+  programmingLanguages?: Array<ComputerLanguage>
+
+  messages?: Array<SoftwareSourceCodeMessage> = []
+}
+
+export class SoftwareSourceCodeMessage extends Thing {
+  readonly type: string = 'SoftwareSourceCodeMessage'
+
+  level?: string
+  line?: number
+  column?: number
+  message?: string
+}
+
+/**
+ * https://schema.org/SoftwareApplication
+ */
+export class SoftwareApplication extends CreativeWork {
+  softwareRequirements: Array<SoftwarePackage | SoftwareApplication> = []
+}
+
+/**
+ * An extension class defined for this context to represent a software
+ * package. We considered this necessary because `schema:SoftwareSourceCode`
+ * has most properties needed to represent a package but not all of them.
+ * Meanwhile, `schema:SoftwareApplication` has some of those missing
+ * properties but lacks most of those needed. Thus, this type does 
+ * not introduce any new properties, but rather uses
+ * schema.org properties on a subtype of `schema:SoftwareSourceCode`
+ */
+export class SoftwarePackage extends SoftwareSourceCode {
+  /**
+   * The [`schema:softwareRequirements`](https://schema.org/softwareRequirements)
+   * property allows for `Text` or `URL` values. Here, we allow
+   * values of software packages or applications.
+   */
+  softwareRequirements: Array<SoftwarePackage | SoftwareApplication> = []
+}
+
+/**
+ * A software environment made up of a collection of
+ * `SoftwareApplication`s.
+ */
+export class SoftwareEnvironment extends SoftwareApplication {
+}
+
+
+export function push(thing: {[key: string]: any}, property: string, item: any){
+  if (thing[property]) thing[property].push(item)
+  else thing[property] = [item]
+}
+
 
 /**
  * Create a new JSON-LD node of a particular type
@@ -75,40 +151,4 @@ function pushProperties<Type> (node: Type, properties: Object = {}) {
       node[key].push(value)
     }
   }
-}
-
-export function pushAuthor (node: CreativeWork, property: string | Person) {
-  node.author.push(compilePerson(property))
-}
-
-export class CreativeWork extends Thing {
-  readonly type: string = 'CreativeWork'
-
-  author: Array<Person> = []
-  text: string = ''
-}
-
-// https://schema.org/SoftwareSourceCode
-export class SoftwareSourceCode extends CreativeWork {
-  readonly type: string = 'SoftwareSourceCode'
-
-  programmingLanguage: string = ''
-  id: string = ''
-  messages: Array<SoftwareSourceCodeMessage> = []
-
-  handle: string = '' // The sha used to identify the image
-  output: string = '' // Output of executing the container
-}
-
-export class SoftwareSourceCodeMessage extends Thing {
-  readonly type: string = 'SoftwareSourceCodeMessage'
-
-  level?: string
-  line?: number
-  column?: number
-  message?: string
-}
-
-export class SoftwareEnvironment {
-
 }

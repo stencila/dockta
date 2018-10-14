@@ -5,6 +5,12 @@ import parser from 'docker-file-parser'
 import path from 'path'
 import tarFs from 'tar-fs'
 
+/**
+ * Builds Docker images from Dockerfiles
+ * 
+ * The Dockerfile may be handwritten, or generated
+ * from requirements files or source code.
+ */
 export default class DockerBuilder {
 
   private docker: Docker

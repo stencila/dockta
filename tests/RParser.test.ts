@@ -1,41 +1,15 @@
 import RParser from '../src/RParser'
 import fixture from './fixture'
+import { SoftwareApplication } from '../src/context';
 
-test('empty', () => {
-  const writer = new RParser(fixture('empty'))
-  expect(writer.active).toEqual(false)
+test('empty', async () => {
+  const parser = new RParser(fixture('empty'))
+  const environ = await parser.parse()
+  expect(environ.softwareRequirements).toEqual([])
 })
 
 test('r-date', async () => {
-  const writer = new RParser(fixture('r-date'))
-  expect(writer.active).toEqual(true)
-
-  const dockerfile = writer.dockerfile()
-  expect(dockerfile).toEqual(`
-FROM ubuntu:16.04
-
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      apt-transport-https \\
-      ca-certificates \\
-      software-properties-common
-
-RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2018-10-05/bin/linux/ubuntu xenial/\" \\
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
-
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      r-base \\
- && apt-get autoremove -y \\
- && apt-get clean \\
- && rm -rf /var/lib/apt/lists/*
-
-# dockter
-
-COPY . .
-
-RUN Rscript install.R
-
-CMD Rscript cmd.R
-`)
+  const parser = new RParser(fixture('r-date'))
+  const environ = await parser.parse()
+  expect(environ.softwareRequirements).toEqual([])
 })
