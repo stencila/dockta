@@ -1,4 +1,5 @@
 import Parser from './Parser'
+import {SoftwareEnvironment} from './context'
 
 export default class PythonParser extends Parser {
 
@@ -13,5 +14,9 @@ export default class PythonParser extends Parser {
   command (sysVersion: number): string {
     if (this.exists('cmd.py')) return 'python3 cmd.py'
     else return ''
+  }
+
+  async parse (): Promise<SoftwareEnvironment | null> {
+    return null
   }
 }

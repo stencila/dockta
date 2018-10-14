@@ -5,12 +5,13 @@ import stream from 'stream'
 import Docker from 'dockerode'
 
 import {
-  Person, pushAuthor,
+  Person,
   SoftwareSourceCode, SoftwareSourceCodeMessage
 } from './context'
 
 import DockerWriter from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
+import DockerGenerator from './DockerGenerator';
 
 export default class DockerCompiler {
 
@@ -29,14 +30,14 @@ export default class DockerCompiler {
       } else if (fs.existsSync(path.join(pat, 'Dockerfile'))) {
         dockerfile = fs.readFileSync(path.join(pat, 'Dockerfile'), 'utf8')
       } else if (fs.statSync(pat).isDirectory()) {
-        dockerfile = new DockerWriter(pat).dockerfile()
+        dockerfile = '' // new DockerGenerator().generate()
       }
     } else {
       dockerfile = content
     }
 
     const node = new SoftwareSourceCode()
-    node.programmingLanguage = 'Dockerfile'
+    // node.programmingLanguage = 'Dockerfile'
     node.text = dockerfile
     return node
   }
@@ -62,8 +63,8 @@ export default class DockerCompiler {
     if (typeof source === 'string') node = await this.load(source)
     else node = source
 
-    assert.strictEqual(node.type, 'SoftwareSourceCode')
-    assert.strictEqual(node.programmingLanguage, 'Dockerfile')
+    //assert.strictEqual(node.type, 'SoftwareSourceCode')
+    //assert.strictEqual(node.programmingLanguage, 'Dockerfile')
 
     // FIXME
     const dir = (source as string).substring(7) // assumes a dir source
@@ -73,7 +74,7 @@ export default class DockerCompiler {
       dockerfile = fs.readFileSync(path.join(dir, 'Dockerfile'), 'utf8')
       dockerfileName = 'Dockerfile'
     } else {
-      dockerfile = new DockerWriter(dir).dockerfile()
+      dockerfile = ' ' //new DockerWriter(dir).dockerfile()
       fs.writeFileSync(path.join(dir, '.Dockerfile'), dockerfile)
       dockerfileName = '.Dockerfile'
     }
@@ -97,6 +98,7 @@ export default class DockerCompiler {
       output += chunk
     }
 
+    /*
     const container = await docker.run(node.handle, [], outputStream)
 
     let value
@@ -106,6 +108,7 @@ export default class DockerCompiler {
       value = output.trim()
     }
     node.output = value
+    */
 
     return node
   }
