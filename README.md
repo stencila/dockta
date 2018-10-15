@@ -13,15 +13,11 @@
 [![Dependency status](https://david-dm.org/stencila/dockter.svg)](https://david-dm.org/stencila/dockter)
 [![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
 
-> 🔧 Setup these badges; add others
-
 Docker is a good tool for creating reproducible computing environments. But creating truely reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
 
 > 🔧 Add a GIF of a console session similar to [this one](http://media.kennethreitz.com.s3.amazonaws.com/pipenv.gif) by Kenneth Reitz for Pipenv
 
-> 🦄 Unicorn emoji are used to indicate features that are in development or are planned. We use them as a way of sketching out what we hope this package will eventually look like. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with the vaporware ♨ called out!
-
-> 🔧 Create issues for each unicorn and put a `#2` link to the issue next to the unicorn
+> 🦄 Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link, like this [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can contribute to make the feature happen. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
 
 <!-- Automatically generated TOC. Don't edit, `make docs` instead>
 
@@ -71,7 +67,7 @@ Imports:
 
 The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Date` field is used to define which CRAN snapshot to use. MRAN daily snapshots began [2014-09-08](https://cran.microsoft.com/snapshot/2014-09-08) so the date should be on or after that.
 
-🦄 If the folder does not contain a `DESCRIPTION` file then Dockter will scan all the folder's R files (files with the extension `.R` or `.Rmd`, or lowercase versions of those) for `library(package)` statements and create a `.DESCRIPTION` file for you.
+If the folder does not contain a `DESCRIPTION` file then Dockter will 🦄 [#6](https://github.com/stencila/dockter/issues/6) scan all the folder's R files (files with the extension `.R` or `.Rmd`, or lowercase versions of those) for `library(package)` statements and create a `.DESCRIPTION` file for you.
 
 #### Python
 
@@ -81,15 +77,13 @@ If the folder does not contain either of those files then Dockter will 🦄 [#5]
 
 #### Node.js
 
-🦄 If the folder contains a [`package.json`](https://docs.npmjs.com/files/package.json) file, Dockter will copy it into the Docker image and use `npm` to install the specified packages.
+If the folder contains a 🦄 [#7](https://github.com/stencila/dockter/issues/7) [`package.json`](https://docs.npmjs.com/files/package.json) file, Dockter will copy it into the Docker image and use `npm` to install the specified packages.
 
-🦄 If the folder does not contain a `package.json` file then Dockter will scan all the folder's `.js` files for `require` statements and create a `.package.json` file for you.
-
-> 🔧 See https://github.com/browserify/detective for extracting required packages from source code
+If the folder does not contain a `package.json` file, Dockter will 🦄 [#8](https://github.com/stencila/dockter/issues/8) scan all the folder's `.js` files for `import` or `require` statements and create a `.package.json` file for you.
 
 #### Jupyter
 
-🦄 If the folder contains any `.ipynb` files, Dockter will scan the code cells in those files to extract any Python `import` or R `library` statements.
+If the folder contains any 🦄 [#9](https://github.com/stencila/dockter/issues/9) `.ipynb` files, Dockter will scan the code cells in those files for any Python `import` or R `library` statements and extract a list of package dependencies. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add Jupyter to the built Docker image.
 
 ### Efficiently handling of updates to project code
 
