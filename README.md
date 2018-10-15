@@ -1,7 +1,10 @@
 > This is a work in progress
-> 🔧 To do items are noted like this
-> 🦄 Longer term ideas are noted like this
-> We'll remove any of these that are remaining into Github issues prior to releasing
+
+> 🔧 Wrench emoji are for README to do items. We'll remove any of these that are remaining into Github issues prior to releasing.
+
+> 🦄 Unicorn emoji are used to indicate features that are in development or are planned. We use them as a way of sketching out what this package will eventually look like. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with the vaporware ♨ called out!
+
+> 🔧 Create issues for each unicorn and put a `#2` link to the issue next to the unicorn
 
 > 🔧 Add logo (something with a whale and a doctor?)
 
@@ -55,7 +58,7 @@ Dockter scans your project folder and builds a Docker image for it. If the the f
 
 #### R
 
-🦄 If the folder contains a R [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file then Docker will use build an image with the R packages listed under `Imports`. e.g.
+If the folder contains a R [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file then Docker will build an image with the R packages listed under `Imports` installed. e.g.
 
 ```
 Package: myrproject
@@ -85,7 +88,13 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 > 🔧 See https://github.com/browserify/detective for extracting required packages from source code
 
+#### Jupyter
+
+🦄 If the folder contains any `.ipynb` files, Dockter will scan the code cells in those files to extract any Python `import` or R `library` statements.
+
 ### Efficiently handling of updates to project code
+
+Docker layered filesystem has advantages but it can cause real delays when you are updating your project dependencies. For example, see [this issue](https://github.com/npm/npm/issues/11446) for the workarounds used by Node.js developers to prevent long waits when they update their `package.json`. The reason this happens is that when you update a requirements file Docker throws away all the susequent layers, including the one where you install all your package dependencies.
 
 Here's a simple motivating [example](fixtures/tests/py-pandas) of a Dockerized Python project. It's got a [`pip`](https://pypi.org/project/pip/) `requirements.txt` file which specifies that the project requires `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
 
@@ -102,7 +111,7 @@ COPY requirements.xt .
 RUN pip install -r requirements.txt
 ```
 
-You can build a Docker image for that project using,
+You can build a Docker image for that project using Docker,
 
 ```bash
 docker build .
@@ -117,7 +126,7 @@ pandas==0.23.0
 matplotlib==3.0.0
 ```
 
-When we do `docker build .` again Docker notices that the `requirements.txt` file has changed so throw away that layer and all subsequant ones. This means that it will download and install **all** the necesary packages again, including the ones that we previously installed - and takes longer than the first install. For a more contrieved illustration of this, simply add a space to a line in the `requirements.txt` file and notice how the package install gets repeated all over again.
+When we do `docker build .` again Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequant ones. This means that it will download and install **all** the necesary packages again, including the ones that we previously installed - and takes longer than the first install. For a more contrieved illustration of this, simply add a space to a line in the `requirements.txt` file and notice how the package install gets repeated all over again.
 
 Now, let's add a special `# dockter` comment to the Dockerfile before the `COPY` directive,
 
@@ -138,11 +147,11 @@ dockter build .
 
 > 🔧 Finish description of commit-based approach and illustrate speed up over normal Docker builds
 
-For example, see [this issue](https://github.com/npm/npm/issues/11446) as an example of the workarounds used by Node.js developers.
-
 ### Generates structured meta-data for your project
 
 Dockter has been built to expose a JSON-LD API so that it works with other tools. It will parse a Dockerfile into a JSON-LD [`SoftwareSourceCode`](https://schema.org/SoftwareSourceCode) node extracting meta-data about the Dockerfile and build it into a `SoftwareEnvironment` node with links to the source files and the build image.
+
+> 🔧 Illustrate how this is done for all project sources including non Dockerfiles
 
 > 🔧 Replace this JSON-LD with final version
 
@@ -335,10 +344,6 @@ There are several other projects that build Docker images from source code, incl
 Dockter is similar to `repro2docker` and `containerit` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repro2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code and managed builds.
 
 ## FAQ
-
-*What's with all the unicorns 🦄?*
-
-Unicorn emoji are used to indicate features that are in development or are planned. They're useful for sketching out what this package will eventually look like.
 
 *Why is this a Node.js package?*
 
