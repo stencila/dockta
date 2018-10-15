@@ -1,14 +1,17 @@
-| Property                    | Docker Labels   |
-|:----------------------------|:----------------|
-| schema:SoftwareSourceCode   | dateCreated     |
-| schema:Thing                | url             |
-| schema:SoftwareSourceCode   | codeRepository  |
-| schema:SoftwareApplication  | softwareVersion |
-| schema:SoftwareSourceCode   | revision        |
-| schema:Organization         | legalName       |
-| schema:Thing                | name            |
-| schema:Thing                | description     |
-| softwareHelp                | softwareHelp    |
-| schema:CreativeWork         | author          |
-| schema:CreativeWork         | license         |
-| codemeta:SoftwareSourceCode | maintainer      | 
+| Docker Labels  | Property (context:type.property)           |
+|:---------------|:-------------------------------------------|
+| created        | schema:SoftwareSourceCode.dateCreated      |
+| url            | schema:Thing.url                           |
+| source         | schema:SoftwareSourceCode.codeRepository   |
+| version        | schema:SoftwareApplication.softwareVersion |
+| revision       |                                            |
+| vendor         | schema:Organization.legalName              |
+| title          | schema:Thing.name                          |
+| description    | schema:Thing.description                   |
+| documentation  | schema:softwareHelp                        |
+| authors        | schema:CreativeWork.author                 |
+| licenses       | schema:CreativeWork.license                |
+| maintainer     | codemeta:SoftwareSourceCode.maintainer     |
+| build          |                                            |
+| schema-version |                                            |
+| ref-name       |                                            |
