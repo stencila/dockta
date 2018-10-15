@@ -16,7 +16,7 @@
 
 > 🔧 Setup these badges; add others
 
-Docker is a great for tool for creating reproducible computing environments. But creating truely reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
+Docker is a good tool for creating reproducible computing environments. But creating truely reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
 
 > 🔧 Add a GIF of a console session similar to [this one](http://media.kennethreitz.com.s3.amazonaws.com/pipenv.gif) by Kenneth Reitz for Pipenv
 
@@ -38,7 +38,8 @@ Docker is a great for tool for creating reproducible computing environments. But
   * [CLI](#cli-1)
     + [Compiling an environment](#compiling-an-environment)
     + [Executing an environment](#executing-an-environment)
-- [Router and server](#router-and-server)
+  * [Router and server](#router-and-server)
+- [Architecture](#architecture)
 - [Develop](#develop)
 - [See also](#see-also)
 - [FAQ](#faq)
@@ -258,6 +259,18 @@ const app = express()
 app.use('/docker', docker)
 app.listen(3000)
 ```
+
+## Architecture
+
+Dockter implements a compiler design pattern. Source files are _parsed_ into a `SoftwareEnvironment` instance (the equivalent of an AST (Abstract Syntax Tree) in other programming language compilers) which is then used to generate a `Dockerfile` which is then built into a Docker image.
+
+The parser classes e.g. `PythonParser`, `RParser` scan for relevant source files and generate `SoftwareEnvironment` instances.
+The generator classes e.g. `PythonGenerator`, `RGenerator` generates a `Dockerfile` for a given `SoftwareEnvironment`.
+`DockerGenerator` is a super-generator which combines the other generators.
+`DockerBuilder` class builds 
+`DockerCompiler` links all of these together.
+
+For example, if a folder has single file in it `code.py`, `PythonParser` will parse that file and create a `SoftwareEnvironment` instance, which `DockerGenerator` uses to generate a `Dockerfile`, which `DockerBuilder` uses to build a Docker image.
 
 ## Develop
 
