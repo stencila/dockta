@@ -19,7 +19,7 @@ Docker is a good tool for creating reproducible computing environments. But crea
 
 > 🔧 Add a GIF of a console session similar to [this one](http://media.kennethreitz.com.s3.amazonaws.com/pipenv.gif) by Kenneth Reitz for Pipenv
 
-> 🦄 Unicorn emoji are used to indicate features that are in development or are planned. We use them as a way of sketching out what this package will eventually look like. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with the vaporware ♨ called out!
+> 🦄 Unicorn emoji are used to indicate features that are in development or are planned. We use them as a way of sketching out what we hope this package will eventually look like. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with the vaporware ♨ called out!
 
 > 🔧 Create issues for each unicorn and put a `#2` link to the issue next to the unicorn
 
@@ -75,11 +75,9 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 #### Python
 
-🦄 If the folder contains a [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
+If the folder contains a 🦄 [#3](https://github.com/stencila/dockter/issues/3) [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [#4](https://github.com/stencila/dockter/issues/4) [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
 
-🦄 If the folder does not contain either of those files then Dockter will scan all the folder's `.py` files for `import` statements and create a `.requirements.txt` file for you.
-
-> 🔧 See https://github.com/browserify/detective/issues/8 as an example of using JS regexes to parse for requires. A similar approach could be used for Python import statements. Since we wont have a python AST to walk in TypeScript.
+If the folder does not contain either of those files then Dockter will 🦄 [#5](https://github.com/stencila/dockter/issues/5) scan all the folder's `.py` files for `import` statements and create a `.requirements.txt` file for you.
 
 #### Node.js
 
@@ -334,15 +332,14 @@ Related Stencila packages include:
 - 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
 - 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
 
-There are several other projects that build Docker images from source code, including:
-
 - [`alibaba/derrick`](https://github.com/alibaba/derrick)
 - [`jupyter/repro2docker`](https://github.com/jupyter/repo2docker)
 - [`Gueils/whales`](https://github.com/Gueils/whales)
 - [`o2r-project/containerit`](https://github.com/o2r-project/containerit)
 - [`openshift/source-to-image`](https://github.com/openshift/source-to-image)
+- [`ViDA-NYU/reprozip`](https://github.com/ViDA-NYU/reprozip])
 
-Dockter is similar to `repro2docker` and `containerit` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repro2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code and managed builds.
+Dockter is similar to `repro2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repro2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code, managed builds and generated of image meta-data.
 
 ## FAQ
 
