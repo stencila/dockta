@@ -1,3 +1,8 @@
+##  Dockerfile labels to JSON-LD schema crosswalk
+
+The table below is a (metadata) [schema crosswalk](https://en.wikipedia.org/wiki/Schema_crosswalk) from Dockerfile labels
+to  JSON-LD schema either schema.org or codemeta.
+
 | Docker Labels  | Property (context:type.property)           |
 |:---------------|:-------------------------------------------|
 | created        | schema:SoftwareSourceCode.dateCreated      |
