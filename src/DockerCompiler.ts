@@ -15,9 +15,18 @@ import DockerBuilder from './DockerBuilder'
 
 export default class DockerCompiler {
 
-  async compile (folder: string) {
-    if (folder.substring(0, 7) === 'file://') {
-      folder = folder.substring(7)
+  /**
+   * Compile a folder into a Docker image
+   *
+   * @param source The folder, Dockerfile or `SoftwareEnvironment` to compile
+   * @param build Should the Docker image be built?
+   */
+  async compile (source: string, build: boolean = true) {
+    let folder
+    if (source.substring(0, 7) === 'file://') {
+      folder = source.substring(7)
+    } else {
+      folder = source
     }
 
     let dockerfile

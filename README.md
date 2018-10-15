@@ -2,10 +2,6 @@
 
 > 🔧 Wrench emoji are for README to do items. We'll remove any of these that are remaining into Github issues prior to releasing.
 
-> 🦄 Unicorn emoji are used to indicate features that are in development or are planned. We use them as a way of sketching out what this package will eventually look like. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with the vaporware ♨ called out!
-
-> 🔧 Create issues for each unicorn and put a `#2` link to the issue next to the unicorn
-
 > 🔧 Add logo (something with a whale and a doctor?)
 
 # Dockter : a Docker image builder for researchers
@@ -23,6 +19,10 @@ Docker is a good tool for creating reproducible computing environments. But crea
 
 > 🔧 Add a GIF of a console session similar to [this one](http://media.kennethreitz.com.s3.amazonaws.com/pipenv.gif) by Kenneth Reitz for Pipenv
 
+> 🦄 Unicorn emoji are used to indicate features that are in development or are planned. We use them as a way of sketching out what this package will eventually look like. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with the vaporware ♨ called out!
+
+> 🔧 Create issues for each unicorn and put a `#2` link to the issue next to the unicorn
+
 <!-- Automatically generated TOC. Don't edit, `make docs` instead>
 
 <!-- toc -->
@@ -32,6 +32,7 @@ Docker is a good tool for creating reproducible computing environments. But crea
     + [R](#r)
     + [Python](#python)
     + [Node.js](#nodejs)
+    + [Jupyter](#jupyter)
   * [Efficiently handling of updates to project code](#efficiently-handling-of-updates-to-project-code)
   * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
 - [Install](#install)
