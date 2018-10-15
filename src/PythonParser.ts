@@ -1,5 +1,5 @@
 import Parser from './Parser'
-import {SoftwareEnvironment} from './context'
+import { SoftwareEnvironment } from './context'
 
 export default class PythonParser extends Parser {
 

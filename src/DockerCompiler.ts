@@ -4,16 +4,67 @@ import path from 'path'
 import stream from 'stream'
 import Docker from 'dockerode'
 
-import {
-  Person,
-  SoftwareSourceCode, SoftwareSourceCodeMessage
-} from './context'
+import { SoftwareSourceCode, SoftwareEnvironment } from './context'
 
-import DockerWriter from './DockerGenerator'
+import Parser from './Parser'
+import DockerParser from './DockerParser'
+import RParser from './RParser'
+
+import DockerGenerator from './Generator'
 import DockerBuilder from './DockerBuilder'
-import DockerGenerator from './DockerGenerator';
 
 export default class DockerCompiler {
+
+  async compile (folder: string) {
+    if (folder.substring(0, 7) === 'file://') {
+      folder = folder.substring(7)
+    }
+
+    let dockerfile
+    let environ
+
+    if (fs.existsSync(path.join(folder, 'Dockerfile'))) {
+      dockerfile = 'Dockerfile'
+      environ = await new DockerParser(folder).parse()
+    } else {
+      // If there is a `environ.jsonld` file then use
+      // TODO
+
+      // Obtain environments for each language parser
+      let parser: Parser
+      for (parser of [
+        new RParser(folder)
+      ]) {
+        const environLang = await parser.parse()
+        if (environLang) {
+          environ = environLang
+          break
+        }
+      }
+
+      // Normalise and compact the `environ` so that duplicates do not
+      // exists e.g. packages required by multiple other packages
+      // TODO
+
+      if (!environ) environ = new SoftwareEnvironment()
+
+      // Write `.environ.jsonld`
+      // TODO
+
+      // Generate Dockerfile
+      const generator = new DockerGenerator(environ)
+      let dockerfileContent = generator.generate()
+
+      // Write `.Dockerfile`
+      dockerfile = '.Dockerfile'
+      fs.writeFileSync(path.join(folder, '.Dockerfile'), dockerfileContent)
+    }
+
+    const builder = new DockerBuilder()
+    await builder.build(folder, undefined, dockerfile)
+
+    return environ
+  }
 
   /**
    * Load a `SoftwareSourceCode` node from a Dockerfile
@@ -58,13 +109,13 @@ export default class DockerCompiler {
    * @param source The `SoftwareSourceCode` node to compile
    * @param build Should the Docker image be built?
    */
-  async compile (source: string | SoftwareSourceCode, build: boolean = true): Promise<SoftwareSourceCode> {
+  async _compile (source: string | SoftwareSourceCode, build: boolean = true): Promise<SoftwareSourceCode> {
     let node: SoftwareSourceCode
     if (typeof source === 'string') node = await this.load(source)
     else node = source
 
-    //assert.strictEqual(node.type, 'SoftwareSourceCode')
-    //assert.strictEqual(node.programmingLanguage, 'Dockerfile')
+    // assert.strictEqual(node.type, 'SoftwareSourceCode')
+    // assert.strictEqual(node.programmingLanguage, 'Dockerfile')
 
     // FIXME
     const dir = (source as string).substring(7) // assumes a dir source
@@ -74,7 +125,7 @@ export default class DockerCompiler {
       dockerfile = fs.readFileSync(path.join(dir, 'Dockerfile'), 'utf8')
       dockerfileName = 'Dockerfile'
     } else {
-      dockerfile = ' ' //new DockerWriter(dir).dockerfile()
+      dockerfile = ' ' // new DockerWriter(dir).dockerfile()
       fs.writeFileSync(path.join(dir, '.Dockerfile'), dockerfile)
       dockerfileName = '.Dockerfile'
     }
@@ -87,7 +138,7 @@ export default class DockerCompiler {
     return node
   }
 
-  async execute (source: string | SoftwareSourceCode): Promise<SoftwareSourceCode> {
+  async execute (source: string): Promise<SoftwareEnvironment | null> {
     const node = await this.compile(source)
 
     const docker = new Docker()

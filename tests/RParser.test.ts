@@ -1,6 +1,6 @@
-import RParser from '../src/RParser'
 import fixture from './fixture'
-import { SoftwareApplication, SoftwareEnvironment } from '../src/context';
+import RParser from '../src/RParser'
+import { SoftwareEnvironment } from '../src/context';
 
 /**
  * When applied to an empty folder, parse should return null.
@@ -29,6 +29,9 @@ test('parse:r-date', async () => {
   expect(environ.name).toEqual('rdate')
   // expect(environ.version).toEqual('version') TODO version not implemented yet
   expect(environ.datePublished).toEqual('2018-10-05')
-  expect(environ.softwareRequirements.length).toEqual(1)
-  expect(environ.softwareRequirements[0].name).toEqual('lubridate')
+  
+  const reqs = environ.softwareRequirements
+  expect(reqs).toBeDefined()
+  expect(reqs && reqs.length).toEqual(1)
+  expect(reqs && reqs[0].name).toEqual('lubridate')
 })

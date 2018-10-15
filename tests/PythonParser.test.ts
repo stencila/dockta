@@ -1,14 +1,19 @@
-import path from 'path'
-
+import fixture from './fixture'
 import PythonParser from '../src/PythonParser'
+import { SoftwareEnvironment } from '../src/context';
 
-test('empty', () => {
-  const writer = new PythonParser(path.join(__dirname, 'fixtures', 'empty'))
-  expect(writer.active).toEqual(false)
+/**
+ * When applied to an empty folder, parse should return null.
+ */
+test('parse:empty', async () => {
+  const parser = new PythonParser(fixture('empty'))
+  expect(await parser.parse()).toBeNull()
 })
 
-test('py-date', () => {
-  const writer = new PythonParser(path.join(__dirname, 'fixtures', 'py-date'))
-  expect(writer.active).toEqual(true)
-  expect(writer.aptPackages(18.04)).toEqual(['python3', 'python3-pip'])
+/**
+ * When applied to a folder with no Python code, parse should return null.
+ */
+test('parse:dockerfile-date', async () => {
+  const parser = new PythonParser(fixture('empty'))
+  expect(await parser.parse()).toBeNull()
 })

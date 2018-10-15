@@ -1,5 +1,5 @@
 import fixture from './fixture'
-import DockerGenerator from '../src/DockerGenerator'
+import RGenerator from '../src/RGenerator'
 import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
 
 /**
@@ -8,28 +8,24 @@ import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
  */
 test('generate:empty', async () => {
   const environ = new SoftwareEnvironment()
-  const generator = new DockerGenerator(environ)
-  expect(await generator.generate()).toEqual('FROM ubuntu:18.04\n')
+  const generator = new RGenerator(environ)
+  expect(await generator.generate()).toEqual('FROM ubuntu:16.04\n')
 })
 
 /**
- * When applied to an environment with packages from several languages, generate should return
+ * When applied to an environment with R packages, generate should return
  * Dockerfile with R and the packages installed
  */
 test('generate:packages', async () => {
-  const pkg1 = new SoftwarePackage()
-  pkg1.name = 'ggplot2'
-  pkg1.runtimePlatform = 'R'
-
-  const pkg2 = new SoftwarePackage()
-  pkg2.name = 'bokeh'
-  pkg2.runtimePlatform = 'Python'
+  const pkg = new SoftwarePackage()
+  pkg.name = 'ggplot2'
+  pkg.runtimePlatform = 'R'
 
   const environ = new SoftwareEnvironment()
   environ.datePublished = '2017-01-01'
-  environ.softwareRequirements = [pkg1, pkg2]
+  environ.softwareRequirements = [pkg]
   
-  const generator = new DockerGenerator(environ)
+  const generator = new RGenerator(environ)
   expect(await generator.generate()).toEqual(`FROM ubuntu:16.04
 
 RUN apt-get update \\
@@ -43,8 +39,6 @@ RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2017-01-01/bin/
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      python3 \\
-      python3-pip \\
       r-base \\
  && apt-get autoremove -y \\
  && apt-get clean \\

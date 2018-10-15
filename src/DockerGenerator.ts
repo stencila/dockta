@@ -1,87 +1,71 @@
-import {SoftwareEnvironment} from './context'
+import Generator from './Generator'
+import PythonGenerator from './PythonGenerator'
+import RGenerator from './RGenerator'
+import { SoftwareEnvironment } from './context'
 
 /**
- * Generates a Dockerfile for a `SoftwareEnvironment` instance
+ * A Dockerfile generator that collects instructions from
+ * all the other generators to allow for images that support
+ * multiple languages.
  */
-export default class DockerGenerator {
+export default class DockerGenerator extends Generator {
 
   /**
-   * Generate a Dockerfile for a `SoftwareEnvironment` instance
-   * 
-   * @param environ The `SoftwareEnvironment` to generate a Dockerfile for
-   * @param dir The directory to cache generated `.Dockerfile` to
+   * The child generators from which this 'super' generator
+   * collects instructions.
    */
-  generate (environ: SoftwareEnvironment, dir?: string): string {
-    let dockerfile = ''
+  protected generators: Array<Generator>
 
-    const sysVersion = 18.04
-    dockerfile += `
-FROM ubuntu:${sysVersion}
-`
+  constructor (environ: SoftwareEnvironment) {
+    super(environ)
 
-    const aptRepos: Array<string> = []
-    if (aptRepos.length) {
-      // Install system packages required for adding repos
-      dockerfile += `
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      apt-transport-https \\
-      ca-certificates \\
-      software-properties-common
-`
-
-      // Add each repository and fetch signing key if defined
-      for (let [deb, key] of aptRepos) {
-        dockerfile += `
-RUN apt-add-repository "${deb}"${key ? ` \\\n && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}` : ''}
-`
-      }
-    }
-
-    let aptPackages: Array<string> = []
-    if (aptPackages.length) {
-      dockerfile += `
-RUN apt-get update \\
-  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      ${aptPackages.join(' \\\n      ')} \\
-  && apt-get autoremove -y \\
-  && apt-get clean \\
-  && rm -rf /var/lib/apt/lists/*
-`
-    }
-
-    // Add Dockter special comment for managed builds
-    dockerfile += `
-# dockter
-`
-
-    // Copy any files over
-    // Use COPY instead of ADD since the latter can add a file from a URL so is
-    // not reproducible
-    const copyFiles: Array<string> = []
-    if (copyFiles.length) {
-      dockerfile += `
-COPY ${copyFiles.join(' ')} .
-`
-    }
-
-    // Run installation instructions
-    const installPackages: Array<string> = []
-    if (installPackages.length) {
-      dockerfile += `
-RUN ${installPackages.join(' \\\n    ')}
-`
-    }
-
-    // Add any CMD
-    const command = null
-    if (command) {
-      dockerfile += `
-CMD ${command}
-`
-    }
-
-    return dockerfile
+    this.generators = [
+      new PythonGenerator(this.environ),
+      new RGenerator(this.environ)
+    ].filter(generator => generator.applies())
   }
 
+  /**
+   * Collect arrays of string from each child generator
+   * and flatten them into an array of strings.
+   * Used below for method overrides.
+   *
+   * @param func The child generator method to call
+   */
+  private collect (func: any): Array<any> {
+    // @ts-ignore
+    return this.generators.map(func).reduce((memo, items) => (memo.concat(items)), [])
+  }
+
+  // Methods that override those in `Generator`
+
+  applies (): boolean {
+    return this.collect((generator: Generator) => generator.applies()).some(value => value)
+  }
+
+  sysVersion (): number {
+    return Math.min(18.04, ...this.generators.map(generator => generator.sysVersion()))
+  }
+
+  aptRepos (sysVersion: number): Array<[string, string]> {
+    return this.collect((generator: Generator) => generator.aptRepos(sysVersion))
+  }
+
+  aptPackages (sysVersion: number): Array<string> {
+    return this.collect((generator: Generator) => generator.aptPackages(sysVersion))
+  }
+
+  copyFiles (sysVersion: number): Array<string> {
+    return this.collect((generator: Generator) => generator.copyFiles(sysVersion))
+  }
+
+  installPackages (sysVersion: number): Array<string> {
+    return this.collect((generator: Generator) => generator.installPackages(sysVersion))
+  }
+
+  command (sysVersion: number): string | undefined {
+    return this.generators.map((generator: Generator) => generator.command(sysVersion))
+                          .filter(cmd => cmd)
+                          .join(';')
+  }
 }

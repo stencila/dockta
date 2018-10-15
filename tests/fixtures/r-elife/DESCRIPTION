@@ -1,0 +1,16 @@
+Package: eLife
+Version: 1.0.0
+Date: 2017-10-19
+Imports:
+  car
+  coin
+  ggplot2
+  httr
+  lsmeans
+  MBESS
+  metafor
+  pander
+  psychometric
+  reshape2
+  rjson
+  tidyr

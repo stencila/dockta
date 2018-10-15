@@ -5,24 +5,24 @@ import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } 
 
 /**
  * Parser for Dockerfiles
- * 
+ *
  * This class implements Dockerfile parsing. It extracts meta-data defined in a Dockerfile using
- * the [`LABEL`](https://docs.docker.com/engine/reference/builder/#label) or 
+ * the [`LABEL`](https://docs.docker.com/engine/reference/builder/#label) or
  * deprecated [`MAINTAINER`](https://docs.docker.com/engine/reference/builder/#maintainer-deprecated) instructions.
  * Unlike the other parsers in Dockter it does not attempt to parse out dependencies.
- * 
+ *
  * The following crosswalk table defines how labels in Dockerfiles are translated into JSON-LD properties
  * Here "label" refers to a key in a LABEL instruction that is un-prefixed
- * or has either the [`org.opencontainers.image`](https://github.com/opencontainers/image-spec/blob/master/annotations.md) prefix, 
+ * or has either the [`org.opencontainers.image`](https://github.com/opencontainers/image-spec/blob/master/annotations.md) prefix,
  * or the deprecated [`org.label-schema`](https://github.com/label-schema/label-schema.org) prefix.
  * In other words, the following are all equivalent:
- * 
+ *
  * ```Dockerfile
- * LABEL version = 1.2.0 
+ * LABEL version = 1.2.0
  * LABEL org.opencontainers.image.version = 1.2.0
  * LABEL org.label-schema.version = 1.2.0
  * ```
- * 
+ *
  * | Label                                                  | Property (`context:type.property`)
  * | ---                                                    | ----
  * | `description`                                          | `schema:Thing.description`
@@ -41,7 +41,7 @@ export default class DockerParser extends Parser {
       dockerfile = content
     } else {
       if (!this.exists('Dockerfile')) return null
-      dockerfile  = this.read('Dockerfile')
+      dockerfile = this.read('Dockerfile')
     }
 
     const environ = new SoftwareEnvironment()
@@ -65,13 +65,14 @@ export default class DockerParser extends Parser {
         switch (key) {
           case 'name':
             environ.name = value
+            break
           case 'description':
             environ.description = value
             break
           case 'maintainer':
             // TODO should push to a `maintainers` property
           case 'author':
-            environ.authors.push(Person.fromText(value))
+            environ.authorsPush(Person.fromText(value))
             break
         }
       }
@@ -82,7 +83,7 @@ export default class DockerParser extends Parser {
       let author = ''
       if (typeof instruction.args === 'string') author = instruction.args
       else throw new Error(`Unexpected type of instruction arguments ${typeof instruction.args}`)
-      environ.authors.push(Person.fromText(author))
+      environ.authorsPush(Person.fromText(author))
     }
 
     return environ

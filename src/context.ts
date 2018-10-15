@@ -15,11 +15,11 @@ type Date = string
 
 class Thing {
   id?: string
-  
-  description: Text = ''
-  identifiers: Array<Text | URL> = []
-  name: Text = ''
-  urls: Array<URL> = []
+
+  description?: Text
+  identifiers?: Array<Text | URL>
+  name?: Text
+  urls?: Array<URL>
 }
 
 class Intangible extends Thing {
@@ -31,9 +31,9 @@ export class Organization extends Thing {
 }
 
 export class Person extends Thing {
-  emails: Array<Text> = []
-  familyNames: Array<Text> = []
-  givenNames: Array<Text> = []
+  emails?: Array<Text>
+  familyNames?: Array<Text>
+  givenNames?: Array<Text>
 
   // Function to take
   // a string like "Nokome Bentley <nokome@stenci.la> (https://stenci.la)" and parse
@@ -45,8 +45,8 @@ export class Person extends Thing {
       person.givenNames = [match[1]]
       person.familyNames = [match[2]]
       person.name = person.givenNames.join(' ') + ' ' + person.familyNames.join(' ')
-      person.emails = [match[4]]
-      person.urls = [match[6]]
+      if (match[4]) person.emails = [match[4]]
+      if (match[6]) person.urls = [match[6]]
     } else {
       person.name = text
     }
@@ -56,26 +56,39 @@ export class Person extends Thing {
 
 export class ComputerLanguage extends Intangible {
 
- static r: ComputerLanguage = new ComputerLanguage()
- static py: ComputerLanguage = new ComputerLanguage()
+  static r: ComputerLanguage = new ComputerLanguage()
+  static py: ComputerLanguage = new ComputerLanguage()
 }
 
-
 export class CreativeWork extends Thing {
-  authors: Array<Organization  | Person> = []
-  contributors: Array<Organization  | Person> = []
-  creators: Array<Organization  | Person> = []
-  text: Text = ''
-  datePublished: Date = ''
-  license: CreativeWork | URL = ''
+  authors?: Array<Organization | Person>
+
+  // Could this method be automatically added via a decorator
+  // for plural properties?
+  authorsPush (author: Organization | Person) {
+    push(this, 'authors', author)
+  }
+
+  contributors?: Array<Organization | Person>
+  creators?: Array<Organization | Person>
+  text?: Text
+  datePublished?: Date
+  license?: CreativeWork | URL
 }
 
 // https://schema.org/SoftwareSourceCode
 export class SoftwareSourceCode extends CreativeWork {
+
   codeRepository?: URL
+
+  // @property('codemeta:SoftwareSourceCode.maintainer')
+  maintainers?: Array<Organization | Person>
+
   programmingLanguages?: Array<ComputerLanguage>
 
-  messages?: Array<SoftwareSourceCodeMessage> = []
+  runtimePlatform?: Text
+
+  messages?: Array<SoftwareSourceCodeMessage>
 }
 
 export class SoftwareSourceCodeMessage extends Thing {
@@ -91,7 +104,7 @@ export class SoftwareSourceCodeMessage extends Thing {
  * https://schema.org/SoftwareApplication
  */
 export class SoftwareApplication extends CreativeWork {
-  softwareRequirements: Array<SoftwarePackage | SoftwareApplication> = []
+  softwareRequirements?: Array<SoftwarePackage | SoftwareApplication>
 }
 
 /**
@@ -99,7 +112,7 @@ export class SoftwareApplication extends CreativeWork {
  * package. We considered this necessary because `schema:SoftwareSourceCode`
  * has most properties needed to represent a package but not all of them.
  * Meanwhile, `schema:SoftwareApplication` has some of those missing
- * properties but lacks most of those needed. Thus, this type does 
+ * properties but lacks most of those needed. Thus, this type does
  * not introduce any new properties, but rather uses
  * schema.org properties on a subtype of `schema:SoftwareSourceCode`
  */
@@ -109,7 +122,11 @@ export class SoftwarePackage extends SoftwareSourceCode {
    * property allows for `Text` or `URL` values. Here, we allow
    * values of software packages or applications.
    */
-  softwareRequirements: Array<SoftwarePackage | SoftwareApplication> = []
+  softwareRequirements?: Array<SoftwarePackage | SoftwareApplication>
+
+  softwareRequirementsPush (itme: SoftwarePackage | SoftwareApplication) {
+    push(this, 'softwareRequirements', itme)
+  }
 }
 
 /**
@@ -119,12 +136,10 @@ export class SoftwarePackage extends SoftwareSourceCode {
 export class SoftwareEnvironment extends SoftwareApplication {
 }
 
-
-export function push(thing: {[key: string]: any}, property: string, item: any){
+export function push (thing: {[key: string]: any}, property: string, item: any) {
   if (thing[property]) thing[property].push(item)
   else thing[property] = [item]
 }
-
 
 /**
  * Create a new JSON-LD node of a particular type

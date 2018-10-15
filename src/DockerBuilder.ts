@@ -7,7 +7,7 @@ import tarFs from 'tar-fs'
 
 /**
  * Builds Docker images from Dockerfiles
- * 
+ *
  * The Dockerfile may be handwritten, or generated
  * from requirements files or source code.
  */
