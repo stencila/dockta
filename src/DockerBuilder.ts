@@ -87,7 +87,7 @@ export default class DockerBuilder {
         message: message
       })
     })
-  
+
     // If there were any errors then return
     //if (!stream) return
     */
@@ -109,7 +109,7 @@ export default class DockerBuilder {
           // We could keep track of data that looks like this
           //  {"stream":"Step 2/2 : RUN foo"}
           // to match any errors with lines in the Dockerfile content
-          console.error(data.stream)
+          process.stderr.write(data.stream)
         }
       })
       stream.on('end', () => resolve(id))
@@ -168,10 +168,9 @@ export default class DockerBuilder {
         case 'RUN':
           // Execute code in the container
           const script = instruction.args as string
-          console.log(script)
-          const cmd = script.split(' ')
+          console.error('Dockter : RUN ', script)
           const exec = await container.exec({
-            Cmd: cmd,
+            Cmd: ['bash', '-c', `${script}`],
             AttachStdout: true,
             AttachStderr: true,
             Tty: true

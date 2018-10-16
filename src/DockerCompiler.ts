@@ -10,7 +10,7 @@ import Parser from './Parser'
 import DockerParser from './DockerParser'
 import RParser from './RParser'
 
-import DockerGenerator from './Generator'
+import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
 
 export default class DockerCompiler {

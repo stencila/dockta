@@ -105,6 +105,7 @@ export default class RParser extends Parser {
       pkg.license = crandb.License // TODO parse license string into a URL or CreativeWork
 
       // schema:SoftwareSourceCode
+      pkg.runtimePlatform = 'R'
       pkg.codeRepository = crandb.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
 
       // stencila:SoftwarePackage

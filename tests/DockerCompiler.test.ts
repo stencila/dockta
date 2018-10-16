@@ -1,12 +1,14 @@
-import Compiler from '../src/DockerCompiler'
+import DockerCompiler from '../src/DockerCompiler'
 import fixture from './fixture'
 import { SoftwareEnvironment } from '../src/context';
+
+jest.setTimeout(60000) // Increase timeout (in milliseconds) to allow for Docker builds
 
 /**
  * Tests of compiling Dockerfile
  */
 test('compile:dockerfile', async () => {
-  const compiler = new Compiler()
+  const compiler = new DockerCompiler()
   let node
 
   //node = await compiler.compile('file://' + fixture('empty'))
@@ -22,10 +24,8 @@ test('compile:dockerfile', async () => {
  * Tests of building Docker image during compilation
  */
 test.skip('compile:build', async () => {
-  const compiler = new Compiler()
+  const compiler = new DockerCompiler()
   let node
-
-  jest.setTimeout(60000) // Increase timeout (in milliseconds) to allow for Docker build
 
   node = await compiler.compile('FROM library/ubuntu@sha256:de774a3145f7ca4f0bd144c7d4ffb2931e06634f11529653b23eba85aef8e378\n')
   //expect(node.messages).toEqual([])
@@ -49,10 +49,8 @@ test.skip('compile:build', async () => {
  * Tests of execution
  */
 test.skip('execute', async () => {
-  const compiler = new Compiler()
+  const compiler = new DockerCompiler()
   let node
-
-  jest.setTimeout(60000) // Increase timeout (in milliseconds) to allow for Docker build
 
   // Compile from file
   node = await compiler.execute('file://tests/fixtures/dockerfile-date') as SoftwareEnvironment

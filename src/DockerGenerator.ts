@@ -19,6 +19,8 @@ export default class DockerGenerator extends Generator {
   constructor (environ: SoftwareEnvironment) {
     super(environ)
 
+    // List of possible generators filtered by those that apply to the
+    // environment
     this.generators = [
       new PythonGenerator(this.environ),
       new RGenerator(this.environ)
@@ -40,7 +42,7 @@ export default class DockerGenerator extends Generator {
   // Methods that override those in `Generator`
 
   applies (): boolean {
-    return this.collect((generator: Generator) => generator.applies()).some(value => value)
+    return true
   }
 
   sysVersion (): number {
