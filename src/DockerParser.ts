@@ -23,11 +23,26 @@ import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } 
  * LABEL org.label-schema.version = 1.2.0
  * ```
  *
- * | Label                                                  | Property (`context:type.property`)
+ * | Label                                                  | Property (`context:type.property`) 
  * | ---                                                    | ----
  * | `description`                                          | `schema:Thing.description`
  * | `maintainer`                                           | `codemeta:SoftwareSourceCode.maintainer`
+ * | `created`                                              | `schema:SoftwareSourceCode.dateCreated`    
+ * | `url`                                                  | `schema:Thing.url`                           
+ * | `source`                                               | `schema:SoftwareSourceCode.codeRepository`   
+ * | `version`                                              | `schema:SoftwareApplication.softwareVersion` 
+ * | `vendor`                                               | `schema:Organization.legalName`              
+ * | `title`                                                | `schema:Thing.name`                          
+ * | `documentation`                                        | `schema:softwareHelp`                        
+ * | `authors`                                              | `schema:CreativeWork.author`                 
+ * | `licenses`                                             | `schema:CreativeWork.license`                
+ * | `schema-version`                                       | `schema:schemaVersion`                                            
+ * | `build`                                                |                                            
+ * | `ref-name`                                             |                                            
+ * | `revision`                                             |                                            
+ *
  */
+
 export default class DockerParser extends Parser {
 
   /**
