@@ -18,13 +18,24 @@ yargonaut
 yargs
   .scriptName('dockter')
 
+  // Help global option
   .alias('h', 'help')
   .usage('$0 <cmd> [args]')
 
+  // Version global option
   .alias('v', 'version')
   .version(VERSION)
   .describe('version', 'Show version')
 
+  // Ensure at least one command
+  .demandCommand(1, 'Please provide a command.')
+  // Provide suggestions regarding similar commands if no matching command is found
+  .recommendCommands()
+  // Any command-line argument given that is not demanded, or does not have a corresponding description, will be reported as an error.
+  // Unrecognized commands will also be reported as errors.
+  .strict()
+
+  // Compile command
   // @ts-ignore
   .command('compile [folder] [format]', 'Compile a folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
     yargs.positional('folder', {
@@ -42,6 +53,7 @@ yargs
     output(node, args.format)
   })
 
+  // Build command
   // @ts-ignore
   .command('build [folder]', 'Build a Docker image for a folder', yargs => {
     yargs.positional('folder', {
@@ -53,6 +65,7 @@ yargs
     await compiler.compile('file://' + args.folder, true).catch(error)
   })
 
+  // Execute command
   // @ts-ignore
   .command('execute [folder] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
     yargs.positional('folder', {
