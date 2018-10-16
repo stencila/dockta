@@ -30,6 +30,7 @@ export default class DockerBuilder {
 
     // Collect all instructions prior to any `# dockter` comment into a
     // new Dockerfile and store remaining instructions for special handling
+    let dockterize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
@@ -37,12 +38,16 @@ export default class DockerBuilder {
         const arg = instruction.args as string
         if (arg.match(/^# *dockter/)) {
           instructions = instructions.slice(index + 1)
+          dockterize = true
           break
         }
       }
-      newContent += instruction.raw + '\n'
+      if (instruction.raw) newContent += instruction.raw + '\n'
       index += 1
     }
+    // If there was no # dockter comment then make sure there are no
+    // 'extra' instructions
+    if (!dockterize) instructions = []
 
     // Pack the directory and replace the Dockerfile with the new one
     const pack = tarFs.pack(dir, {
