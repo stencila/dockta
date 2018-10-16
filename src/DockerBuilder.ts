@@ -30,6 +30,7 @@ export default class DockerBuilder {
 
     // Collect all instructions prior to any `# dockter` comment into a
     // new Dockerfile and store remaining instructions for special handling
+    let dockterize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
@@ -37,12 +38,16 @@ export default class DockerBuilder {
         const arg = instruction.args as string
         if (arg.match(/^# *dockter/)) {
           instructions = instructions.slice(index + 1)
+          dockterize = true
           break
         }
       }
-      newContent += instruction.raw + '\n'
+      if (instruction.raw) newContent += instruction.raw + '\n'
       index += 1
     }
+    // If there was no # dockter comment then make sure there are no
+    // 'extra' instructions
+    if (!dockterize) instructions = []
 
     // Pack the directory and replace the Dockerfile with the new one
     const pack = tarFs.pack(dir, {
@@ -147,7 +152,9 @@ export default class DockerBuilder {
     await container.start()
 
     // Handle the remaining instructions
+    let count = 1
     for (let instruction of instructions) {
+      const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
         case 'COPY':
         case 'ADD':
@@ -155,6 +162,7 @@ export default class DockerBuilder {
           // TODO: only copy files if they have changed
           // TODO: to be consistent with Docker ADD should handle urls
           const add = instruction.args as Array<string>
+          console.error(step, instruction.name, add.join(' '))
           const to = add.pop()
           const pack = tarFs.pack(dir, {
             ignore: name => {
@@ -168,7 +176,7 @@ export default class DockerBuilder {
         case 'RUN':
           // Execute code in the container
           const script = instruction.args as string
-          console.error('Dockter : RUN ', script)
+          console.error(step, 'RUN', script)
           const exec = await container.exec({
             Cmd: ['bash', '-c', `${script}`],
             AttachStdout: true,
@@ -189,6 +197,7 @@ export default class DockerBuilder {
           }
           break
       }
+      count += 1
     }
 
     // Create an image from the modified container
