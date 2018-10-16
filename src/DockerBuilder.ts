@@ -67,7 +67,13 @@ export default class DockerBuilder {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
       t: name + ':system'
-    }).catch(error => {
+    })
+
+    // The following catches errors from abovr and turns them into messages but does
+    // nothing with them. It's commented out for now, so errors get thrown to console,
+    // but will be reinstated when we determine the best place to attach these errors/messages
+    /*
+    .catch(error => {
       let line
       let message = error.message
       const match = message.match(/^\(HTTP code 400\) unexpected - Dockerfile parse error line (\d+): (.*)$/)
@@ -81,9 +87,10 @@ export default class DockerBuilder {
         message: message
       })
     })
-
+  
     // If there were any errors then return
-    if (!stream) return
+    //if (!stream) return
+    */
 
     // Wait for build to finish and record the id of the system layer
     let currentSystemLayer = await new Promise<string>((resolve, reject) => {

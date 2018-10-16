@@ -1,6 +1,6 @@
 {
   "name": "@stencila/dockter",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A compiler for JSON-LD `SoftwareEnvironment` and `SoftwareSourceCode` nodes targetting Docker",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

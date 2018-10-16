@@ -5,6 +5,8 @@ import yargonaut from 'yargonaut'
 import yargs from 'yargs'
 import yaml from 'js-yaml'
 
+const VERSION = require('../package').version
+
 import DockerCompiler from './DockerCompiler'
 const compiler = new DockerCompiler()
 
@@ -15,36 +17,48 @@ yargonaut
 
 yargs
   .scriptName('dockter')
+
+  .alias('h', 'help')
   .usage('$0 <cmd> [args]')
 
+  .alias('v', 'version')
+  .version(VERSION)
+  .describe('version', 'Show version')
+
   // @ts-ignore
-  .command('compile [path] [build] [format]', 'Compile a file or folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
-    yargs.positional('path', {
+  .command('compile [folder] [format]', 'Compile a folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
+    yargs.positional('folder', {
       type: 'string',
       default: '.',
-      describe: 'The path to the file or folder which defines the environment'
-    }),
-    yargs.positional('build', {
-      type: 'boolean',
-      default: true,
-      describe: 'Build a Docker image for the environment'
+      describe: 'The path to the folder which defines the environment'
     }),
     yargs.positional('format', {
       type: 'string',
       default: 'json',
-      describe: 'Format to output: json or yaml'
+      describe: 'Format to output the environment: json or yaml'
     })
   }, async (args: any) => {
-    const node = await compiler.compile('file://' + args.path, args.build).catch(error)
+    const node = await compiler.compile('file://' + args.folder, false).catch(error)
     output(node, args.format)
   })
 
   // @ts-ignore
-  .command('execute [path] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
-    yargs.positional('path', {
+  .command('build [folder]', 'Build a Docker image for a folder', yargs => {
+    yargs.positional('folder', {
       type: 'string',
       default: '.',
-      describe: 'The path to the file or folder which defines the environment'
+      describe: 'The path to the folder which defines the environment'
+    })
+  }, async (args: any) => {
+    await compiler.compile('file://' + args.folder, true).catch(error)
+  })
+
+  // @ts-ignore
+  .command('execute [folder] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
+    yargs.positional('folder', {
+      type: 'string',
+      default: '.',
+      describe: 'The folder which defines the environment'
     }),
     yargs.positional('format', {
       type: 'string',
@@ -52,7 +66,7 @@ yargs
       describe: 'Format to output: json or yaml'
     })
   }, async (args: any) => {
-    const node = await compiler.execute('file://' + args.path).catch(error)
+    const node = await compiler.execute('file://' + args.folder).catch(error)
     output(node, args.format)
   })
 
