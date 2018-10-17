@@ -114,7 +114,9 @@ export default class DockerBuilder {
           // We could keep track of data that looks like this
           //  {"stream":"Step 2/2 : RUN foo"}
           // to match any errors with lines in the Dockerfile content
-          process.stderr.write(data.stream)
+          if (data.stream) {
+            process.stderr.write(data.stream)
+          }
         }
       })
       stream.on('end', () => resolve(id))
