@@ -1,9 +1,3 @@
-> This is a work in progress
-
-> 🔧 Wrench emoji are for README to do items. We'll remove any of these that are remaining into Github issues prior to releasing.
-
-> 🔧 Add logo (something with a whale and a doctor?)
-
 # Dockter : a Docker image builder for researchers
 
 [![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/dockter/)
@@ -15,9 +9,7 @@
 
 Docker is a good tool for creating reproducible computing environments. But creating truely reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
 
-> 🔧 Add a GIF of a console session similar to [this one](http://media.kennethreitz.com.s3.amazonaws.com/pipenv.gif) by Kenneth Reitz for Pipenv
-
-> 🦄 Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link, like this [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can contribute to make the feature happen. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
+> 🦄 Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
 
 <!-- Automatically generated TOC. Don't edit, `make docs` instead>
 
@@ -31,6 +23,7 @@ Docker is a good tool for creating reproducible computing environments. But crea
     + [Jupyter](#jupyter)
   * [Efficiently handling of updates to project code](#efficiently-handling-of-updates-to-project-code)
   * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
+  * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
 - [Install](#install)
   * [CLI](#cli)
   * [Package](#package)
@@ -84,6 +77,7 @@ If the folder does not contain a `package.json` file, Dockter will 🦄 [#8](htt
 #### Jupyter
 
 If the folder contains any 🦄 [#9](https://github.com/stencila/dockter/issues/9) `.ipynb` files, Dockter will scan the code cells in those files for any Python `import` or R `library` statements and extract a list of package dependencies. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add Jupyter to the built Docker image.
+
 
 ### Efficiently handling of updates to project code
 
@@ -161,26 +155,32 @@ Dockter has been built to expose a JSON-LD API so that it works with other tools
 }
 ```
 
+### Easy to pick up, easy to throw away
+
+Dockter is designed to make it easier to get started creating Docker images for your project. But it's also designed not to get in your way or restrict you from using bare Docker. You can easily and individually override any of the steps that Dockter takes to build an image. 
+
+- *Code analysis*: To stop Dockter doing code analysis and take over specifying your project's package dependencies, just remove the leading '.' from the `.DESCRIPTION`, `.requirements.txt` or `.package.json` file that Dockter generates. 
+
+- *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They're a good place to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
+
+- *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter alltogether and build the same image using Docker (it will just take longer if you change you project dependencies).
+
+
 ## Install
 
-Dockter is available as pre-compiled, standalone command line tool, or as an Node.js package.
+Dockter is available as pre-compiled, standalone command line tool, or as a Node.js package.
 
 ### CLI
 
-> 🔧 Add `pkg`-based binary builds
-> 🔧 Add download instructions
+If you don't have Node.js or would simply prefer a standalone binary, you can download the latest release from the [releases page](https://github.com/stencila/dockter/releases).
 
 ### Package
-
-> 🔧 Register package on NPM; add publishing and release commands to npm scripts and Makefile and travis.yml
 
 ```bash
 npm install @stencila/dockter
 ```
 
 You will need to [install Docker](https://docs.docker.com/install/) if you don't already have it on your system.
-
-> 🔧 Allow for the use of a remote Docker daemon for building images
 
 ## Use
 
@@ -325,6 +325,8 @@ Related Stencila packages include:
 
 - 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
 - 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
+
+There are several projects that create Docker images from source code and/or requirements files:
 
 - [`alibaba/derrick`](https://github.com/alibaba/derrick)
 - [`jupyter/repro2docker`](https://github.com/jupyter/repo2docker)
