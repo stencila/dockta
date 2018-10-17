@@ -1,0 +1,21 @@
+An R Markdown file with cells with different types of package imports
+
+```{r}
+# Use of library
+library(ggplot2)
+```
+
+```{r}
+# Use of require
+require(dplyr)
+```
+
+```{r}
+# Use of function exported by the package
+lubridate::now()
+```
+
+```{r}
+# Use of function not exported by the package
+digest:::sha1()
+```

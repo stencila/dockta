@@ -35,3 +35,21 @@ test('parse:r-date', async () => {
   expect(reqs && reqs.length).toEqual(1)
   expect(reqs && reqs[0].name).toEqual('lubridate')
 })
+
+/**
+ * When applied to a folder with no DESCRIPTION file but with .R files, 
+ * parse should generate a `.DESCRIPTION` file and 
+ * return a `SoftwareEnvironment` with packages listed.
+ */
+test('parse:r-no-desc', async () => {
+  const parser = new RParser(fixture('r-no-desc'))
+  const environ = await parser.parse() as SoftwareEnvironment
+
+  expect(parser.exists('.DESCRIPTION')).toBeTruthy()
+  
+  expect(environ.name).toEqual('project')
+
+  const reqs = environ.softwareRequirements
+  expect(reqs).toBeDefined()
+  expect(reqs && reqs.map(req => req.name)).toEqual(['MASS', 'digest', 'dplyr', 'ggplot2', 'lubridate'])
+})

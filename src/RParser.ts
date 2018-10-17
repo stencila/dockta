@@ -17,18 +17,42 @@ export default class RParser extends Parser {
    * and return a `SoftwareEnvironment` instance
    */
   async parse (): Promise<SoftwareEnvironment | null> {
-    // Read DESCRIPTION file if it exists
+    const environ = new SoftwareEnvironment()
+
     let desc = ''
     if (this.exists('DESCRIPTION')) {
+      // Read the existing/generated DESCRIPTION file
       desc = this.read('DESCRIPTION')
+    } else {
+      // Scan the directory for any R or Rmd files
+      const files = this.glob(['**/*.R', '**/*.Rmd'])
+      if (files.length) {
+        desc = `Package: project
+Version: 1.0.0
+Date: ${new Date(Date.now()).toISOString().substring(0,10)}
+`
+        // Analyse files for `library(<pkg>)`, `require(<pkg>)`, `<pkg>::<member>`, `<pkg>:::<member>`
+        let pkgs: Array<string> = []
+        // Wondering WTF this regex does? See https://regex101.com/r/hG4iij/2
+        const regex = /(?:(?:library|require)\s*\((?:\s*(\w+)\s*)|(?:"([^"]*)")|(?:'([^']*)')\s*\))|(?:(\w+):::?\w+)/g
+        for (let file of files) {
+          let code = this.read(file)
+          let match = regex.exec(code)
+          while (match) {
+            const pkg = match[1] || match[2] || match[3] || match[4]
+            if (!pkgs.includes(pkg)) pkgs.push(pkg)
+            match = regex.exec(code)
+          }
+        }
+        pkgs.sort()
+        desc += `Imports:\n  ${pkgs.join(',\n  ')}\n`
+        // Generate `.DESCRIPTION` file
+        this.write('.DESCRIPTION', desc)
+      } else {
+        // If no R files detected, return null
+        return null
+      }
     }
-
-    // TODO Create a `.DESCRIPTION` file by scanning .R and .Rmd files
-
-    // If no R files detected, return empty environments
-    if (!desc) return null
-
-    const environ = new SoftwareEnvironment()
 
     // Get `name`
     const matchName = desc.match(/^Package:\s*(.+)/m)
@@ -111,11 +135,13 @@ export default class RParser extends Parser {
       // stencila:SoftwarePackage
       // Required R packages are added as `softwareRequirements` with
       // `programmingLanguage` set to R
-      for (let [name, version] of Object.entries(crandb.Imports)) {
-        const required = new SoftwarePackage()
-        required.name = name
-        required.runtimePlatform = 'R'
-        pkg.softwareRequirementsPush(required)
+      if (crandb.Imports) {
+        for (let [name, version] of Object.entries(crandb.Imports)) {
+          const required = new SoftwarePackage()
+          required.name = name
+          required.runtimePlatform = 'R'
+          pkg.softwareRequirementsPush(required)
+        }
       }
       // Required system dependencies are obtained from https://sysreqs.r-hub.io and
       // added as `softwareRequirements` with "deb" `runtimePlatform`

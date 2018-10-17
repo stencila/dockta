@@ -1,4 +1,5 @@
 import fs from 'fs'
+import glob from 'fast-glob'
 import path from 'path'
 import request from 'request'
 // @ts-ignore
@@ -37,8 +38,18 @@ export default abstract class Parser {
     return fs.existsSync(path.join(this.folder, subpath))
   }
 
+  glob (pattern: string | Array<string>): Array<string> {
+    return glob.sync(pattern, {
+      cwd: this.folder
+    })
+  }
+
   read (subpath: string): string {
     return fs.readFileSync(path.join(this.folder, subpath), 'utf8')
+  }
+
+  write (subpath: string, content: string) {
+    fs.writeFileSync(path.join(this.folder, subpath), content, 'utf8')
   }
 
   fetch (url: string): Promise<any> {
