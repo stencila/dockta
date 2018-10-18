@@ -60,7 +60,9 @@ Imports:
 
 The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Date` field is used to define which CRAN snapshot to use. MRAN daily snapshots began [2014-09-08](https://cran.microsoft.com/snapshot/2014-09-08) so the date should be on or after that.
 
-If the folder does not contain a `DESCRIPTION` file then Dockter will 🦄 [#6](https://github.com/stencila/dockter/issues/6) scan all the folder's R files (files with the extension `.R` or `.Rmd`, or lowercase versions of those) for `library(package)` statements and create a `.DESCRIPTION` file for you.
+If the folder does not contain a `DESCRIPTION` file then Dockter will scan all the R files (files with the extension `.R` or `.Rmd`) in the folder for package import or usage statements, like `library(package)` and `package::function()`, and create a `.DESCRIPTION` file for you.
+
+If the folder contains a `main.R` file, Dockter will set that to be the default script to run in any container created from the image.
 
 #### Python
 

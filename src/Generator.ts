@@ -62,11 +62,11 @@ RUN apt-get update \\
 
     const installFiles = this.installFiles(sysVersion)
     const installCommand = this.installCommand(sysVersion)
-    const copyFiles = this.copyFiles(sysVersion)
-    const command = this.command(sysVersion)
+    const projectFiles = this.projectFiles(sysVersion)
+    const runCommand = this.runCommand(sysVersion)
 
     // Add Dockter special comment for managed installation of language packages
-    if (installFiles.length || installCommand) {
+    if (installCommand) {
       dockerfile += `\n# dockter\n`
     }
 
@@ -82,16 +82,16 @@ RUN apt-get update \\
       dockerfile += `RUN ${installCommand}\n`
     }
 
-    // Copy any files over
-    // Use COPY instead of ADD since the latter can add a file from a URL so is
-    // not reproducible
-    if (copyFiles.length) {
-      dockerfile += `\nCOPY ${copyFiles.join(' ')} .\n`
+    // Copy files needed to run project
+    if (projectFiles.length) {
+      for (let [src, dest] of projectFiles) {
+        dockerfile += `\nCOPY ${src} ${dest}\n`
+      }
     }
 
     // Add any CMD
-    if (command) {
-      dockerfile += `\nCMD ${command}\n`
+    if (runCommand) {
+      dockerfile += `\nCMD ${runCommand}\n`
     }
 
     // Write `.Dockerfile` for use by Docker
@@ -173,11 +173,22 @@ RUN apt-get update \\
     return
   }
 
-  copyFiles (sysVersion: number): Array<string> {
+  /**
+   * The project's files that should be copied across to the image
+   * 
+   * @param sysVersion The Ubuntu system version being used
+   * @returns An array of [src, dest] tuples
+   */
+  projectFiles (sysVersion: number): Array<[string, string]> {
     return []
   }
 
-  command (sysVersion: number): string | undefined {
+  /**
+   * The default command to run containers created from this image
+   * 
+   * @param sysVersion The Ubuntu system version being used
+   */
+  runCommand (sysVersion: number): string | undefined {
     return
   }
 }

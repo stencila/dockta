@@ -155,6 +155,7 @@ export default class DockerBuilder {
 
     // Handle the remaining instructions
     let count = 1
+    let changes = ''
     for (let instruction of instructions) {
       const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
@@ -204,6 +205,14 @@ export default class DockerBuilder {
             await new Promise(resolve => setTimeout(resolve, 100))
           }
           break
+
+        case 'CMD':
+          // Dockerfile instructions to apply when commiting the image
+          changes += instruction.raw + '\n\n'
+          break
+
+        default:
+          throw new Error(`Dockter can not yet handle a ${instruction.name} instruction. Put it before the # dockter comment in your Dockerfile.`)
       }
       count += 1
     }
@@ -214,6 +223,7 @@ export default class DockerBuilder {
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageCommit
       repo: name + ':latest',
       comment: 'Updated application layer',
+      changes,
       Labels: {
         systemLayer: currentSystemLayer
       }

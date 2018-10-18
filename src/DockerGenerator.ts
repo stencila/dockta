@@ -67,12 +67,12 @@ export default class DockerGenerator extends Generator {
                           .join(' \\\n && ')
   }
 
-  copyFiles (sysVersion: number): Array<string> {
-    return this.collect((generator: Generator) => generator.copyFiles(sysVersion))
+  projectFiles (sysVersion: number): Array<[string, string]> {
+    return this.collect((generator: Generator) => generator.projectFiles(sysVersion))
   }
 
-  command (sysVersion: number): string | undefined {
-    return this.generators.map((generator: Generator) => generator.command(sysVersion))
+  runCommand (sysVersion: number): string | undefined {
+    return this.generators.map((generator: Generator) => generator.runCommand(sysVersion))
                           .filter(cmd => cmd)
                           .join(';')
   }
