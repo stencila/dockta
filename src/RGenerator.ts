@@ -66,7 +66,7 @@ Imports:
 
       const url = 'http://localhost:8000/src/install.R'
       // const url = 'https://stencila.github.io/dockter/install.R'
-      return `Rscript <(curl -s ${url})`
+      return `bash "Rscript <(curl -s ${url})"`
     }
   }
 }
