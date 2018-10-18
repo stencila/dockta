@@ -89,8 +89,9 @@ export default class RParser extends Parser {
       }
     }
 
-    // Default to the folder name
-    if (!name) name = path.basename(this.folder)
+    // Default to the folder name, with any non alphanumerics removed to ensure compatability
+    // with R package name requirements
+    if (!name) name = path.basename(this.folder).replace(/[^a-zA-Z0-9]/g, '')
     // Default to yesterday's date (to ensure MRAN is available for the date)
     if (!date) date = new Date(Date.now() - 24 * 3600 * 1000)
 
