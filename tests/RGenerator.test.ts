@@ -47,6 +47,6 @@ RUN apt-get update \\
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c "Rscript <(curl -s http://localhost:8000/src/install.R)"
+RUN bash -c "Rscript <(curl -s https://stencila.github.io/dockter/install.R)"
 `)
 })

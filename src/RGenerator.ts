@@ -53,20 +53,12 @@ Imports:
 
   installCommand (sysVersion: number): string | undefined {
     if (this.exists('install.R')) {
+      // Run the user supplied installation script
       return `Rscript install.R`
     } else if (this.exists('DESCRIPTION') || this.exists('.DESCRIPTION')) {
-      // To keep the Dockerfile as simple as possible, get and
+      // To keep the Dockerfile as simple as possible, download and
       // execute the installation-from-DESCRIPTION script.
-      //
-      // During development you might want to test this by starting a static files
-      // server in this repo's directory e.g.
-      //   python -m SimpleHTTPServer 8000
-      // and then changing the url to
-      //   http://localhost:8000/src/install.R
-
-      const url = 'http://localhost:8000/src/install.R'
-      // const url = 'https://stencila.github.io/dockter/install.R'
-      return `bash "Rscript <(curl -s ${url})"`
+      return `bash -c "Rscript <(curl -s https://stencila.github.io/dockter/install.R)"`
     }
   }
 }
