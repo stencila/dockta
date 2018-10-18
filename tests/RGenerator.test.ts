@@ -9,7 +9,7 @@ import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
 test('generate:empty', async () => {
   const environ = new SoftwareEnvironment()
   const generator = new RGenerator(environ)
-  expect(await generator.generate()).toEqual('FROM ubuntu:16.04\n')
+  expect(await generator.generate(false)).toEqual('FROM ubuntu:16.04\n')
 })
 
 /**
@@ -26,7 +26,7 @@ test('generate:packages', async () => {
   environ.softwareRequirements = [pkg]
   
   const generator = new RGenerator(environ)
-  expect(await generator.generate()).toEqual(`FROM ubuntu:16.04
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\

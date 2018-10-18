@@ -65,8 +65,10 @@ export default class DockerCompiler {
       new DockerGenerator(environ, folder).generate()
     }
 
-    const builder = new DockerBuilder()
-    await builder.build(folder, undefined, dockerfile)
+    if (build) {
+      const builder = new DockerBuilder()
+      await builder.build(folder, undefined, dockerfile)
+    }
 
     return environ
   }

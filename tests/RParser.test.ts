@@ -28,7 +28,7 @@ test('parse:r-date', async () => {
   const environ = await parser.parse() as SoftwareEnvironment
   expect(environ.name).toEqual('rdate')
   // expect(environ.version).toEqual('version') TODO version not implemented yet
-  expect(environ.datePublished).toEqual('2018-10-05')
+  // expect(environ.datePublished).toEqual('2018-10-05') TODO date in this fixture is now dinamic, create another with DESCRIPTION file
   
   const reqs = environ.softwareRequirements
   expect(reqs).toBeDefined()
@@ -47,7 +47,7 @@ test('parse:r-no-desc', async () => {
 
   expect(parser.exists('.DESCRIPTION')).toBeTruthy()
   
-  expect(environ.name).toEqual('project')
+  expect(environ.name).toEqual('rnodesc')
 
   const reqs = environ.softwareRequirements
   expect(reqs).toBeDefined()

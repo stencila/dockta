@@ -140,11 +140,11 @@ RUN apt-get update \\
   }
 
   /**
-   * A list of packages in `this.environ.softwareRequirements` 
+   * A list of packages in `this.environ.softwareRequirements`
    * which the generator applies to
    */
   installPackages (): Array<SoftwarePackage> {
-    if (this.environ.softwareRequirements){
+    if (this.environ.softwareRequirements) {
       const appliesRuntime = this.appliesRuntime()
       return this.environ.softwareRequirements
                  .filter(req => (req as SoftwarePackage).runtimePlatform === appliesRuntime)
@@ -175,7 +175,7 @@ RUN apt-get update \\
 
   /**
    * The project's files that should be copied across to the image
-   * 
+   *
    * @param sysVersion The Ubuntu system version being used
    * @returns An array of [src, dest] tuples
    */
@@ -185,7 +185,7 @@ RUN apt-get update \\
 
   /**
    * The default command to run containers created from this image
-   * 
+   *
    * @param sysVersion The Ubuntu system version being used
    */
   runCommand (sysVersion: number): string | undefined {
