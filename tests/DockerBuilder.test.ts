@@ -12,7 +12,7 @@ jest.setTimeout(30 * 60 * 1000)
 test('build:py-requests-dockter', async () => {
   const builder = new DockerBuilder()
 
-  await builder.build(fixture('py-requests-dockter'), 'dockter-test-py-requests-dockter')
+  await builder.build(fixture('py-requests-dockter'))
 })
 
 /**
@@ -22,5 +22,5 @@ test('build:py-requests-dockter', async () => {
 test('build:py-requests-no-dockter', async () => {
   const builder = new DockerBuilder()
 
-  await builder.build(fixture('py-requests-no-dockter'), 'dockter-test-py-requests-no-dockter')
+  await builder.build(fixture('py-requests-no-dockter'))
 })
