@@ -163,16 +163,22 @@ export default class DockerBuilder {
           // Add files/subdirs to the container
           // TODO: only copy files if they have changed
           // TODO: to be consistent with Docker ADD should handle urls
-          const add = instruction.args as Array<string>
-          console.error(step, instruction.name, add.join(' '))
-          const to = add.pop()
+          const copy = instruction.args as Array<string>
+          console.error(step, instruction.name, copy.join(' '))
+          const to = copy.pop() as string
           const pack = tarFs.pack(dir, {
+            // Set the destination of each file (last item in `COPY` command)
+            map: function (header) {
+              header.name = to
+              return header
+            },
+            // Ignore any files in the directory that are not in the `COPY` list
             ignore: name => {
               const relativePath = path.relative(dir, name)
-              return !add.includes(relativePath)
+              return !copy.includes(relativePath)
             }
           })
-          await container.putArchive(pack, { path: to })
+          await container.putArchive(pack, { path: '.' }) // TODO this should put to WORKDIR if specified
           break
 
         case 'RUN':

@@ -1,3 +1,5 @@
+import path from 'path'
+
 import Parser from './Parser'
 import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } from './context'
 
@@ -19,81 +21,83 @@ export default class RParser extends Parser {
   async parse (): Promise<SoftwareEnvironment | null> {
     const environ = new SoftwareEnvironment()
 
-    let desc = ''
+    let name
+    let version
+    let date: Date | undefined = undefined
+    let packages: Array<string> = []
+
     if (this.exists('DESCRIPTION')) {
       // Read the existing/generated DESCRIPTION file
-      desc = this.read('DESCRIPTION')
+      let desc = this.read('DESCRIPTION')
+
+      // Get `name`
+      const matchName = desc.match(/^Package:\s*(.+)/m)
+      if (matchName) {
+        name = matchName[1]
+      }
+
+      // Get `date`, if no date then use yesterday's date to ensure
+      // packages are available on MRAN
+      const matchDate = desc.match(/^Date:\s*(.+)/m)
+      if (matchDate) {
+        let dateNum = Date.parse(matchDate[1])
+        if (isNaN(dateNum)) {
+          throw new Error('Unable to parse date in DESCRIPTION file: ' + matchDate[1])
+        } else {
+          date = new Date(dateNum)
+        }
+      }
+
+      // Get dependencies
+      const start = /^Imports:[ \t]*\n/gm.exec(desc)
+      if (start) {
+        // Find next unindented line or use end of string
+        let match = desc.substring(start.index + start[0].length).match(/\n^\w/m)
+        let end
+        if (match) end = match.index
+        else end = desc.length - 1
+        const imports = desc.substring(start.index + start[0].length, end)
+        for (let imported of imports.split(',')) {
+          let pkg
+          const match = imported.match(/^\s*(\w+).*/)
+          if (match) {
+            pkg = match[1]
+          } else pkg = imported.trim()
+          packages.push(pkg)
+        }
+      }
     } else {
       // Scan the directory for any R or Rmd files
       const files = this.glob(['**/*.R', '**/*.Rmd'])
       if (files.length) {
-        desc = `Package: project
-Version: 1.0.0
-Date: ${new Date(Date.now()).toISOString().substring(0,10)}
-`
         // Analyse files for `library(<pkg>)`, `require(<pkg>)`, `<pkg>::<member>`, `<pkg>:::<member>`
-        let pkgs: Array<string> = []
-        // Wondering WTF this regex does? See https://regex101.com/r/hG4iij/2
-        const regex = /(?:(?:library|require)\s*\((?:\s*(\w+)\s*)|(?:"([^"]*)")|(?:'([^']*)')\s*\))|(?:(\w+):::?\w+)/g
+        // Wondering WTF this regex does? See https://regex101.com/r/hG4iij/4
+        const regex = /(?:(?:library|require)\s*\(\s*(?:(?:\s*(\w+)\s*)|(?:"([^"]*)")|(?:'([^']*)'))\s*\))|(?:(\w+):::?\w+)/g
         for (let file of files) {
           let code = this.read(file)
           let match = regex.exec(code)
           while (match) {
             const pkg = match[1] || match[2] || match[3] || match[4]
-            if (!pkgs.includes(pkg)) pkgs.push(pkg)
+            if (!packages.includes(pkg)) packages.push(pkg)
             match = regex.exec(code)
           }
         }
-        pkgs.sort()
-        desc += `Imports:\n  ${pkgs.join(',\n  ')}\n`
-        // Generate `.DESCRIPTION` file
-        this.write('.DESCRIPTION', desc)
+        packages.sort()
       } else {
         // If no R files detected, return null
         return null
       }
     }
 
-    // Get `name`
-    const matchName = desc.match(/^Package:\s*(.+)/m)
-    if (matchName) {
-      environ.name = matchName[1]
-    }
-
-    // Get `date`, if no date then use yesterday's date to ensure
-    // packages are available on MRAN
-    let date
-    const matchDate = desc.match(/^Date:\s*(.+)/m)
-    if (matchDate) {
-      date = Date.parse(matchDate[1])
-      if (isNaN(date)) {
-        throw new Error('Unable to parse date in DESCRIPTION file: ' + matchDate[1])
-      } else {
-        date = new Date(date)
-      }
-    }
+    // Default to the folder name
+    if (!name) name = path.basename(this.folder)
+    // Default to yesterday's date (to ensure MRAN is available for the date)
     if (!date) date = new Date(Date.now() - 24 * 3600 * 1000)
-    environ.datePublished = date.toISOString().substring(0,10)
 
-    // Get dependencies
-    let packages = []
-    const start = /^Imports:[ \t]*\n/gm.exec(desc)
-    if (start) {
-      // Find next unindented line or use end of string
-      let match = desc.substring(start.index + start[0].length).match(/\n^\w/m)
-      let end
-      if (match) end = match.index
-      else end = desc.length - 1
-      const imports = desc.substring(start.index + start[0].length, end)
-      for (let imported of imports.split(',')) {
-        let pkg
-        const match = imported.match(/^\s*(\w+).*/)
-        if (match) {
-          pkg = match[1]
-        } else pkg = imported.trim()
-        packages.push(pkg)
-      }
-    }
+    // Set environs properties
+    environ.name = name
+    // environ.version = version
+    environ.datePublished = date.toISOString().substring(0,10)
 
     // For each dependency, query https://crandb.r-pkg.org to get a manifest including it's own
     // dependencies and convert it to a `SoftwarePackage`
@@ -108,7 +112,7 @@ Date: ${new Date(Date.now()).toISOString().substring(0,10)}
       // schema:Thing
       pkg.description = crandb.Description
       pkg.name = crandb.Package
-      pkg.urls = crandb.URL.split(',')
+      if (crandb.URL) pkg.urls = crandb.URL.split(',')
 
       // schema:CreativeWork
       // pkg.headline = crandb.Title TODO

@@ -19,7 +19,7 @@ export default abstract class Doer {
   /**
    * The directory to scan for relevant files
    */
-  private folder: string
+  folder: string
 
   constructor (folder: string | undefined) {
     if (!folder) folder = tmp.dirSync().name
