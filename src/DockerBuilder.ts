@@ -221,7 +221,7 @@ export default class DockerBuilder {
     const data = await container.commit({
       // Options to commit
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageCommit
-      repo: name + ':latest',
+      repo: name,
       comment: 'Updated application layer',
       changes,
       Labels: {
