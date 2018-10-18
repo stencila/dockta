@@ -44,8 +44,6 @@ test('parse:r-date', async () => {
 test('parse:r-no-desc', async () => {
   const parser = new RParser(fixture('r-no-desc'))
   const environ = await parser.parse() as SoftwareEnvironment
-
-  expect(parser.exists('.DESCRIPTION')).toBeTruthy()
   
   expect(environ.name).toEqual('rnodesc')
 
