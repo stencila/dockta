@@ -49,5 +49,10 @@ RUN apt-get update \\
  && apt-get autoremove -y \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
+
+# dockter
+
+COPY .DESCRIPTION DESCRIPTION
+RUN Rscript <(curl -s http://localhost:8000/src/install.R)
 `)
 })

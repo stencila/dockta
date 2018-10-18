@@ -34,23 +34,39 @@ export default class RGenerator extends Generator {
     return ['r-base']
   }
 
-  /*
+  installFiles (sysVersion: number): Array<[string, string]> {
+    if (this.exists('install.R')) return [['install.R', '.']]
+    if (this.exists('DESCRIPTION')) return [['DESCRIPTION', '.']]
 
-  TODO: reimplement these based on environment
+    // TODO Generate a '.DESCRIPTION' file from the environ
+    this.write('.DESCRIPTION',`Package: project
+Version: 1.0.0
+Date: 2018-10-17
+Imports:
+  digest
+`)
+    return [['.DESCRIPTION', 'DESCRIPTION']]
 
-  installPackages (sysVersion: number): Array<string> {
-    // If there is an `install.R` file in the path then use that
-    // otherwise use special `install.R` which reads from `DESCRIPTION`
-    return ['Rscript install.R']
+    // Return empty array if no R packages
+    return []
   }
 
-  copyFiles (sysVersion: number): Array<string> {
-    return ['.']
-  }
+  installCommand (sysVersion: number): string | undefined {
+    if (this.exists('install.R')) {
+      return `Rscript install.R`
+    } else if (this.exists('DESCRIPTION') || this.exists('.DESCRIPTION')) {
+      // To keep the Dockerfile as simple as possible, get and
+      // execute the installation-from-DESCRIPTION script.
+      //
+      // During development you might want to test this by starting a static files
+      // server in this repo's directory e.g.
+      //   python -m SimpleHTTPServer 8000
+      // and then changing the url to
+      //   http://localhost:8000/src/install.R
 
-  command (sysVersion: number): string | undefined {
-    return 'Rscript cmd.R'
+      const url = 'http://localhost:8000/src/install.R'
+      // const url = 'https://stencila.github.io/dockter/install.R'
+      return `Rscript <(curl -s ${url})`
+    }
   }
-
-  */
 }

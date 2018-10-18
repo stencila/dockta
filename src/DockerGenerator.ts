@@ -16,14 +16,14 @@ export default class DockerGenerator extends Generator {
    */
   protected generators: Array<Generator>
 
-  constructor (environ: SoftwareEnvironment) {
-    super(environ)
+  constructor (environ: SoftwareEnvironment, folder?: string) {
+    super(environ, folder)
 
     // List of possible generators filtered by those that apply to the
     // environment
     this.generators = [
-      new PythonGenerator(this.environ),
-      new RGenerator(this.environ)
+      new PythonGenerator(environ, folder),
+      new RGenerator(environ, folder)
     ].filter(generator => generator.applies())
   }
 
@@ -57,12 +57,18 @@ export default class DockerGenerator extends Generator {
     return this.collect((generator: Generator) => generator.aptPackages(sysVersion))
   }
 
-  copyFiles (sysVersion: number): Array<string> {
-    return this.collect((generator: Generator) => generator.copyFiles(sysVersion))
+  installFiles (sysVersion: number): Array<[string, string]> {
+    return this.collect((generator: Generator) => generator.installFiles(sysVersion))
   }
 
-  installPackages (sysVersion: number): Array<string> {
-    return this.collect((generator: Generator) => generator.installPackages(sysVersion))
+  installCommand (sysVersion: number): string | undefined {
+    return this.generators.map((generator: Generator) => generator.installCommand(sysVersion))
+                          .filter(cmd => cmd)
+                          .join(' \\\n && ')
+  }
+
+  copyFiles (sysVersion: number): Array<string> {
+    return this.collect((generator: Generator) => generator.copyFiles(sysVersion))
   }
 
   command (sysVersion: number): string | undefined {

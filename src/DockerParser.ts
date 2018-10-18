@@ -10,7 +10,7 @@ import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } 
  * the [`LABEL`](https://docs.docker.com/engine/reference/builder/#label) or
  * deprecated [`MAINTAINER`](https://docs.docker.com/engine/reference/builder/#maintainer-deprecated) instructions.
  * Unlike the other parsers in Dockter it does not attempt to parse out dependencies.
- * 
+ *
  * Here "label" refers to a key in a LABEL instruction that is un-prefixed
  * or has either the [`org.opencontainers.image`](https://github.com/opencontainers/image-spec/blob/master/annotations.md) prefix,
  * or the deprecated [`org.label-schema`](https://github.com/label-schema/label-schema.org) prefix.
@@ -22,7 +22,7 @@ import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } 
  * LABEL org.label-schema.version = 1.2.0
  * ```
  *
- * The following [schema crosswalk](https://en.wikipedia.org/wiki/Schema_crosswalk) defines how labels in 
+ * The following [schema crosswalk](https://en.wikipedia.org/wiki/Schema_crosswalk) defines how labels in
  * Dockerfiles are translated into JSON-LD properties
  *
  * | Label                                                  | Property (`context:type.property`)

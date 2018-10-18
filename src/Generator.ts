@@ -1,13 +1,15 @@
+import Doer from './Doer'
 import { SoftwareEnvironment, SoftwarePackage } from './context'
 
 /**
  * Generates a Dockerfile for a `SoftwareEnvironment` instance
  */
-export default class Generator {
+export default class Generator extends Doer {
 
   environ: SoftwareEnvironment
 
-  constructor (environ: SoftwareEnvironment) {
+  constructor (environ: SoftwareEnvironment, folder?: string) {
+    super(folder)
     this.environ = environ
   }
 
@@ -20,8 +22,7 @@ export default class Generator {
     let dockerfile = ''
 
     const sysVersion = this.sysVersion()
-    dockerfile += `FROM ubuntu:${sysVersion}
-`
+    dockerfile += `FROM ubuntu:${sysVersion}\n`
 
     if (!this.applies()) return dockerfile
 
@@ -38,9 +39,7 @@ RUN apt-get update \\
 
       // Add each repository and fetch signing key if defined
       for (let [deb, key] of aptRepos) {
-        dockerfile += `
-RUN apt-add-repository "${deb}"${key ? ` \\\n && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}` : ''}
-`
+        dockerfile += `\nRUN apt-add-repository "${deb}"${key ? ` \\\n && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}` : ''}\n`
       }
     }
 
@@ -56,39 +55,42 @@ RUN apt-get update \\
 `
     }
 
-    const copyFiles: Array<string> = this.copyFiles(sysVersion)
-    const installPackages: Array<string> = this.installPackages(sysVersion)
+    const installFiles = this.installFiles(sysVersion)
+    const installCommand = this.installCommand(sysVersion)
+    const copyFiles = this.copyFiles(sysVersion)
     const command = this.command(sysVersion)
 
-    if (copyFiles.length || installPackages.length || command) {
-      // Add Dockter special comment for managed builds
-      dockerfile += `
-# dockter
-`
+    // Add Dockter special comment for managed installation of language packages
+    if (installFiles.length || installCommand) {
+      dockerfile += `\n# dockter\n`
+    }
+
+    // Copy files needed for installation of language packages
+    if (installFiles.length) {
+      for (let [src, dest] of installFiles) {
+        dockerfile += `\nCOPY ${src} ${dest}\n`
+      }
+    }
+
+    // Run command to install packages
+    if (installCommand) {
+      dockerfile += `RUN ${installCommand}\n`
     }
 
     // Copy any files over
     // Use COPY instead of ADD since the latter can add a file from a URL so is
     // not reproducible
     if (copyFiles.length) {
-      dockerfile += `
-COPY ${copyFiles.join(' ')} .
-`
-    }
-
-    // Run installation instructions
-    if (installPackages.length) {
-      dockerfile += `
-RUN ${installPackages.join(' \\\n    ')}
-`
+      dockerfile += `\nCOPY ${copyFiles.join(' ')} .\n`
     }
 
     // Add any CMD
     if (command) {
-      dockerfile += `
-CMD ${command}
-`
+      dockerfile += `\nCMD ${command}\n`
     }
+
+    // Write `.Dockerfile` for use by Docker
+    this.write('.Dockerfile', dockerfile)
 
     return dockerfile
   }
@@ -132,8 +134,24 @@ CMD ${command}
     return []
   }
 
-  installPackages (sysVersion: number): Array<string> {
+  /**
+   * A list of files that need to be be copied
+   * into the image before running `installCommand`
+   *
+   * @param sysVersion The Ubuntu system version being used
+   * @returns An array of [src, dest] tuples
+   */
+  installFiles (sysVersion: number): Array<[string, string]> {
     return []
+  }
+
+  /**
+   * The Bash command to run to install required language packages
+   *
+   * @param sysVersion The Ubuntu system version being used
+   */
+  installCommand (sysVersion: number): string | undefined {
+    return
   }
 
   copyFiles (sysVersion: number): Array<string> {

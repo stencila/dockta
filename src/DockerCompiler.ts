@@ -61,12 +61,8 @@ export default class DockerCompiler {
       // TODO
 
       // Generate Dockerfile
-      const generator = new DockerGenerator(environ)
-      let dockerfileContent = generator.generate()
-
-      // Write `.Dockerfile`
       dockerfile = '.Dockerfile'
-      fs.writeFileSync(path.join(folder, '.Dockerfile'), dockerfileContent)
+      new DockerGenerator(environ, folder).generate()
     }
 
     const builder = new DockerBuilder()

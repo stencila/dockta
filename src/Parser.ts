@@ -1,14 +1,5 @@
-import fs from 'fs'
-import glob from 'fast-glob'
-import path from 'path'
-import request from 'request'
-// @ts-ignore
-import cachedRequest from 'cached-request'
-
+import Doer from './Doer'
 import { SoftwareEnvironment } from './context'
-
-const requestCache = cachedRequest(request)
-requestCache.setCacheDirectory('/tmp/dockter-request-cache')
 
 /**
  * A base class for language parsers
@@ -23,48 +14,6 @@ requestCache.setCacheDirectory('/tmp/dockter-request-cache')
  * it scans for source code files for package import statements (e.g. `library(package)` in `.R` files),
  * generates a package list from those statements and creates a requirements file.
  */
-export default abstract class Parser {
-
-  /**
-   * The directory to scan for relevant files
-   */
-  private folder: string
-
-  constructor (folder: string) {
-    this.folder = folder
-  }
-
-  exists (subpath: string): boolean {
-    return fs.existsSync(path.join(this.folder, subpath))
-  }
-
-  glob (pattern: string | Array<string>): Array<string> {
-    return glob.sync(pattern, {
-      cwd: this.folder
-    })
-  }
-
-  read (subpath: string): string {
-    return fs.readFileSync(path.join(this.folder, subpath), 'utf8')
-  }
-
-  write (subpath: string, content: string) {
-    fs.writeFileSync(path.join(this.folder, subpath), content, 'utf8')
-  }
-
-  fetch (url: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      requestCache({
-        url,
-        json: true,
-        ttl: 60 * 60 * 1000 // Milliseconds to cache responses for
-      }, (error: Error, response: any, body: any) => {
-        if (error) return reject(error)
-        resolve(body)
-      })
-    })
-  }
-
+export default abstract class Parser extends Doer {
   abstract async parse (): Promise<SoftwareEnvironment | null>
-
 }
