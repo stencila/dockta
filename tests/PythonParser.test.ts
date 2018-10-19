@@ -13,17 +13,9 @@ test('parse:empty', async () => {
 /**
  * When applied to a folder with no Python code, parse should return null.
  */
-test('parse:dockerfile-pandas', async () => {
-  const parser = new PythonParser(fixture('py-pandas'))
+test('parse:r-date', async () => {
+  const parser = new PythonParser(fixture('r-date'))
   expect(await parser.parse()).toBeNull()
-})
-
-/**
- * When applied to a folder with Python code, parse should return null.
- */
-test('parse:dockerfile-py-pandas', async () => {
-  const parser = new PythonParser(fixture('py-pandas'))
-  expect(await parser.parse())
 })
 
 /**
@@ -91,9 +83,10 @@ test('parse:example-requirements', async () => {
 })
 
 /**
- * When applied to a folder with Python code, parse should return the SoftwareEnvironment.
+ * When applied to a folder with a requirements file,
+ * parse should return the SoftwareEnvironment.
  */
-test('parse:dockerfile-py-pandas', async () => {
+test('parse:py-pandas', async () => {
   const parser = new PythonParser(fixture('py-date'))
 
   const arrowPackage = new SoftwarePackage()

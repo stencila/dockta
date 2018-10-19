@@ -24,3 +24,26 @@ test('build:py-requests-no-dockter', async () => {
 
   await builder.build(fixture('py-requests-no-dockter'))
 })
+
+/**
+ * Tests of build failiures
+ * 
+ * Currently skipped because we are not handline messages right now
+ */
+test.skip('build:py-requests-no-dockter', async () => {
+  const builder = new DockerBuilder()
+  let node
+
+  // Unknown directive (aka instruction)
+  node = await builder.build('FOO ubuntu\n')
+  //expect(node.messages[0].line).toEqual(1)
+  //expect(node.messages[0].message).toEqual('unknown instruction: FOO ')
+
+  // Unknown base image
+  node = await builder.build('FROM foobuntoo\n')
+  //expect(node.messages[0].message).toEqual('pull access denied for foobuntoo, repository does not exist or may require \'docker login\'')
+
+  // Bad RUN command
+  node = await builder.build('FROM ubuntu\nRUN foo')
+  //expect(node.messages[0].message).toEqual("The command '/bin/sh -c foo' returned a non-zero code: 127")
+})

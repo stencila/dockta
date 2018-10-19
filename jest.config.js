@@ -3,5 +3,8 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: [
     "**/tests/**/*.test.ts"
+  ],
+  coveragePathIgnorePatterns: [
+    "tests/fixture.ts"
   ]
 };

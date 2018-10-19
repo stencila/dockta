@@ -21,7 +21,7 @@ export default class DockerCompiler {
    * @param source The folder, Dockerfile or `SoftwareEnvironment` to compile
    * @param build Should the Docker image be built?
    */
-  async compile (source: string, build: boolean = true) {
+  async compile (source: string, build: boolean = true): Promise<SoftwareEnvironment | null> {
     let folder
     if (source.substring(0, 7) === 'file://') {
       folder = source.substring(7)
@@ -71,78 +71,6 @@ export default class DockerCompiler {
     }
 
     return environ
-  }
-
-  /**
-   * Load a `SoftwareSourceCode` node from a Dockerfile
-   *
-   * @param content The content to load
-   * @param build Should the Docker image be built?
-   */
-  async load (content: string, build: boolean = true): Promise<SoftwareSourceCode> {
-    let dockerfile = ''
-    if (content.substring(0, 7) === 'file://') {
-      const pat = content.substring(7)
-      if (path.basename(pat) === 'Dockerfile') {
-        dockerfile = fs.readFileSync(pat, 'utf8')
-      } else if (fs.existsSync(path.join(pat, 'Dockerfile'))) {
-        dockerfile = fs.readFileSync(path.join(pat, 'Dockerfile'), 'utf8')
-      } else if (fs.statSync(pat).isDirectory()) {
-        dockerfile = '' // new DockerGenerator().generate()
-      }
-    } else {
-      dockerfile = content
-    }
-
-    const node = new SoftwareSourceCode()
-    // node.programmingLanguage = 'Dockerfile'
-    node.text = dockerfile
-    return node
-  }
-
-  /**
-   * Compile a `SoftwareSourceCode` node
-   *
-   * Parse the `node.text` Dockerfile content to:
-   *
-   * - extract labels from [`LABEL` instructions](https://docs.docker.com/engine/reference/builder/#label)
-   *
-   * - extract a `maintainer` label from any deprecated
-   *   [`MAINTAINER` instructions](https://docs.docker.com/engine/reference/builder/#maintainer-deprecated)
-   *
-   * See also [best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#label)
-   * for labels.
-   *
-   * @param source The `SoftwareSourceCode` node to compile
-   * @param build Should the Docker image be built?
-   */
-  async _compile (source: string | SoftwareSourceCode, build: boolean = true): Promise<SoftwareSourceCode> {
-    let node: SoftwareSourceCode
-    if (typeof source === 'string') node = await this.load(source)
-    else node = source
-
-    // assert.strictEqual(node.type, 'SoftwareSourceCode')
-    // assert.strictEqual(node.programmingLanguage, 'Dockerfile')
-
-    // FIXME
-    const dir = (source as string).substring(7) // assumes a dir source
-    let dockerfile
-    let dockerfileName
-    if (fs.existsSync(path.join(dir, 'Dockerfile'))) {
-      dockerfile = fs.readFileSync(path.join(dir, 'Dockerfile'), 'utf8')
-      dockerfileName = 'Dockerfile'
-    } else {
-      dockerfile = ' ' // new DockerWriter(dir).dockerfile()
-      fs.writeFileSync(path.join(dir, '.Dockerfile'), dockerfile)
-      dockerfileName = '.Dockerfile'
-    }
-
-    if (!build) return node
-
-    const builder = new DockerBuilder()
-    await builder.build(dir, undefined, dockerfileName)
-
-    return node
   }
 
   async execute (source: string): Promise<SoftwareEnvironment | null> {
