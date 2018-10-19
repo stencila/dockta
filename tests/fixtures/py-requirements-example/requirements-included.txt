@@ -1,0 +1,5 @@
+-e svn+http://myrepo/svn/MyApp#egg=MyApp
+
+# another comment
+
+final-requirement==2.4

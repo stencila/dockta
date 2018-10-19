@@ -1,0 +1,13 @@
+Django==1.9.2
+
+# this is a comment
+
+requests==2.19.1
+less-than<1
+greater-than>2
+less-than-equal<=3
+greater-than-equal>=4
+multiple-things>5,<=6
+squiggly-boye~=7
+
+-r requirements-included.txt

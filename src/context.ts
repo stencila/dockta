@@ -74,6 +74,7 @@ export class CreativeWork extends Thing {
   text?: Text
   datePublished?: Date
   license?: CreativeWork | URL
+  version?: string
 }
 
 // https://schema.org/SoftwareSourceCode
@@ -105,6 +106,10 @@ export class SoftwareSourceCodeMessage extends Thing {
  */
 export class SoftwareApplication extends CreativeWork {
   softwareRequirements?: Array<SoftwarePackage | SoftwareApplication>
+
+  softwareRequirementsPush (item: SoftwarePackage | SoftwareApplication) {
+    push(this, 'softwareRequirements', item)
+  }
 }
 
 /**
@@ -136,7 +141,7 @@ export class SoftwarePackage extends SoftwareSourceCode {
 export class SoftwareEnvironment extends SoftwareApplication {
 }
 
-export function push (thing: {[key: string]: any}, property: string, item: any) {
+export function push (thing: { [key: string]: any }, property: string, item: any) {
   if (thing[property]) thing[property].push(item)
   else thing[property] = [item]
 }
@@ -147,7 +152,7 @@ export function push (thing: {[key: string]: any}, property: string, item: any) 
  * @param type The type of node to create
  * @param properties
  */
-function create<Type> (type: { new(): Type; }, properties: Object = {}): Type {
+function create<Type> (type: { new (): Type; }, properties: Object = {}): Type {
   // For an explanation of the weird parameter typing see https://stackoverflow.com/a/26696476/4625911
   const node = new type()
   pushProperties(node, properties)
