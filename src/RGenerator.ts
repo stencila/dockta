@@ -1,5 +1,5 @@
 import Generator from './Generator'
-import { SoftwarePackage } from './context';
+import { SoftwarePackage } from './context'
 
 /**
  * A Dockerfile generator for R environments
@@ -35,7 +35,7 @@ export default class RGenerator extends Generator {
   aptPackages (sysVersion: number): Array<string> {
     // Walk through R packages and find any deb packages
     let debpkgs: Array<string> = []
-    function find(pkg: any) {
+    function find (pkg: any) {
       if (pkg.runtimePlatform !== 'R' || !pkg.softwareRequirements) return
       for (let subpkg of pkg.softwareRequirements) {
         if (subpkg.runtimePlatform === 'deb') {
@@ -46,7 +46,7 @@ export default class RGenerator extends Generator {
       }
     }
     for (let pkg of this.environ.softwareRequirements || []) find(pkg)
-    
+
     return debpkgs.concat([
       'r-base'
     ])
