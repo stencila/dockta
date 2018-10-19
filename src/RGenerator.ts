@@ -1,4 +1,5 @@
 import Generator from './Generator'
+import { SoftwarePackage } from './context';
 
 /**
  * A Dockerfile generator for R environments
@@ -32,7 +33,23 @@ export default class RGenerator extends Generator {
   }
 
   aptPackages (sysVersion: number): Array<string> {
-    return ['r-base']
+    // Walk through R packages and find any deb packages
+    let debpkgs: Array<string> = []
+    function find(pkg: any) {
+      if (pkg.runtimePlatform !== 'R' || !pkg.softwareRequirements) return
+      for (let subpkg of pkg.softwareRequirements) {
+        if (subpkg.runtimePlatform === 'deb') {
+          debpkgs.push(subpkg.name || '')
+        } else {
+          find(subpkg)
+        }
+      }
+    }
+    for (let pkg of this.environ.softwareRequirements || []) find(pkg)
+    
+    return debpkgs.concat([
+      'r-base'
+    ])
   }
 
   installFiles (sysVersion: number): Array<[string, string]> {
@@ -41,7 +58,7 @@ export default class RGenerator extends Generator {
     if (this.exists('DESCRIPTION')) return [['DESCRIPTION', '.']]
 
     // Generate a .DESCRIPTION to copy into image
-    const pkgs = this.installPackages().map(pkg => pkg.name)
+    const pkgs = this.filterPackages('R').map(pkg => pkg.name)
     let desc = `Package: ${this.environ.name}
 Version: 1.0.0
 Date: ${this.environ.datePublished}

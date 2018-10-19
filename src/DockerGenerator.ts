@@ -54,7 +54,9 @@ export default class DockerGenerator extends Generator {
   }
 
   aptPackages (sysVersion: number): Array<string> {
-    return this.collect((generator: Generator) => generator.aptPackages(sysVersion))
+    // Get the set of unique apt packages requested by each child generator
+    const pkgs = this.collect((generator: Generator) => generator.aptPackages(sysVersion)).sort()
+    return Array.from(new Set(pkgs))
   }
 
   installFiles (sysVersion: number): Array<[string, string]> {

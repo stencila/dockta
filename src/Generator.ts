@@ -102,16 +102,21 @@ RUN apt-get update \\
 
   // Methods that are overridden in derived classes
 
-  applies (): boolean {
+  /**
+   * Get a list of packages in `this.environ.softwareRequirements`
+   * which have have a particular `runtimePlatform` value
+   */
+  filterPackages (runtimePlatform: string): Array<SoftwarePackage> {
     if (this.environ.softwareRequirements) {
-      for (let req of this.environ.softwareRequirements) {
-        let pkg = req as SoftwarePackage
-        if (pkg.runtimePlatform === this.appliesRuntime()) {
-          return true
-        }
-      }
+      return this.environ.softwareRequirements
+                 .filter(req => (req as SoftwarePackage).runtimePlatform === runtimePlatform)
+                 .map(req => req as SoftwarePackage)
     }
-    return false
+    return []
+  }
+
+  applies (): boolean {
+    return this.filterPackages(this.appliesRuntime()).length > 0
   }
 
   appliesRuntime (): string {
@@ -136,21 +141,7 @@ RUN apt-get update \\
   }
 
   aptPackages (sysVersion: number): Array<string> {
-    return []
-  }
-
-  /**
-   * A list of packages in `this.environ.softwareRequirements`
-   * which the generator applies to
-   */
-  installPackages (): Array<SoftwarePackage> {
-    if (this.environ.softwareRequirements) {
-      const appliesRuntime = this.appliesRuntime()
-      return this.environ.softwareRequirements
-                 .filter(req => (req as SoftwarePackage).runtimePlatform === appliesRuntime)
-                 .map(req => req as SoftwarePackage)
-    }
-    return []
+    return this.filterPackages('deb').map(pkg => pkg.name || '')
   }
 
   /**

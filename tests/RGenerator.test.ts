@@ -1,4 +1,5 @@
 import fixture from './fixture'
+import RParser from '../src/RParser'
 import RGenerator from '../src/RGenerator'
 import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
 
@@ -48,5 +49,43 @@ RUN apt-get update \\
 
 COPY .DESCRIPTION DESCRIPTION
 RUN bash -c "Rscript <(curl -s https://stencila.github.io/dockter/install.R)"
+`)
+})
+
+/**
+ * When applied to a project with R packages that have system dependencies
+ * adds the right apt packages to the Dockerfile
+ */
+test('generate:r-xml2', async () => {
+  const folder = fixture('r-xml2')
+  const environ = await new RParser(folder).parse() as SoftwareEnvironment
+  const dockerfile = await new RGenerator(environ, folder).generate(false)
+  expect(dockerfile).toEqual(`FROM ubuntu:16.04
+
+RUN apt-get update \\
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
+      apt-transport-https \\
+      ca-certificates \\
+      software-properties-common
+
+RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2018-10-18/bin/linux/ubuntu xenial/\" \\
+ && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+
+RUN apt-get update \\
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
+      libxml2-dev \\
+      r-base \\
+ && apt-get autoremove -y \\
+ && apt-get clean \\
+ && rm -rf /var/lib/apt/lists/*
+
+# dockter
+
+COPY .DESCRIPTION DESCRIPTION
+RUN bash -c \"Rscript <(curl -s https://stencila.github.io/dockter/install.R)\"
+
+COPY main.R main.R
+
+CMD Rscript main.R
 `)
 })

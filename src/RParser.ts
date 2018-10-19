@@ -135,7 +135,7 @@ export default class RParser extends Parser {
 
       // schema:SoftwareSourceCode
       pkg.runtimePlatform = 'R'
-      pkg.codeRepository = crandb.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
+      if (crandb.URL) pkg.codeRepository = crandb.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
 
       // stencila:SoftwarePackage
       // Required R packages are added as `softwareRequirements` with

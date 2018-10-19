@@ -17,9 +17,14 @@ test('generate:empty', async () => {
  * Dockerfile with R and the packages installed
  */
 test('generate:packages', async () => {
+  const pkg0 = new SoftwarePackage()
+  pkg0.name = 'libxml2-dev'
+  pkg0.runtimePlatform = 'deb'
+
   const pkg1 = new SoftwarePackage()
-  pkg1.name = 'ggplot2'
+  pkg1.name = 'xml2'
   pkg1.runtimePlatform = 'R'
+  pkg1.softwareRequirements = [pkg0]
 
   const pkg2 = new SoftwarePackage()
   pkg2.name = 'bokeh'
@@ -43,6 +48,7 @@ RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2017-01-01/bin/
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
+      libxml2-dev \\
       python3 \\
       python3-pip \\
       r-base \\
