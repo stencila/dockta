@@ -68,7 +68,7 @@ RUN apt-get update \\
       ca-certificates \\
       software-properties-common
 
-RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2018-10-18/bin/linux/ubuntu xenial/\" \\
+RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/${environ.datePublished}/bin/linux/ubuntu xenial/\" \\
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
 RUN apt-get update \\
