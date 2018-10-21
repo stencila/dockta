@@ -22,3 +22,6 @@ build:
 docs:
 	npm run docs
 .PHONY: docs
+
+commit:
+	npm run commit

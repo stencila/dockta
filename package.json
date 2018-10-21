@@ -17,7 +17,8 @@
     "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
-    "start": "node ./dist/server.js"
+    "start": "node ./dist/server.js",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,8 @@
     "@types/tar-stream": "^1.6.0",
     "@types/tmp": "0.0.33",
     "@types/yargs": "^12.0.1",
+    "commitizen": "^3.0.4",
+    "cz-conventional-changelog": "^2.1.0",
     "jest": "^23.6.0",
     "markdown-toc": "^1.2.0",
     "pkg": "^4.3.4",
@@ -69,5 +72,10 @@
     "tmp": "0.0.33",
     "yargonaut": "^1.1.4",
     "yargs": "^12.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

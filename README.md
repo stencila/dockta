@@ -286,6 +286,16 @@ cd dockter
 npm install
 ```
 
+To run the CLI during development use, `npm run cli -- <args>` e.g.
+
+```bash
+npm run cli -- compile tests/fixtures/dockerfile-date/Dockerfile
+```
+
+This uses `ts-node` to compile and run Typescript on the fly so that you don't need to do a build step first.
+
+### Linting and testing
+
 Then take a look at the docs ([online](https://stencila.github.io/dockter/) or inline) and start hacking! Please check that your changes pass linting and unit tests,
 
 ```bash
@@ -304,6 +314,8 @@ npm run cover # or, make cover
 open coverage/lcov-report/index.html
 ```
 
+### Documentation generation
+
 If you've been working on in-code documentation 🙏 you can check that by building and viewing the docs,
 
 ```bash
@@ -311,15 +323,18 @@ npm run docs # or, make docs
 open docs/index.html
 ```
 
-Linting, test coverage, package building, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/dockter).
+### Commit messages
 
-To run the CLI during development use, `npm run cli -- <args>` e.g.
+Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
 
 ```bash
-npm run cli -- compile tests/fixtures/dockerfile-date/Dockerfile
+npm run commit # or, make commit
 ```
 
-This uses `ts-node` to compile and run Typescript on the fly so that you don't need to do a build step first.
+### Continuous integration
+
+Linting, test coverage, binary builds, package builds, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/dockter).
+
 
 ## See also
 

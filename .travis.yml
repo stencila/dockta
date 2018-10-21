@@ -22,12 +22,30 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
-# Deploy documentation to Github Pages
-# See https://docs.travis-ci.com/user/deployment/pages/
+# Rename (remove OS suffixes) and zip binary builds
+before_deploy:
+  - tar --transform "s|build/dockter-linux|dockter|" -czvf build/dockter-linux-x64.tar.gz build/dockter-linux
+  - tar --transform "s|build/dockter-macos|dockter|" -czvf build/dockter-macos-x64.tar.gz build/dockter-macos
+  - mv build/dockter-win.exe build/dockter.exe ; zip -j build/dockter-win-x64.zip build/dockter.exe
+
 deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN
-  local-dir: docs
-  on:
-    branch: master
+  # Deploy binary builds to Github Releases
+  # See https://docs.travis-ci.com/user/deployment/releases/
+  - provider: releases
+    skip_cleanup: true
+    api_key: $GITHUB_TOKEN
+    file:
+      - build/docktor-linux-x64.tar.gz
+      - build/docktor-macos-x64.tar.gz
+      - build/docktor-win-x64.zip
+    on:
+      tags: true
+
+  # Deploy documentation to Github Pages
+  # See https://docs.travis-ci.com/user/deployment/pages/
+  - provider: pages
+    skip-cleanup: true
+    github-token: $GITHUB_TOKEN
+    local-dir: docs
+    on:
+      branch: master
