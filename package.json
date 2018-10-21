@@ -1,7 +1,7 @@
 {
   "name": "@stencila/dockter",
   "version": "0.1.0",
-  "description": "A compiler for JSON-LD `SoftwareEnvironment` and `SoftwareSourceCode` nodes targetting Docker",
+  "description": "A Docker image builder for researchers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -18,18 +18,19 @@
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
     "start": "node ./dist/server.js",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "prepublishOnly": "npm run build-dist"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stencila/dockter.git"
   },
   "keywords": [
-    "JSON-LD",
-    "SoftwareEnvironment",
-    "SoftwareSourceCode",
     "Docker",
-    "compiler"
+    "Dockerfile",
+    "JSON-LD",
+    "reproducibility",
+    "reasearch"
   ],
   "author": "Contributors (https://github.com/stencila/dockter/contributors)",
   "license": "Apache-2.0",
@@ -52,6 +53,7 @@
     "jest": "^23.6.0",
     "markdown-toc": "^1.2.0",
     "pkg": "^4.3.4",
+    "semantic-release-cli": "^4.0.9",
     "ts-jest": "^23.10.3",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

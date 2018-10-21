@@ -29,6 +29,12 @@ before_deploy:
   - mv build/dockter-win.exe build/dockter.exe ; zip -j build/dockter-win-x64.zip build/dockter.exe
 
 deploy:
+  # Deploy a new version of NPM package and create a Github release
+  - provider: script
+    skip_cleanup: true
+    script:
+      - npx semantic-release
+
   # Deploy binary builds to Github Releases
   # See https://docs.travis-ci.com/user/deployment/releases/
   - provider: releases
