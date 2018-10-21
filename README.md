@@ -346,13 +346,13 @@ Related Stencila packages include:
 There are several projects that create Docker images from source code and/or requirements files:
 
 - [`alibaba/derrick`](https://github.com/alibaba/derrick)
-- [`jupyter/repro2docker`](https://github.com/jupyter/repo2docker)
+- [`jupyter/repo2docker`](https://github.com/jupyter/repo2docker)
 - [`Gueils/whales`](https://github.com/Gueils/whales)
 - [`o2r-project/containerit`](https://github.com/o2r-project/containerit)
 - [`openshift/source-to-image`](https://github.com/openshift/source-to-image)
 - [`ViDA-NYU/reprozip`](https://github.com/ViDA-NYU/reprozip])
 
-Dockter is similar to `repro2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repro2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code, managed builds and generated of image meta-data.
+Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repo2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code, managed builds and generated of image meta-data.
 
 ## FAQ
 
@@ -362,4 +362,4 @@ We've implemented this as a Node.js package for easier integration into Stencila
 
 ## Acknowledgments
 
-Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder) and [`repro2docker`](https://github.com/jupyter/repo2docker). It relies on [`dockerode`](https://www.npmjs.com/package/dockerode), [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser), and of course [Docker](https://www.docker.com/).
+Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder) and [`repo2docker`](https://github.com/jupyter/repo2docker). It relies on [`dockerode`](https://www.npmjs.com/package/dockerode), [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser), and of course [Docker](https://www.docker.com/).
