@@ -98,15 +98,15 @@
         {
           "assets": [
             {
-              "path": "build/docktor-linux-x64.tar.gz",
+              "path": "build/dockter-linux-x64.tar.gz",
               "label": "Linux CLI binary"
             },
             {
-              "path": "build/docktor-macos-x64.tar.gz",
+              "path": "build/dockter-macos-x64.tar.gz",
               "label": "MacOS CLI binary"
             },
             {
-              "path": "build/docktor-win-x64.zip",
+              "path": "build/dockter-win-x64.zip",
               "label": "Windows CLI binary"
             }
           ]
