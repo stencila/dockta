@@ -84,8 +84,9 @@ RUN apt-get update \\
 COPY .DESCRIPTION DESCRIPTION
 RUN bash -c \"Rscript <(curl -s https://unpkg.com/@stencila/dockter/src/install.R)\"
 
-COPY main.R main.R
+COPY cmd.R cmd.R
+COPY other.R other.R
 
-CMD Rscript main.R
+CMD Rscript cmd.R
 `)
 })

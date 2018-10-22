@@ -84,9 +84,7 @@ RUN apt-get update \\
 
     // Copy files needed to run project
     if (projectFiles.length) {
-      for (let [src, dest] of projectFiles) {
-        dockerfile += `\nCOPY ${src} ${dest}\n`
-      }
+      dockerfile += '\n' + projectFiles.map(([src, dest]) => `COPY ${src} ${dest}`).join('\n') + '\n'
     }
 
     // Add any CMD
