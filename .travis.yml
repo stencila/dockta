@@ -2,9 +2,6 @@
 language: node_js
 node_js:
   - 8
-cache:
-  directories:
-    - node_modules
 
 # Require docker servie for building images during tests
 services:
