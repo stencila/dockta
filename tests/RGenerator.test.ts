@@ -48,7 +48,7 @@ RUN apt-get update \\
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c "Rscript <(curl -s https://stencila.github.io/dockter/install.R)"
+RUN bash -c "Rscript <(curl -s https://unpkg.com/@stencila/dockter/src/install.R)"
 `)
 })
 
@@ -82,7 +82,7 @@ RUN apt-get update \\
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c \"Rscript <(curl -s https://stencila.github.io/dockter/install.R)\"
+RUN bash -c \"Rscript <(curl -s https://unpkg.com/@stencila/dockter/src/install.R)\"
 
 COPY main.R main.R
 
