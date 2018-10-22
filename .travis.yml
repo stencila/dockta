@@ -33,19 +33,7 @@ deploy:
   - provider: script
     skip_cleanup: true
     script:
-      - npx semantic-release
-
-  # Deploy binary builds to Github Releases
-  # See https://docs.travis-ci.com/user/deployment/releases/
-  - provider: releases
-    skip_cleanup: true
-    api_key: $GITHUB_TOKEN
-    file:
-      - build/docktor-linux-x64.tar.gz
-      - build/docktor-macos-x64.tar.gz
-      - build/docktor-win-x64.zip
-    on:
-      tags: true
+      - npm run semantic-release
 
   # Deploy documentation to Github Pages
   # See https://docs.travis-ci.com/user/deployment/pages/
