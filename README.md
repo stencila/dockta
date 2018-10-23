@@ -1,13 +1,13 @@
 # Dockter : a Docker image builder for researchers
 
-[![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/dockter/)
-[![NPM](http://img.shields.io/npm/v/@stencila/dockter.svg?style=flat)](https://www.npmjs.com/package/@stencila/dockter)
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
-[![Dependency status](https://david-dm.org/stencila/dockter.svg)](https://david-dm.org/stencila/dockter)
-[![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila) [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
+[![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
+[![NPM](http://img.shields.io/npm/v/@stencila/dockter.svg?style=flat)](https://www.npmjs.com/package/@stencila/dockter)
+[![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
+[![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/dockter/)
 
-Docker is a good tool for creating reproducible computing environments. But creating truely reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
+Docker is a good tool for creating reproducible computing environments. But creating truly reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
 
 > 🦄 Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
 
@@ -29,11 +29,16 @@ Docker is a good tool for creating reproducible computing environments. But crea
   * [Package](#package)
 - [Use](#use)
   * [CLI](#cli-1)
-    + [Compiling an environment](#compiling-an-environment)
-    + [Executing an environment](#executing-an-environment)
+    + [Compile a project](#compile-a-project)
+    + [Build a Docker image](#build-a-docker-image)
+    + [Execute a Docker image](#execute-a-docker-image)
   * [Router and server](#router-and-server)
 - [Architecture](#architecture)
-- [Develop](#develop)
+- [Contribute](#contribute)
+  * [Linting and testing](#linting-and-testing)
+  * [Documentation generation](#documentation-generation)
+  * [Commit messages](#commit-messages)
+  * [Continuous integration](#continuous-integration)
 - [See also](#see-also)
 - [FAQ](#faq)
 - [Acknowledgments](#acknowledgments)
@@ -310,15 +315,19 @@ The generator classes e.g. `PythonGenerator`, `RGenerator` generates a `Dockerfi
 
 For example, if a folder has single file in it `code.py`, `PythonParser` will parse that file and create a `SoftwareEnvironment` instance, which `DockerGenerator` uses to generate a `Dockerfile`, which `DockerBuilder` uses to build a Docker image.
 
-## Develop
+## Contribute
 
-We 💕 contributions! To get started,
+We 💕 contributions! All contributions: ideas 💡, bug reports 🐛, documentation 🗎, code 💾. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
+
+To get started on developing the code,
 
 ```bash
 git clone https://github.com/stencila/dockter
 cd dockter
 npm install
 ```
+
+Then take a look at the docs ([online](https://stencila.github.io/dockter/) or inline) and start hacking! 
 
 To run the CLI during development use, `npm run cli -- <args>` e.g.
 
@@ -330,18 +339,18 @@ This uses `ts-node` to compile and run Typescript on the fly so that you don't n
 
 ### Linting and testing
 
-Then take a look at the docs ([online](https://stencila.github.io/dockter/) or inline) and start hacking! Please check that your changes pass linting and unit tests,
+Please check that your changes pass linting and unit tests,
 
 ```bash
 npm run lint # or, make lint
 npm test # or, make text
 ```
 
-Use `npm test -- <test file path>` to run a single test file
+Use `npm test -- <test file path>` to run a single test file.
 
 You can setup a Git pre-commit hook to perform these checks automatically before each commit using `make hooks`.
 
-Check that any changes you've made are covered 🏅 by unit tests using,
+You can check that any changes you've made are covered 🏅 by unit tests using,
 
 ```bash
 npm run cover # or, make cover
@@ -359,7 +368,7 @@ open docs/index.html
 
 ### Commit messages
 
-Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. This help with automated semantic versioning. To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
+Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. This helps with automated semantic versioning. To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
 
 ```bash
 npm run commit # or, make commit
@@ -367,15 +376,10 @@ npm run commit # or, make commit
 
 ### Continuous integration
 
-Linting, test coverage, binary builds, package builds, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management, Github releases and NPM package publishing.
+Linting, test coverage, binary builds, package builds, and documentation generation are done on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management: minor version releases are done if any `feat(...)` commits are pushed, patch version releases are done if any `fix(...)` commits are pushed. Releases are made to [NPM](https://www.npmjs.com/package/@stencila/dockter) and [Github Releases](https://github.com/stencila/dockter/releases).
 
 
 ## See also
-
-Related Stencila packages include:
-
-- 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
-- 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
 
 There are several projects that create Docker images from source code and/or requirements files:
 
@@ -388,6 +392,13 @@ There are several projects that create Docker images from source code and/or req
 
 Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repo2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code, managed builds and generated of image meta-data.
 
+If you don't want to build a Docker image and just want a tool that helps determining the package dependencies of your source code check out:
+
+- Node.js: [`detective`](https://github.com/browserify/detective)
+- Python: [`modulefinder`](https://docs.python.org/3.7/library/modulefinder.html)
+- R: [`hadley/requirements`](https://github.com/hadley/requirements)
+
+
 ## FAQ
 
 *Why is this a Node.js package?*
@@ -396,4 +407,10 @@ We've implemented this as a Node.js package for easier integration into Stencila
 
 ## Acknowledgments
 
-Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder) and [`repo2docker`](https://github.com/jupyter/repo2docker). It relies on [`dockerode`](https://www.npmjs.com/package/dockerode), [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser), and of course [Docker](https://www.docker.com/).
+Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder) and [`repo2docker`](https://github.com/jupyter/repo2docker). It relies on many great open source projects, in particular:
+
+ - [`crandb`](https://github.com/metacran/crandb)
+ - [`dockerode`](https://www.npmjs.com/package/dockerode)
+ - [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser)
+ - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
+ - and of course, [Docker](https://www.docker.com/)
