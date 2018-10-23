@@ -1,8 +1,5 @@
-import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
-import stream from 'stream'
-import Docker from 'dockerode'
 
 import { SoftwareSourceCode, SoftwareEnvironment } from './context'
 
@@ -12,6 +9,7 @@ import RParser from './RParser'
 
 import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
+import DockerExecutor from './DockerExecutor'
 
 export default class DockerCompiler {
 
@@ -66,36 +64,26 @@ export default class DockerCompiler {
     }
 
     if (build) {
+      // Use the name of the environment, if possible
+      let name = (environ && environ.name) || undefined
+      // Build the image!
       const builder = new DockerBuilder()
-      await builder.build(folder, undefined, dockerfile)
+      await builder.build(folder, name, dockerfile)
     }
 
     return environ
   }
 
-  async execute (source: string): Promise<SoftwareEnvironment | null> {
-    const node = await this.compile(source)
+  async execute (source: string): Promise<string> {
+    // Compile the environment first
+    let environ = await this.compile(source)
+    if (!environ) throw new Error('Environment not created')
+    if (!environ.name) throw new Error('Environment does not have a name')
 
-    const docker = new Docker()
+    // Execute the environment's image (which is built in compile())
+    const executor = new DockerExecutor()
+    const result = await executor.execute(environ.name)
 
-    let output = ''
-    let outputStream = new stream.Writable()
-    outputStream._write = (chunk) => {
-      output += chunk
-    }
-
-    /*
-    const container = await docker.run(node.handle, [], outputStream)
-
-    let value
-    try {
-      value = JSON.parse(output)
-    } catch {
-      value = output.trim()
-    }
-    node.output = value
-    */
-
-    return node
+    return result
   }
 }

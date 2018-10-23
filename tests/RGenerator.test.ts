@@ -29,6 +29,8 @@ test('generate:packages', async () => {
   const generator = new RGenerator(environ)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
 
+ENV TZ="Etc/UTC"
+
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
       apt-transport-https \\
@@ -48,7 +50,7 @@ RUN apt-get update \\
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c "Rscript <(curl -s https://unpkg.com/@stencila/dockter/src/install.R)"
+RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 `)
 })
 
@@ -61,6 +63,8 @@ test('generate:r-xml2', async () => {
   const environ = await new RParser(folder).parse() as SoftwareEnvironment
   const dockerfile = await new RGenerator(environ, folder).generate(false)
   expect(dockerfile).toEqual(`FROM ubuntu:16.04
+
+ENV TZ="Etc/UTC"
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -82,7 +86,7 @@ RUN apt-get update \\
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c \"Rscript <(curl -s https://unpkg.com/@stencila/dockter/src/install.R)\"
+RUN bash -c \"Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)\"
 
 COPY cmd.R cmd.R
 COPY other.R other.R

@@ -37,11 +37,11 @@ yargs
 
   // Compile command
   // @ts-ignore
-  .command('compile [folder] [format]', 'Compile a folder to a JSON-LD `SoftwareEnvironment` node', yargs => {
+  .command('compile [folder] [format]', 'Compile a project to a software environment', yargs => {
     yargs.positional('folder', {
       type: 'string',
       default: '.',
-      describe: 'The path to the folder which defines the environment'
+      describe: 'The path to the project folder'
     }),
     yargs.positional('format', {
       type: 'string',
@@ -55,11 +55,11 @@ yargs
 
   // Build command
   // @ts-ignore
-  .command('build [folder]', 'Build a Docker image for a folder', yargs => {
+  .command('build [folder]', 'Build a Docker image for project', yargs => {
     yargs.positional('folder', {
       type: 'string',
       default: '.',
-      describe: 'The path to the folder which defines the environment'
+      describe: 'The path to the project folder'
     })
   }, async (args: any) => {
     await compiler.compile('file://' + args.folder, true).catch(error)
@@ -67,16 +67,11 @@ yargs
 
   // Execute command
   // @ts-ignore
-  .command('execute [folder] [format]', 'Execute a `SoftwareEnvironment` node', yargs => {
+  .command('execute [folder] [format]', 'Execute a project', yargs => {
     yargs.positional('folder', {
       type: 'string',
       default: '.',
-      describe: 'The folder which defines the environment'
-    }),
-    yargs.positional('format', {
-      type: 'string',
-      default: 'json',
-      describe: 'Format to output: json or yaml'
+      describe: 'The path to the project folder'
     })
   }, async (args: any) => {
     const node = await compiler.execute('file://' + args.folder).catch(error)

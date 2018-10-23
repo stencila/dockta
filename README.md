@@ -170,73 +170,107 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 ## Install
 
-Dockter is available as pre-compiled, standalone command line tool, or as a Node.js package.
+Dockter is available as pre-compiled, standalone command line tool (CLI), or as a Node.js package. In both cases, if you want to use Dockter to build Docker images, you will need to [install Docker](https://docs.docker.com/install/) if you don't already have it.
 
 ### CLI
 
-If you don't have Node.js or would simply prefer a standalone binary, you can download the latest release from the [releases page](https://github.com/stencila/dockter/releases).
+Download the command line interface (CLI) as a pre-compiled, standalone binary for Windows, MacOS or Linux from the [releases page](https://github.com/stencila/dockter/releases).
 
 ### Package
+
+If you want to integrate Dockter into another application or package, it is also available as a Node.js package :
 
 ```bash
 npm install @stencila/dockter
 ```
 
-You will need to [install Docker](https://docs.docker.com/install/) if you don't already have it on your system.
-
 ## Use
-
-This package is primarily designed to be used a compiler service within a Stencila deployment (e.g. `stencila/cloud`). But you can also use it standalone via the API or command line interface. 
 
 ### CLI
 
-The command line interface (CLI) is a good way to get an understanding of what this package does. Essentially, it just exposes the compiler API on the command line.
-
-#### Compiling an environment
-
-The most basic thing that this package does is to read a `Dockerfile`, parse it to extract metadata, build a Docker image for it, and run that image as a Docker container.
-
-Here's a very simple example `Dockerfile`. It uses the tiny `busybox` image as a base, adds some meta-data about the image, and then specifies the command to run to print out the date.
-
-```Dockerfile
-FROM busybox
-LABEL description="Returns the current date and time at UTC, to the nearest second, in ISO-8601 format" \
-      author="Nokome Bentley <nokome@stenci.la>"
-CMD date -u -Iseconds
-```
-
-You can use the `compile` command to a Dockerfile like this into a JSON-LD `SoftwareEnvironment` node,
+The command line tool has three primary commands `compile`, `build` and `execute`. To get an overview of the commands available use the `--help` option i.e.
 
 ```bash
-dockter compile Dockerfile > environ.jsonld
+dockter --help
 ```
 
-```json
-{
-  "@context": "https://schema.stenci.la",
-  "type": "SoftwareSourceCode",
-  "id": "https://hub.docker.com/#sha256:27d6e441706e89dac442c69c3565fc261b9830dd313963cb5488ba418afa3d02",
-  "author": [],
-  "text": "FROM busybox\nLABEL description=\"Prints the current date and time at UTC, to the nearest second, in ISO-8601 format\" \\\n      author=\"Nokome Bentley <nokome@stenci.la>\"\nCMD date -u -Iseconds\n",
-  "programmingLanguage": "Dockerfile",
-  "messages": [],
-  "description": "Prints the current date and time at UTC, to the nearest second, in ISO-8601 format"
-}
-```
-
-> 🔧 Replace this JSON output when a more final version available.
-
-The default CLI output format is JSON but you can get YAML, which is easier to read, by using the `--format=yaml` option. You can turn off building of the Docker image (to just extract meta-data) using `--build=false`. Use `dockter compile --help` for more help.
-
-
-#### Executing an environment
+To get more detailed help on a particular command, also include the command name e.g
 
 ```bash
-dockter execute environ.jsonld
+dockter compile --help
 ```
 
+#### Compile a project
+
+The `compile` command compiles a project folder into a specification of a software environment. It scans the folder for source code and package requirement files, parses them, and 🦄 creates an `.environ.jsonld` file. This file contains the information needed to build a Docker image for your project.
+
+For example, let's say your project folder has a single R file, `main.R` which uses the R package `lubridate` to print out the current time:
+
+```R
+lubridate::now()
+```
+
+Let's compile that project and inspect the compiled software environment. Change into the project directory and run the `compile` command. The default output format is JSON but you can get YAML, which is easier to read, by using the `--format=yaml` option.
+
 ```bash
-dockter execute Dockerfile
+dockter compile --format=yaml
+```
+
+The output from this command is a YAML document describing the project's software environment including it's dependencies (in this case just `lubridate`). The environment's name is taken from the name of the folder, in this case `rdate`.
+
+```yaml
+name: rdate
+datePublished: '2018-10-21'
+softwareRequirements:
+  - description: |-
+      Functions to work with date-times and time-spans: fast and user
+      friendly parsing of date-time data, extraction and updating of components of
+      a date-time (years, months, days, hours, minutes, and seconds), algebraic
+      manipulation on date-time and time-span objects. The 'lubridate' package has
+      a consistent and memorable syntax that makes working with dates easy and
+      fun.
+      Parts of the 'CCTZ' source code, released under the Apache 2.0 License,
+      are included in this package. See <https://github.com/google/cctz> for more
+      details.
+    name: lubridate
+    urls:
+      - 'http://lubridate.tidyverse.org'
+      - |-
+
+        https://github.com/tidyverse/lubridate
+    authors:
+      - &ref_0
+        givenNames:
+          - Vitalie
+        familyNames:
+          - Spinu
+        name: Vitalie Spinu
+...
+```
+
+#### Build a Docker image
+
+Usually, you'll compile and build a Docker image for your project in one step using the `build` command. This takes the output of the `compile` command, generates a `.Dockerfile` for it and gets Docker to build that image.
+
+```bash
+dockter build
+```
+
+After the image has finished building you should have a new docker image on your machine, called `rdate`:
+
+```bash
+> docker images
+REPOSITORY        TAG                 IMAGE ID            CREATED              SIZE
+rdate             latest              545aa877bd8d        About a minute ago   766MB
+```
+
+#### Execute a Docker image
+
+You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your docker image in one step:
+
+```bash
+> dockter execute
+2018-10-23 00:58:39
 ```
 
 ### Router and server
