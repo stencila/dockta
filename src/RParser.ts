@@ -104,74 +104,112 @@ export default class RParser extends Parser {
 
     // For each dependency, query https://crandb.r-pkg.org to get a manifest including it's own
     // dependencies and convert it to a `SoftwarePackage`
-    environ.softwareRequirements = await Promise.all(packages.map(async name => {
-      const crandb = await this.fetch(`http://crandb.r-pkg.org/${name}`)
-
-      // Create new package instance and populate it's
-      // properties in order of type heirarchy:
-      //   Thing > CreativeWork > SoftwareSourceCode > SoftwarePackage
-      const pkg = new SoftwarePackage()
-
-      // schema:Thing
-      pkg.description = crandb.Description
-      pkg.name = crandb.Package
-      if (crandb.URL) pkg.urls = crandb.URL.split(',')
-
-      // schema:CreativeWork
-      // pkg.headline = crandb.Title TODO
-      if (crandb.Author) {
-        crandb.Author.split(',\n').map((author: string) => {
-          const match = author.match(/^([^\[]+?) \[([^\]]+)\]/)
-          if (match) {
-            const name = match[1]
-            const person = Person.fromText(name)
-            const roles = match[2].split(', ')
-            if (roles.includes('aut')) push(pkg, 'authors', person)
-            if (roles.includes('ctb')) push(pkg, 'contributors', person)
-            if (roles.includes('cre')) push(pkg, 'creators', person)
-          } else {
-            push(pkg, 'authors', Person.fromText(author))
-          }
-        })
-      }
-      pkg.datePublished = crandb['Date/Publication']
-      pkg.license = crandb.License // TODO parse license string into a URL or CreativeWork
-
-      // schema:SoftwareSourceCode
-      pkg.runtimePlatform = 'R'
-      if (crandb.URL) pkg.codeRepository = crandb.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
-
-      // stencila:SoftwarePackage
-      // Required R packages are added as `softwareRequirements` with
-      // `programmingLanguage` set to R
-      if (crandb.Imports) {
-        for (let [name, version] of Object.entries(crandb.Imports)) {
-          const required = new SoftwarePackage()
-          required.name = name
-          required.runtimePlatform = 'R'
-          pkg.softwareRequirementsPush(required)
-        }
-      }
-      // Required system dependencies are obtained from https://sysreqs.r-hub.io and
-      // added as `softwareRequirements` with "deb" `runtimePlatform`
-      const sysreqs = await this.fetch(`https://sysreqs.r-hub.io/pkg/${name}`)
-      for (let sysreq of sysreqs) {
-        const keys = Object.keys(sysreq)
-        if (keys.length > 1) throw new Error(`Expected on one key for each sysreq but got: ${keys.join(',')}`)
-        const name = keys[0]
-        const debPackage = sysreq[name].platforms['DEB']
-        // The deb package can be null e.g. `curl https://sysreqs.r-hub.io/pkg/lubridate`
-        if (debPackage) {
-          const required = new SoftwarePackage()
-          required.name = debPackage
-          required.runtimePlatform = 'deb'
-          pkg.softwareRequirementsPush(required)
-        }
-      }
-
-      return pkg
-    }))
+    environ.softwareRequirements = await Promise.all(
+      packages.map(name => this.createPackage(name))
+    )
 
     return environ
+  }
+
+  /**
+   * Create a `SoftwarePackage` instance from a R package name
+   *
+   * This method fetches meta-data for a R package to populate the properties
+   * of a `SoftwarePackage` instance. It recursively fetches meta-data on the package's
+   * dependencies, including system dependencies.
+   *
+   * @param name Name of the R package
+   */
+  private async createPackage (name: string): Promise<SoftwarePackage> {
+    // Create new package instance and populate it's
+    // properties in order of type heirarchy:
+    //   Thing > CreativeWork > SoftwareSourceCode > SoftwarePackage
+    const pkg = new SoftwarePackage()
+    pkg.name = name
+
+    // These packages are built-in to R distributions, so we don't need to collect
+    // meta-data for them.
+    if (['stats', 'graphics', 'grDevices', 'tools', 'utils', 'datasets', 'methods'].includes(name)) {
+      return pkg
+    }
+
+    // Fetch meta-data from CRANDB
+    const crandb = await this.fetch(`http://crandb.r-pkg.org/${name}`)
+    if (crandb.error) {
+      if (crandb.error === 'not_found') return pkg
+      else throw new Error(crandb.error)
+    }
+
+    // schema:Thing
+    pkg.description = crandb.Description
+    if (crandb.URL) pkg.urls = crandb.URL.split(',')
+
+    // schema:CreativeWork
+    // pkg.headline = crandb.Title TODO
+    if (crandb.Author) {
+      crandb.Author.split(',\n').map((author: string) => {
+        const match = author.match(/^([^\[]+?) \[([^\]]+)\]/)
+        if (match) {
+          const name = match[1]
+          const person = Person.fromText(name)
+          const roles = match[2].split(', ')
+          if (roles.includes('aut')) push(pkg, 'authors', person)
+          if (roles.includes('ctb')) push(pkg, 'contributors', person)
+          if (roles.includes('cre')) push(pkg, 'creators', person)
+        } else {
+          push(pkg, 'authors', Person.fromText(author))
+        }
+      })
+    }
+    pkg.datePublished = crandb['Date/Publication']
+    pkg.license = crandb.License // TODO parse license string into a URL or CreativeWork
+
+    // schema:SoftwareSourceCode
+    pkg.runtimePlatform = 'R'
+    if (crandb.URL) pkg.codeRepository = crandb.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
+
+    // stencila:SoftwarePackage
+    // Create `SoftwarePackage` for each dependency
+    if (crandb.Imports) {
+      pkg.softwareRequirements = await Promise.all(
+        Object.entries(crandb.Imports).map(([name, version]) => this.createPackage(name))
+      )
+    }
+
+    // Required system dependencies are obtained from https://sysreqs.r-hub.io and
+    // added as `softwareRequirements` with "deb" as `runtimePlatform`
+    const sysreqs = await this.fetch(`https://sysreqs.r-hub.io/pkg/${name}`)
+    for (let sysreq of sysreqs) {
+      const keys = Object.keys(sysreq)
+      if (keys.length > 1) throw new Error(`Expected on one key for each sysreq but got: ${keys.join(',')}`)
+      const name = keys[0]
+      const debPackage = sysreq[name].platforms['DEB']
+      // The deb package can be null e.g. `curl https://sysreqs.r-hub.io/pkg/lubridate`
+      if (typeof debPackage === 'string') {
+        // Handle strings e.g. curl https://sysreqs.r-hub.io/pkg/XML
+        const required = new SoftwarePackage()
+        required.name = debPackage
+        required.runtimePlatform = 'deb'
+        pkg.softwareRequirementsPush(required)
+      } else if (Array.isArray(debPackage)) {
+        // Handle arrays e.g. curl https://sysreqs.r-hub.io/pkg/gsl
+        for (let deb of debPackage.filter(deb => deb.distribution === 'Ubuntu' && deb.releases === undefined)) {
+          if (deb.buildtime) {
+            const required = new SoftwarePackage()
+            required.name = deb.buildtime
+            required.runtimePlatform = 'deb'
+            pkg.softwareRequirementsPush(required)
+          }
+          if (deb.runtime) {
+            const required = new SoftwarePackage()
+            required.name = deb.runtime
+            required.runtimePlatform = 'deb'
+            pkg.softwareRequirementsPush(required)
+          }
+        }
+      }
+    }
+
+    return pkg
   }
 }
