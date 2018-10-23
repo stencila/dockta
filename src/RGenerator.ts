@@ -20,6 +20,12 @@ export default class RGenerator extends Generator {
     return 16.04
   }
 
+  envVars (sysVersion: number): Array<[string, string]> {
+    // Set the timezone to avoid warning from Sys.timezone()
+    // See https://github.com/rocker-org/rocker-versioned/issues/89
+    return [['TZ', 'Etc/UTC']]
+  }
+
   aptRepos (sysVersion: number): Array<[string, string]> {
     // TODO if no date, then use cran
     const sysVersionName = this.sysVersionName(sysVersion)

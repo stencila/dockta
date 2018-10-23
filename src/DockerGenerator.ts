@@ -49,6 +49,10 @@ export default class DockerGenerator extends Generator {
     return Math.min(18.04, ...this.generators.map(generator => generator.sysVersion()))
   }
 
+  envVars (sysVersion: number): Array<[string, string]> {
+    return this.collect((generator: Generator) => generator.envVars(sysVersion))
+  }
+
   aptRepos (sysVersion: number): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.aptRepos(sysVersion))
   }

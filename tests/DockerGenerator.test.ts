@@ -37,6 +37,8 @@ test('generate:packages', async () => {
   const generator = new DockerGenerator(environ)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
 
+ENV TZ="Etc/UTC"
+
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
       apt-transport-https \\

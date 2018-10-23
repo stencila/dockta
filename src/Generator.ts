@@ -31,6 +31,12 @@ export default class Generator extends Doer {
 
     if (!this.applies()) return dockerfile
 
+    const envVars = this.envVars(sysVersion)
+    if (envVars.length) {
+      const pairs = envVars.map(([key,value]) => `${key}="${value.replace('"', '\\"')}"`)
+      dockerfile += `\nENV ${pairs.join(' \\\n    ')}\n`
+    }
+
     const aptRepos: Array<[string, string]> = this.aptRepos(sysVersion)
     if (aptRepos.length) {
       // Install system packages required for adding repos
@@ -132,6 +138,10 @@ RUN apt-get update \\
       '18.04': 'bionic'
     }
     return lookup[sysVersion]
+  }
+
+  envVars (sysVersion: number): Array<[string, string]> {
+    return []
   }
 
   aptRepos (sysVersion: number): Array<[string, string]> {
