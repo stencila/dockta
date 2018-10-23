@@ -66,8 +66,11 @@ export default class DockerCompiler {
     }
 
     if (build) {
+      // Use the name of the environment, if possible
+      let name = (environ && environ.name) || undefined
+      // Build the image!
       const builder = new DockerBuilder()
-      await builder.build(folder, undefined, dockerfile)
+      await builder.build(folder, name, dockerfile)
     }
 
     return environ
