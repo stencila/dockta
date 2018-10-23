@@ -1,6 +1,10 @@
 import fixture from './fixture'
 import RParser from '../src/RParser'
-import { SoftwareEnvironment } from '../src/context';
+import { SoftwareEnvironment } from '../src/context'
+
+// Increase timeout (in milliseconds) to allow for HTTP requests
+// to get package meta data
+jest.setTimeout(30 * 60 * 1000)
 
 /**
  * When applied to an empty folder, parse should return null.
