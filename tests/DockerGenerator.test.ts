@@ -59,6 +59,6 @@ RUN apt-get update \\
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c "Rscript <(curl -s https://unpkg.com/@stencila/dockter/src/install.R)"
+RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 `)
 })
