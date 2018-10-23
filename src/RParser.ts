@@ -62,8 +62,10 @@ export default class RParser extends Parser {
           const match = imported.match(/^\s*(\w+).*/)
           if (match) {
             pkg = match[1]
-          } else pkg = imported.trim()
-          packages.push(pkg)
+          } else {
+            pkg = imported.trim()
+          }
+          if (pkg.length) packages.push(pkg)
         }
       }
     } else {
@@ -117,19 +119,21 @@ export default class RParser extends Parser {
 
       // schema:CreativeWork
       // pkg.headline = crandb.Title TODO
-      crandb.Author.split(',\n').map((author: string) => {
-        const match = author.match(/^([^\[]+?) \[([^\]]+)\]/)
-        if (match) {
-          const name = match[1]
-          const person = Person.fromText(name)
-          const roles = match[2].split(', ')
-          if (roles.includes('aut')) push(pkg, 'authors', person)
-          if (roles.includes('ctb')) push(pkg, 'contributors', person)
-          if (roles.includes('cre')) push(pkg, 'creators', person)
-        } else {
-          push(pkg, 'authors', Person.fromText(author))
-        }
-      })
+      if (crandb.Author) {
+        crandb.Author.split(',\n').map((author: string) => {
+          const match = author.match(/^([^\[]+?) \[([^\]]+)\]/)
+          if (match) {
+            const name = match[1]
+            const person = Person.fromText(name)
+            const roles = match[2].split(', ')
+            if (roles.includes('aut')) push(pkg, 'authors', person)
+            if (roles.includes('ctb')) push(pkg, 'contributors', person)
+            if (roles.includes('cre')) push(pkg, 'creators', person)
+          } else {
+            push(pkg, 'authors', Person.fromText(author))
+          }
+        })
+      }
       pkg.datePublished = crandb['Date/Publication']
       pkg.license = crandb.License // TODO parse license string into a URL or CreativeWork
 
