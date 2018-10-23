@@ -1,16 +1,19 @@
-Package: eLife
+Package: elife
+Description:
+  A test project that replicates the packages, and snapshot date,
+  as used in https://github.com/stencila/examples/tree/master/elife-30274
 Version: 1.0.0
 Date: 2017-10-19
 Imports:
-  car
-  coin
-  ggplot2
-  httr
-  lsmeans
-  MBESS
-  metafor
-  pander
-  psychometric
-  reshape2
-  rjson
+  car,
+  coin,
+  ggplot2,
+  httr,
+  lsmeans,
+  MBESS,
+  metafor,
+  pander,
+  psychometric,
+  reshape2,
+  rjson,
   tidyr
