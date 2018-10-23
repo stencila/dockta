@@ -1,6 +1,10 @@
 import fixture from './fixture'
 import RParser from '../src/RParser'
-import { SoftwareEnvironment } from '../src/context';
+import { SoftwareEnvironment } from '../src/context'
+
+// Increase timeout (in milliseconds) to allow for HTTP requests
+// to get package meta data
+jest.setTimeout(30 * 60 * 1000)
 
 /**
  * When applied to an empty folder, parse should return null.
@@ -51,3 +55,20 @@ test('parse:r-no-desc', async () => {
   expect(reqs).toBeDefined()
   expect(reqs && reqs.map(req => req.name)).toEqual(['MASS', 'digest', 'dplyr', 'ggplot2', 'lubridate'])
 })
+
+/**
+ * When applied to fixture with more system dependencies...
+ */
+test('parse:r-elife', async () => {
+  const parser = new RParser(fixture('r-elife'))
+  const environ = await parser.parse() as SoftwareEnvironment
+
+  const reqs = environ.softwareRequirements
+  expect(reqs).toBeDefined()
+  expect(reqs && reqs.map(req => req.name)).toEqual([
+    'car', 'coin', 'ggplot2', 'httr', 'lsmeans', 'MBESS',
+    'metafor', 'pander', 'psychometric', 'reshape2',
+    'rjson', 'tidyr'
+  ])
+})
+

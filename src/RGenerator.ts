@@ -60,8 +60,8 @@ export default class RGenerator extends Generator {
 
   installFiles (sysVersion: number): Array<[string, string]> {
     // Copy user defined files if they exist
-    if (this.exists('install.R')) return [['install.R', '.']]
-    if (this.exists('DESCRIPTION')) return [['DESCRIPTION', '.']]
+    if (this.exists('install.R')) return [['install.R', 'install.R']]
+    if (this.exists('DESCRIPTION')) return [['DESCRIPTION', 'DESCRIPTION']]
 
     // Generate a .DESCRIPTION to copy into image
     const pkgs = this.filterPackages('R').map(pkg => pkg.name)
