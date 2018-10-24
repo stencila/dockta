@@ -9,13 +9,13 @@ import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } 
  * For each package, we get meta-data from http://crandb.r-pkg.org.
  * System dependencies for each package are obtained from https://sysreqs.r-hub.io/pkg/xml2.
  *
- * Create a `SoftwarePackage` instance to respresent each package
+ * Create a `SoftwarePackage` instance to represent each package
  * using crosswalks from column "R Package Description" in https://github.com/codemeta/codemeta/blob/master/crosswalk.csv
  */
 export default class RParser extends Parser {
 
   /**
-   * Parse a folder by detecting any R requirements or souce code files
+   * Parse a folder by detecting any R requirements or source code files
    * and return a `SoftwareEnvironment` instance
    */
   async parse (): Promise<SoftwareEnvironment | null> {
@@ -51,7 +51,7 @@ export default class RParser extends Parser {
       // Get dependencies
       const start = /^Imports:[ \t]*\n/gm.exec(desc)
       if (start) {
-        // Find next unindented line or use end of string
+        // Find next un-indented line or use end of string
         let match = desc.substring(start.index + start[0].length).match(/\n^\w/m)
         let end
         if (match) end = match.index
@@ -91,7 +91,7 @@ export default class RParser extends Parser {
       }
     }
 
-    // Default to the folder name, with any non alphanumerics removed to ensure compatability
+    // Default to the folder name, with any non alphanumerics removed to ensure compatibility
     // with R package name requirements
     if (!name) name = path.basename(this.folder).replace(/[^a-zA-Z0-9]/g, '')
     // Default to yesterday's date (to ensure MRAN is available for the date)
@@ -122,7 +122,7 @@ export default class RParser extends Parser {
    */
   private async createPackage (name: string): Promise<SoftwarePackage> {
     // Create new package instance and populate it's
-    // properties in order of type heirarchy:
+    // properties in order of type hierarchy:
     //   Thing > CreativeWork > SoftwareSourceCode > SoftwarePackage
     const pkg = new SoftwarePackage()
     pkg.name = name
