@@ -1,3 +1,8 @@
+<div align="center">
+	<img src="http://stenci.la/img/logo-name.png" alt="Stencila" style="max-width:100px">
+</div>
+<br>
+
 # Dockter : a Docker image builder for researchers
 
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
