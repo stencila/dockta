@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import os from 'os'
 // @ts-ignore
 import yargonaut from 'yargonaut'
 import yargs from 'yargs'
@@ -8,6 +9,7 @@ import yaml from 'js-yaml'
 const VERSION = require('../package').version
 
 import DockerCompiler from './DockerCompiler'
+import { ApplicationError } from './errors';
 const compiler = new DockerCompiler()
 
 yargonaut
@@ -81,9 +83,18 @@ yargs
   .parse()
 
 function output (node: any, format: string) {
-  console.log(format === 'yaml' ? yaml.safeDump(node, { lineWidth: 120 }) : JSON.stringify(node, null, '  '))
+  if (node) console.log(format === 'yaml' ? yaml.safeDump(node, { lineWidth: 120 }) : JSON.stringify(node, null, '  '))
 }
 
 function error (error: Error) {
-  console.error(error)
+  if (error instanceof ApplicationError) {
+    console.error(error.message)
+  } else {
+    console.error('Woops, sorry something went wrong :(')
+    console.error('Please help us fix this issue by posting this output to https://github.com/stencila/dockter/issues/new')
+    console.error(`  args: ${process.argv.slice(2).join(' ')}`)
+    console.error(`  version: ${VERSION}`)
+    console.error(`  platform: ${os.platform()}`)
+    console.error(error)
+  }
 }

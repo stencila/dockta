@@ -6,13 +6,14 @@ import path from 'path'
 import request from 'request'
 import tmp from 'tmp'
 
+import {PermissionError} from './errors'
+
 const requestCache = cachedRequest(request)
 requestCache.setCacheDirectory('/tmp/dockter-request-cache')
 
 /**
- * A utility base call which provides a convient interface to
- * a filesystem folder and hTTP requests
- * for the `Parser` and `Generator` classes
+ * A utility base class for the `Parser` and `Generator` classes
+ * providing a convenient interface to a filesystem folder and HTTP requests
  */
 export default abstract class Doer {
 
@@ -31,9 +32,18 @@ export default abstract class Doer {
   }
 
   glob (pattern: string | Array<string>): Array<string> {
-    return glob.sync(pattern, {
-      cwd: this.folder
-    })
+    try {
+      return glob.sync(pattern, {
+        cwd: this.folder
+      })
+    } catch (error) {
+      if (error.code === 'EACCES') {
+        throw new PermissionError(
+          `You do no have permission to access the whole of folder "${this.folder}". Are you sure this is the right folder?`
+        )
+      }
+      else throw error
+    }
   }
 
   read (subpath: string): string {
