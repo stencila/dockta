@@ -108,7 +108,40 @@ Dockter can create a software environment file which reflects the requirements t
 The software environment file is a file in `JSON` or `yaml` format with comprehensive meta data about the project.
 Dockter parses the folder with the Python project for `py` files and extracts the relevant information.
 
+#### 4. Real-life example
 
+To demonstrate convenience of using Dockter, try running it for one of the [Software Carpentry modules](https://github.com/swcarpentry/r-novice-inflammation)
+for learning R. The repository with the module contains a range of source code files, including 'python`, `JS`, `Rmd` and `R`. 
+First, clone the repository on your machine:
+
+```
+git clone https://github.com/swcarpentry/r-novice-inflammation.git
+```
+
+Run `dockter compile` on the whole directory:
+
+```
+dockter compile r-novice-inflammation
+```
+
+Then, `dockter build` to create a `Docker` image so that the module can be run (note, `dockter` will likely have to download and install a number
+of packages, this may take a while):
+
+```
+dockter build r-novice-inflammation
+```
+
+Check if the image is there:
+
+```
+docker images
+```
+
+And you should see the image on the list:
+
+```                                 TAG                 IMAGE ID            CREATED             SIZE
+rnoviceinflammation                        latest              149d3dc3fc73        20 minutes ago      1.12GB
+```
 
 #### Resources
 

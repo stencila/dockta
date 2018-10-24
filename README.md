@@ -93,7 +93,7 @@ If the folder contains any 🦄 [#9](https://github.com/stencila/dockter/issues/
 
 ### Efficiently handling of updates to project code
 
-Docker layered filesystem has advantages but it can cause real delays when you are updating your project dependencies. For example, see [this issue](https://github.com/npm/npm/issues/11446) for the workarounds used by Node.js developers to prevent long waits when they update their `package.json`. The reason this happens is that when you update a requirements file Docker throws away all the susequent layers, including the one where you install all your package dependencies.
+Docker layered filesystem has advantages but it can cause real delays when you are updating your project dependencies. For example, see [this issue](https://github.com/npm/npm/issues/11446) for the workarounds used by Node.js developers to prevent long waits when they update their `package.json`. The reason this happens is that when you update a requirements file Docker throws away all the subsequent layers, including the one where you install all your package dependencies.
 
 Here's a simple motivating [example](fixtures/tests/py-pandas) of a Dockerized Python project. It's got a [`pip`](https://pypi.org/project/pip/) `requirements.txt` file which specifies that the project requires `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
 
@@ -106,7 +106,7 @@ The project has also got a `Dockerfile` that specifies which Python version we w
 ```Dockerfile
 FROM python:3.7.0
 
-COPY requirements.xt .
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 ```
 
@@ -125,7 +125,7 @@ pandas==0.23.0
 matplotlib==3.0.0
 ```
 
-When we do `docker build .` again Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequant ones. This means that it will download and install **all** the necesary packages again, including the ones that we previously installed - and takes longer than the first install. For a more contrieved illustration of this, simply add a space to a line in the `requirements.txt` file and notice how the package install gets repeated all over again.
+When we do `docker build .` again Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequent ones. This means that it will download and install **all** the necessary packages again, including the ones that we previously installed - and takes longer than the first install. For a more contrived illustration of this, simply add a space to a line in the `requirements.txt` file and notice how the package install gets repeated all over again.
 
 Now, let's add a special `# dockter` comment to the Dockerfile before the `COPY` directive,
 
@@ -175,7 +175,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 - *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They're a good place to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
-- *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter alltogether and build the same image using Docker (it will just take longer if you change you project dependencies).
+- *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
 
 ## Install
