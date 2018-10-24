@@ -186,6 +186,12 @@ Dockter is available as pre-compiled, standalone command line tool (CLI), or as 
 
 Download the command line interface (CLI) as a pre-compiled, standalone binary for Windows, MacOS or Linux from the [releases page](https://github.com/stencila/dockter/releases).
 
+For example, on Linux, you can download and install Dockter using the following command (change the version to the latest):
+
+```bash
+curl -sL https://github.com/stencila/dockter/releases/download/v0.2.4/dockter-linux -o ~/.local/bin/dockter && chmod +x ~/.local/bin/dockter
+```
+
 ### Package
 
 If you want to integrate Dockter into another application or package, it is also available as a Node.js package :
