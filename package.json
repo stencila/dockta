@@ -19,7 +19,7 @@
     "server": "ts-node src/server.ts",
     "start": "node ./dist/server.js",
     "commit": "git-cz",
-    "prepublishOnly": "npm run build-dist",
+    "prepublishOnly": "npm run build",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -98,16 +98,16 @@
         {
           "assets": [
             {
-              "path": "build/dockter-linux-x64.tar.gz",
-              "label": "Linux CLI binary"
+              "path": "build/dockter-linux",
+              "label": "dockter-linux"
             },
             {
-              "path": "build/dockter-macos-x64.tar.gz",
-              "label": "MacOS CLI binary"
+              "path": "build/dockter-macos",
+              "label": "dockter-macos"
             },
             {
-              "path": "build/dockter-win-x64.zip",
-              "label": "Windows CLI binary"
+              "path": "build/dockter-win.exe",
+              "label": "dockter-win.exe"
             }
           ]
         }

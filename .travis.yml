@@ -11,19 +11,12 @@ services:
 script:
   - make lint
   - make cover
-  - make build
   - make docs
 
 # Upload test coverage to codecov
 # See https://docs.codecov.io/v5.0.0/docs/about-the-codecov-bash-uploader
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-
-# Rename (remove OS suffixes) and zip binary builds
-before_deploy:
-  - tar --transform "s|build/dockter-linux|dockter|" -czvf build/dockter-linux-x64.tar.gz build/dockter-linux
-  - tar --transform "s|build/dockter-macos|dockter|" -czvf build/dockter-macos-x64.tar.gz build/dockter-macos
-  - mv build/dockter-win.exe build/dockter.exe ; zip -j build/dockter-win-x64.zip build/dockter.exe
 
 deploy:
   # Deploy a new version of NPM package and create a Github release
