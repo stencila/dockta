@@ -31,11 +31,14 @@ export default class DockerBuilder {
 
     // Collect all instructions prior to any `# dockter` comment into a
     // new Dockerfile and store remaining instructions for special handling
+    let workdir = '/'
     let dockterize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
-      if (instruction.name === 'COMMENT') {
+      if (instruction.name === 'WORKDIR') {
+        workdir = path.join(workdir, instruction.args as string)
+      } else if (instruction.name === 'COMMENT') {
         const arg = instruction.args as string
         if (arg.match(/^# *dockter/)) {
           instructions = instructions.slice(index + 1)
@@ -164,6 +167,10 @@ export default class DockerBuilder {
     for (let instruction of instructions) {
       const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
+        case 'WORKDIR':
+          workdir = path.join(workdir, instruction.args as string)
+          break
+
         case 'COPY':
         case 'ADD':
           // Add files/subdirs to the container
@@ -182,7 +189,7 @@ export default class DockerBuilder {
               return !copy.includes(relativePath)
             }
           })
-          await container.putArchive(pack, { path: '.' })
+          await container.putArchive(pack, { path: workdir })
           break
 
         case 'RUN':
