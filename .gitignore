@@ -2,6 +2,9 @@
 /coverage
 /dist
 /docs
+!/docs/*.md
+!/docs/*.R
+!/docs/*.Rmd
 /node_modules
 /tests/**/.*
 .idea
