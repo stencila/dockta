@@ -68,10 +68,10 @@ export default class DockerBuilder {
       }
     })
     const targz = tar.pipe(zlib.createGzip())
-    
+
     // The following line can be useful in debugging the
     // above tar stream generation
-    //targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
+    // targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
 
     const messages: Array<Object> = []
     const stream = await this.docker.buildImage(targz, {
