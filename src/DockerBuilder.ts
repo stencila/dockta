@@ -57,7 +57,6 @@ export default class DockerBuilder {
         // Ignore original Dockerfile
         // Ignore the special `snapshot` directory which exists when this
         // is run within a `pkg` binary and dir is `.`
-        // TODO: implement `.dockerignore` behavior
         return relpath === 'Dockerfile' || relpath[0] === '.' || relpath === 'snapshot'
       },
       finalize: false,
@@ -168,8 +167,6 @@ export default class DockerBuilder {
         case 'COPY':
         case 'ADD':
           // Add files/subdirs to the container
-          // TODO: only copy files if they have changed
-          // TODO: to be consistent with Docker ADD should handle urls
           const copy = instruction.args as Array<string>
           console.error(step, instruction.name, copy.join(' '))
           const to = copy.pop() as string
@@ -185,7 +182,7 @@ export default class DockerBuilder {
               return !copy.includes(relativePath)
             }
           })
-          await container.putArchive(pack, { path: '.' }) // TODO this should put to WORKDIR if specified
+          await container.putArchive(pack, { path: '.' })
           break
 
         case 'RUN':
@@ -200,11 +197,9 @@ export default class DockerBuilder {
           })
           await exec.start()
 
-          // TODO: do something with stdout and stderr?
           exec.output.pipe(process.stdout)
 
           // Wait until the exec has finished running, checking every 100ms
-          // TODO: abort after an amount of time
           while (true) {
             let status = await exec.inspect()
             if (status.Running === false) break
@@ -213,7 +208,7 @@ export default class DockerBuilder {
           break
 
         case 'CMD':
-          // Dockerfile instructions to apply when commiting the image
+          // Dockerfile instructions to apply when committing the image
           changes += instruction.raw + '\n\n'
           break
 

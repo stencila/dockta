@@ -87,7 +87,6 @@ export default class DockerParser extends Parser {
             environ.description = value
             break
           case 'maintainer':
-            // TODO should push to a `maintainers` property
           case 'author':
             environ.authorsPush(Person.fromText(value))
             break

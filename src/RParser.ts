@@ -143,7 +143,6 @@ export default class RParser extends Parser {
     if (crandb.URL) pkg.urls = crandb.URL.split(',')
 
     // schema:CreativeWork
-    // pkg.headline = crandb.Title TODO
     if (crandb.Author) {
       crandb.Author.split(',\n').map((author: string) => {
         const match = author.match(/^([^\[]+?) \[([^\]]+)\]/)
@@ -160,11 +159,11 @@ export default class RParser extends Parser {
       })
     }
     pkg.datePublished = crandb['Date/Publication']
-    pkg.license = crandb.License // TODO parse license string into a URL or CreativeWork
+    pkg.license = crandb.License
 
     // schema:SoftwareSourceCode
     pkg.runtimePlatform = 'R'
-    if (crandb.URL) pkg.codeRepository = crandb.URL.split(',') // TODO only use URLS which point to a repo e.g. github.com
+    if (crandb.URL) pkg.codeRepository = crandb.URL.split(',') // See issue #35
 
     // stencila:SoftwarePackage
     // Create `SoftwarePackage` for each dependency

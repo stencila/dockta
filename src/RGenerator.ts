@@ -27,7 +27,6 @@ export default class RGenerator extends Generator {
   }
 
   aptRepos (sysVersion: number): Array<[string, string]> {
-    // TODO if no date, then use cran
     const sysVersionName = this.sysVersionName(sysVersion)
     const date = this.environ.datePublished
     return [
