@@ -40,36 +40,5 @@ test('generate:packages', async () => {
   environ.softwareRequirements = [pkg1, pkg2]
   
   const generator = new DockerGenerator(environ)
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
-
-ENV TZ="Etc/UTC"
-
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      apt-transport-https \\
-      ca-certificates \\
-      software-properties-common
-
-RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu xenial/\" \\
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
-
-RUN apt-get update \\
- && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      libxml2-dev \\
-      python3 \\
-      python3-pip \\
-      r-base \\
- && apt-get autoremove -y \\
- && apt-get clean \\
- && rm -rf /var/lib/apt/lists/*
-
-RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
-USER dockteruser
-WORKDIR /home/dockteruser
-
-# dockter
-
-COPY .DESCRIPTION DESCRIPTION
-RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
-`)
+  expect(generator.aptPackages(18.04)).toEqual(['libxml2-dev', 'python3', 'python3-pip', 'r-base'])
 })
