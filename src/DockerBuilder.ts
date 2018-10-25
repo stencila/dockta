@@ -4,6 +4,7 @@ import fs from 'fs'
 import parser from 'docker-file-parser'
 import path from 'path'
 import tarFs from 'tar-fs'
+import zlib from 'zlib'
 
 /**
  * Builds Docker images from Dockerfiles
@@ -50,11 +51,14 @@ export default class DockerBuilder {
     if (!dockterize) instructions = []
 
     // Pack the directory and replace the Dockerfile with the new one
-    const pack = tarFs.pack(dir, {
+    const tar = tarFs.pack(dir, {
       ignore: name => {
+        const relpath = path.relative(dir, name)
         // Ignore original Dockerfile
+        // Ignore the special `snapshot` directory which exists when this
+        // is run within a `pkg` binary and dir is `.`
         // TODO: implement `.dockerignore` behavior
-        return path.relative(name, dir) === 'Dockerfile'
+        return relpath === 'Dockerfile' || relpath[0] === '.' || relpath === 'snapshot'
       },
       finalize: false,
       finish: pack => {
@@ -63,12 +67,14 @@ export default class DockerBuilder {
         pack.finalize()
       }
     })
+    const targz = tar.pipe(zlib.createGzip())
+    
     // The following line can be useful in debugging the
     // above tar stream generation
-    // pack.pipe(tarFs.extract('/tmp/dockter-builder-debug-1'))
+    //targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
 
     const messages: Array<Object> = []
-    const stream = await this.docker.buildImage(pack, {
+    const stream = await this.docker.buildImage(targz, {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
       t: name + ':system'

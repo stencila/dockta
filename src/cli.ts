@@ -9,7 +9,7 @@ import yaml from 'js-yaml'
 const VERSION = require('../package').version
 
 import DockerCompiler from './DockerCompiler'
-import { ApplicationError } from './errors';
+import { ApplicationError } from './errors'
 const compiler = new DockerCompiler()
 
 yargonaut
@@ -96,5 +96,6 @@ function error (error: Error) {
     console.error(`  version: ${VERSION}`)
     console.error(`  platform: ${os.platform()}`)
     console.error(error)
+    process.exit(1)
   }
 }
