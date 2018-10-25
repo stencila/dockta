@@ -3,13 +3,15 @@ import glob from 'fast-glob'
 // @ts-ignore
 import cachedRequest from 'cached-request'
 import path from 'path'
+import rimraf from 'rimraf'
 import request from 'request'
 import tmp from 'tmp'
 
-import {PermissionError} from './errors'
+import { PermissionError, NetworkError, ApplicationError } from './errors'
 
+const REQUEST_CACHE_DIR = '/tmp/dockter-request-cache'
 const requestCache = cachedRequest(request)
-requestCache.setCacheDirectory('/tmp/dockter-request-cache')
+requestCache.setCacheDirectory(REQUEST_CACHE_DIR)
 
 /**
  * A utility base class for the `Parser` and `Generator` classes
@@ -39,10 +41,9 @@ export default abstract class Doer {
     } catch (error) {
       if (error.code === 'EACCES') {
         throw new PermissionError(
-          `You do no have permission to access the whole of folder "${this.folder}". Are you sure this is the right folder?`
+          `You do no have permission to access the whole of folder "${this.folder}". Are you sure you want Dockter to compile this folder?`
         )
-      }
-      else throw error
+      } else throw error
     }
   }
 
@@ -60,8 +61,20 @@ export default abstract class Doer {
         url,
         json: true,
         ttl: 60 * 60 * 1000 // Milliseconds to cache responses for
-      }, (error: Error, response: any, body: any) => {
-        if (error) return reject(error)
+      }, (error: any, response: any, body: any) => {
+        if (error) {
+          if (['ENOTFOUND', 'EAI_AGAIN', 'DEPTH_ZERO_SELF_SIGNED_CERT'].includes(error.code)) {
+            // These are usually connection errors
+            error = new NetworkError(`There was a problem fetching ${url} (${error.code}). Are you connected to the internet?`)
+          } else if (error instanceof SyntaxError && error.message.includes(' JSON ')) {
+            // We can get here if a previous attempt had a network error and resulted in corrupt
+            // JSON being written to the cache. So clear the cache...
+            rimraf.sync(REQUEST_CACHE_DIR)
+            // Ask the user to try again
+            error = new ApplicationError(`There was a problem fetching ${url}. Please try again.`)
+          }
+          return reject(error)
+        }
         resolve(body)
       })
     })
