@@ -134,11 +134,9 @@ export default class RParser extends Parser {
     }
 
     // Fetch meta-data from CRANDB
+    // If null (i.e. 404) then return package as is
     const crandb = await this.fetch(`http://crandb.r-pkg.org/${name}`)
-    if (crandb.error) {
-      if (crandb.error === 'not_found') return pkg
-      else throw new Error(crandb.error)
-    }
+    if (crandb === null) return pkg
 
     // schema:Thing
     pkg.description = crandb.Description
