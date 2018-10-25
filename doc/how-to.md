@@ -22,22 +22,7 @@ a) Download the latest stable binary package (ready to run) [for your operating 
 
 b) Copy the binary file into the folder where you would like Dockter to be (eg. `Applications` on your Mac OS, or `Program Files` on Windows). 
 
-c) Unpack the binary file
-
-If you are using Windows, you can simply `unzip` the file. For Linux and Mac OS, open the terminal and type:
-
-Linux:
-```
-tar xvzf dockter-linux-x64.tar.gz
-```
-
-Mac OS
-```
-tar xvzf dockter-macos-x64.tar.gz
-```
-
-You should now see the executable file called `docter`. Dockter is a command line tool (at least for now) so you need to interact with it through the terminal
-(on Windows it will be Power Shell). 
+c) Once the file is downloaded, rename it to `dockter`  Dockter is a command line tool (at least for now) so you need to interact with it through the terminal (on Windows it will be Power Shell). 
 
 **Basic use**
 
