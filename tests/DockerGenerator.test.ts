@@ -9,7 +9,12 @@ import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
 test('generate:empty', async () => {
   const environ = new SoftwareEnvironment()
   const generator = new DockerGenerator(environ)
-  expect(await generator.generate(false)).toEqual('FROM ubuntu:18.04\n')
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
+
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+`)
 })
 
 /**
@@ -57,6 +62,10 @@ RUN apt-get update \\
  && apt-get autoremove -y \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
+
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
 
 # dockter
 

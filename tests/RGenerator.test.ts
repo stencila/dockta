@@ -47,6 +47,10 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
@@ -82,6 +86,10 @@ RUN apt-get update \\
  && apt-get autoremove -y \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
+
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
 
 # dockter
 

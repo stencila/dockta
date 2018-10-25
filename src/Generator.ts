@@ -70,10 +70,10 @@ RUN apt-get update \\
 
     // Once everything that needs root permissions is installed, switch the user to non-root for installing the rest of the packages.
     dockerfile += `
-    RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser \\
-    USER dockteruser \\
-    WORKDIR /home/dockteruser
-    `
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+`
 
     const installFiles = this.installFiles(sysVersion)
     const installCommand = this.installCommand(sysVersion)
