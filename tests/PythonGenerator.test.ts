@@ -42,20 +42,24 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+
 # dockter
 
-COPY dockter-generated-requirements.txt .
-RUN pip3 install -r dockter-generated-requirements.txt
+COPY .requirements.txt requirements.txt
+RUN pip3 install --user --requirement requirements.txt
 
 COPY cmd.py cmd.py
 
 CMD python3  cmd.py
 `)
-  const requirements = generator.read('dockter-generated-requirements.txt')
+  const requirements = generator.read('.requirements.txt')
   expect(requirements).toEqual('arrow==0.12.1')
 
-  if (fs.existsSync(fixture('py-date/dockter-generated-requirements.txt'))) {
-    fs.unlinkSync(fixture('py-date/dockter-generated-requirements.txt'))
+  if (fs.existsSync(fixture('py-date/.requirements.txt'))) {
+    fs.unlinkSync(fixture('py-date/.requirements.txt'))
   }
 })
 
@@ -78,10 +82,14 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+
 # dockter
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY requirements.txt requirements.txt
+RUN pip install --user --requirement requirements.txt
 
 COPY cmd.py cmd.py
 

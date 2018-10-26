@@ -1,7 +1,7 @@
 import Generator from './Generator'
 import { ComputerLanguage, SoftwareEnvironment } from './context'
 
-const GENERATED_REQUIREMENTS_FILE = 'dockter-generated-requirements.txt'
+const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
 /**
  * A Dockerfile generator for Python environments
@@ -52,28 +52,18 @@ export default class PythonGenerator extends Generator {
 
     if (requirementsContent !== '') {
       this.write(GENERATED_REQUIREMENTS_FILE, requirementsContent)
-      return [[GENERATED_REQUIREMENTS_FILE, '.']]
+      return [[GENERATED_REQUIREMENTS_FILE, 'requirements.txt']]
     }
 
     if (this.exists('requirements.txt')) {
-      return [['requirements.txt', '.']]
+      return [['requirements.txt', 'requirements.txt']]
     }
 
     return []
   }
 
   installCommand (sysVersion: string): string | undefined {
-    let requirementsFileName = null
-
-    if (this.exists(GENERATED_REQUIREMENTS_FILE)) {
-      requirementsFileName = GENERATED_REQUIREMENTS_FILE
-    } else if (this.exists('requirements.txt')) {
-      requirementsFileName = 'requirements.txt'
-    }
-
-    if (requirementsFileName !== null) {
-      return `pip${this.pythonVersionSuffix()} install -r ${requirementsFileName}`
-    }
+    return `pip${this.pythonVersionSuffix()} install --user --requirement requirements.txt`
   }
 
   /**
