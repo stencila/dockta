@@ -13,11 +13,11 @@ export default class RGenerator extends Generator {
     return 'R'
   }
 
-  sysVersion (): number {
+  baseVersion (): string {
     // At time of writing, MRAN did not have an ubuntu:18.04(bionic) repo which supported R 3.4 (only bionic_3.5)
     // See https://cran.microsoft.com/snapshot/2018-10-05/bin/linux/ubuntu/
     // So require ubuntu:16.04(xenial).
-    return 16.04
+    return '16.04'
   }
 
   envVars (sysVersion: number): Array<[string, string]> {
@@ -32,7 +32,8 @@ export default class RGenerator extends Generator {
     ]
   }
 
-  aptRepos (sysVersion: number): Array<[string, string]> {
+  aptRepos (sysVersion: string): Array<[string, string]> {
+    // TODO if no date, then use cran
     const sysVersionName = this.sysVersionName(sysVersion)
     const date = this.environ.datePublished
     return [
@@ -43,9 +44,10 @@ export default class RGenerator extends Generator {
     ]
   }
 
-  aptPackages (sysVersion: number): Array<string> {
+  aptPackages (sysVersion: string): Array<string> {
     // Walk through R packages and find any deb packages
     let debpkgs: Array<string> = []
+
     function find (pkg: any) {
       if (pkg.runtimePlatform !== 'R' || !pkg.softwareRequirements) return
       for (let subpkg of pkg.softwareRequirements) {
@@ -56,6 +58,7 @@ export default class RGenerator extends Generator {
         }
       }
     }
+
     for (let pkg of this.environ.softwareRequirements || []) find(pkg)
 
     return debpkgs.concat([
@@ -63,7 +66,7 @@ export default class RGenerator extends Generator {
     ])
   }
 
-  installFiles (sysVersion: number): Array<[string, string]> {
+  installFiles (sysVersion: string): Array<[string, string]> {
     // Copy user defined files if they exist
     if (this.exists('install.R')) return [['install.R', 'install.R']]
     if (this.exists('DESCRIPTION')) return [['DESCRIPTION', 'DESCRIPTION']]

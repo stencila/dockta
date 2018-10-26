@@ -106,9 +106,14 @@ export class SoftwareSourceCodeMessage extends Thing {
  */
 export class SoftwareApplication extends CreativeWork {
   softwareRequirements?: Array<SoftwarePackage | SoftwareApplication>
+  runtimePlatform?: Text
 
   softwareRequirementsPush (item: SoftwarePackage | SoftwareApplication) {
     push(this, 'softwareRequirements', item)
+  }
+
+  identifier (): string {
+    return `${this.name}${this.version}`
   }
 }
 
@@ -131,6 +136,10 @@ export class SoftwarePackage extends SoftwareSourceCode {
 
   softwareRequirementsPush (itme: SoftwarePackage | SoftwareApplication) {
     push(this, 'softwareRequirements', itme)
+  }
+
+  identifier (): string {
+    return this.codeRepository || ''
   }
 }
 

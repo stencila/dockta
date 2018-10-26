@@ -28,18 +28,18 @@ export default class Generator extends Doer {
 # To stop Dockter generating this file and start editing it yourself, rename it to "Dockerfile".\n\n`
     }
 
-    const sysVersion = this.sysVersion()
-    dockerfile += `FROM ubuntu:${sysVersion}\n`
+    const baseIdentifier = this.baseIdentifier()
+    dockerfile += `FROM ${baseIdentifier}\n`
 
     if (!this.applies()) return dockerfile
 
-    const envVars = this.envVars(sysVersion)
+    const envVars = this.envVars(this.baseVersion())
     if (envVars.length) {
-      const pairs = envVars.map(([key,value]) => `${key}="${value.replace('"', '\\"')}"`)
+      const pairs = envVars.map(([key, value]) => `${key}="${value.replace('"', '\\"')}"`)
       dockerfile += `\nENV ${pairs.join(' \\\n    ')}\n`
     }
 
-    const aptRepos: Array<[string, string]> = this.aptRepos(sysVersion)
+    const aptRepos: Array<[string, string]> = this.aptRepos(this.baseVersion())
     if (aptRepos.length) {
       // Install system packages required for adding repos
       dockerfile += `
@@ -56,7 +56,7 @@ RUN apt-get update \\
       }
     }
 
-    let aptPackages: Array<string> = this.aptPackages(sysVersion)
+    let aptPackages: Array<string> = this.aptPackages(baseIdentifier)
     if (aptPackages.length) {
       dockerfile += `
 RUN apt-get update \\
@@ -75,10 +75,10 @@ USER dockteruser
 WORKDIR /home/dockteruser
 `
 
-    const installFiles = this.installFiles(sysVersion)
-    const installCommand = this.installCommand(sysVersion)
-    const projectFiles = this.projectFiles(sysVersion)
-    const runCommand = this.runCommand(sysVersion)
+    const installFiles = this.installFiles(baseIdentifier)
+    const installCommand = this.installCommand(baseIdentifier)
+    const projectFiles = this.projectFiles(baseIdentifier)
+    const runCommand = this.runCommand(baseIdentifier)
 
     // Add Dockter special comment for managed installation of language packages
     if (installCommand) {
@@ -122,8 +122,8 @@ WORKDIR /home/dockteruser
   filterPackages (runtimePlatform: string): Array<SoftwarePackage> {
     if (this.environ.softwareRequirements) {
       return this.environ.softwareRequirements
-                 .filter(req => (req as SoftwarePackage).runtimePlatform === runtimePlatform)
-                 .map(req => req as SoftwarePackage)
+          .filter(req => (req as SoftwarePackage).runtimePlatform === runtimePlatform)
+          .map(req => req as SoftwarePackage)
     }
     return []
   }
@@ -136,12 +136,22 @@ WORKDIR /home/dockteruser
     return 'deb'
   }
 
-  sysVersion (): number {
-    return 18.04
+  baseName (): string {
+    return 'ubuntu'
   }
 
-  sysVersionName (sysVersion: number): string {
-    const lookup: {[key: string]: string} = {
+  baseVersion (): string {
+    return '18.04'
+  }
+
+  baseIdentifier (): string {
+    const joiner = this.baseVersion() === '' ? '' : ':'
+
+    return `${this.baseName()}${joiner}${this.baseVersion()}`
+  }
+
+  sysVersionName (sysVersion: string): string {
+    const lookup: { [key: string]: string } = {
       '14.04': 'trusty',
       '16.04': 'xenial',
       '18.04': 'bionic'
@@ -149,15 +159,15 @@ WORKDIR /home/dockteruser
     return lookup[sysVersion]
   }
 
-  envVars (sysVersion: number): Array<[string, string]> {
+  envVars (sysVersion: string): Array<[string, string]> {
     return []
   }
 
-  aptRepos (sysVersion: number): Array<[string, string]> {
+  aptRepos (sysVersion: string): Array<[string, string]> {
     return []
   }
 
-  aptPackages (sysVersion: number): Array<string> {
+  aptPackages (sysVersion: string): Array<string> {
     return this.filterPackages('deb').map(pkg => pkg.name || '')
   }
 
@@ -168,7 +178,7 @@ WORKDIR /home/dockteruser
    * @param sysVersion The Ubuntu system version being used
    * @returns An array of [src, dest] tuples
    */
-  installFiles (sysVersion: number): Array<[string, string]> {
+  installFiles (sysVersion: string): Array<[string, string]> {
     return []
   }
 
@@ -177,7 +187,7 @@ WORKDIR /home/dockteruser
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  installCommand (sysVersion: number): string | undefined {
+  installCommand (sysVersion: string): string | undefined {
     return
   }
 
@@ -187,7 +197,7 @@ WORKDIR /home/dockteruser
    * @param sysVersion The Ubuntu system version being used
    * @returns An array of [src, dest] tuples
    */
-  projectFiles (sysVersion: number): Array<[string, string]> {
+  projectFiles (sysVersion: string): Array<[string, string]> {
     return []
   }
 
@@ -196,7 +206,7 @@ WORKDIR /home/dockteruser
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  runCommand (sysVersion: number): string | undefined {
+  runCommand (sysVersion: string): string | undefined {
     return
   }
 }

@@ -92,6 +92,7 @@ test('parse:py-pandas', async () => {
   const arrowPackage = new SoftwarePackage()
   arrowPackage.name = 'arrow'
   arrowPackage.version = '==0.12.1'
+  arrowPackage.runtimePlatform = 'Python'
 
   const environ = new SoftwareEnvironment()
   environ.name = 'py-date'
