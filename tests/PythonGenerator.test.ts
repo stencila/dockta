@@ -1,4 +1,4 @@
-import { SoftwareEnvironment, SoftwareApplication } from '../src/context'
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 import PythonGenerator from '../src/PythonGenerator'
 import fs from 'fs'
 import fixture from './fixture'
@@ -23,7 +23,7 @@ test('generate:dockter-requirements', async () => {
   }
   const environ = new SoftwareEnvironment()
 
-  const arrowPackage = new SoftwareApplication()
+  const arrowPackage = new SoftwarePackage()
   arrowPackage.name = 'arrow'
   arrowPackage.version = '==0.12.1'
   arrowPackage.runtimePlatform = 'Python'

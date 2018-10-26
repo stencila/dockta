@@ -71,6 +71,7 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
+    "@stencila/schema": "0.1.2",
     "docker-file-parser": "^1.0.4",
     "dockerode": "^2.5.7",
     "express": "^4.16.3",

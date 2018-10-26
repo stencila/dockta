@@ -1,7 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-
-import { SoftwareSourceCode, SoftwareEnvironment } from './context'
+import { SoftwareEnvironment } from '@stencila/schema'
 
 import Parser from './Parser'
 import DockerParser from './DockerParser'

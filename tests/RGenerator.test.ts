@@ -1,7 +1,7 @@
 import fixture from './fixture'
 import RParser from '../src/RParser'
 import RGenerator from '../src/RGenerator'
-import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 
 /**
  * When applied to an empty environment, generate should return

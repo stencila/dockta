@@ -1,5 +1,5 @@
 import Generator from './Generator'
-import { ComputerLanguage, SoftwareEnvironment } from './context'
+import { SoftwareEnvironment } from '@stencila/schema'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
@@ -43,7 +43,7 @@ export default class PythonGenerator extends Generator {
     }
 
     return this.filterPackages('Python').map(
-        requirement => requirement.identifier()
+        requirement => `${requirement.name}${requirement.version}`
     ).join('\n')
   }
 

@@ -1,6 +1,7 @@
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
+
 import fixture from './fixture'
 import DockerGenerator from '../src/DockerGenerator'
-import { SoftwareEnvironment, SoftwarePackage } from '../src/context';
 
 /**
  * When applied to an empty environment, generate should return

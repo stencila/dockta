@@ -1,5 +1,5 @@
 import Doer from './Doer'
-import { SoftwareEnvironment } from './context'
+import { SoftwareEnvironment } from '@stencila/schema'
 
 /**
  * A base class for language parsers

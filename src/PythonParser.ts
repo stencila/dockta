@@ -1,5 +1,5 @@
 import Parser from './Parser'
-import { SoftwareEnvironment, SoftwarePackage, SoftwareSourceCode } from './context'
+import { SoftwareEnvironment, SoftwarePackage, SoftwareSourceCode } from '@stencila/schema'
 import { basename } from 'path'
 
 const REQUIREMENTS_COMMENT_REGEX = /^\s*#/
@@ -92,7 +92,7 @@ export default class PythonParser extends Parser {
           standardRequirement.version = rawRequirement.version
         }
 
-        environ.softwareRequirementsPush(standardRequirement)
+        environ.softwareRequirements.push(standardRequirement)
       } else if (rawRequirement.type === RequirementType.URL) {
         let sourceRequirement = new SoftwareSourceCode()
         sourceRequirement.runtimePlatform = 'Python'

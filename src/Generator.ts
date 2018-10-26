@@ -1,5 +1,5 @@
 import Doer from './Doer'
-import { SoftwareEnvironment, SoftwarePackage } from './context'
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 
 const VERSION = require('../package').version
 

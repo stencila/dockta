@@ -1,6 +1,6 @@
 import fixture from './fixture'
 import RParser from '../src/RParser'
-import { SoftwareEnvironment } from '../src/context'
+import { SoftwareEnvironment } from '@stencila/schema'
 
 // Increase timeout (in milliseconds) to allow for HTTP requests
 // to get package meta data

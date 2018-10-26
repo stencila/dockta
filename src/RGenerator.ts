@@ -1,5 +1,4 @@
 import Generator from './Generator'
-import { SoftwarePackage } from './context'
 
 /**
  * A Dockerfile generator for R environments

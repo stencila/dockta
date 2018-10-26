@@ -1,6 +1,6 @@
 import fixture from './fixture'
 import PythonParser, { RequirementType } from '../src/PythonParser'
-import { SoftwareEnvironment, SoftwarePackage } from '../src/context'
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 
 /**
  * When applied to an empty folder, parse should return null.

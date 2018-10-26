@@ -1,4 +1,4 @@
-# Use Node.js 8 and cache packages
+# Use Node.js 8
 language: node_js
 node_js:
   - 8
@@ -7,7 +7,7 @@ node_js:
 services:
   docker
 
-# Do linting, coverage, and build docs (to upload to github pages)
+# Do linting, coverage, and build docs (to upload to Github pages)
 script:
   - make lint
   - make cover

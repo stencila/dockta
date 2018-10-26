@@ -1,7 +1,7 @@
 import path from 'path'
 
 import Parser from './Parser'
-import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } from './context'
+import { SoftwarePackage, SoftwareEnvironment, Person } from '@stencila/schema'
 
 /**
  * Dockter `Parser` class for R requirements files and source code.
@@ -150,11 +150,11 @@ export default class RParser extends Parser {
           const name = match[1]
           const person = Person.fromText(name)
           const roles = match[2].split(', ')
-          if (roles.includes('aut')) push(pkg, 'authors', person)
-          if (roles.includes('ctb')) push(pkg, 'contributors', person)
-          if (roles.includes('cre')) push(pkg, 'creators', person)
+          if (roles.includes('aut')) pkg.authors.push(person)
+          if (roles.includes('ctb')) pkg.contributors.push(person)
+          if (roles.includes('cre')) pkg.creators.push(person)
         } else {
-          push(pkg, 'authors', Person.fromText(author))
+          pkg.authors.push(Person.fromText(author))
         }
       })
     }
@@ -187,7 +187,7 @@ export default class RParser extends Parser {
         const required = new SoftwarePackage()
         required.name = debPackage
         required.runtimePlatform = 'deb'
-        pkg.softwareRequirementsPush(required)
+        pkg.softwareRequirements.push(required)
       } else if (Array.isArray(debPackage)) {
         // Handle arrays e.g. curl https://sysreqs.r-hub.io/pkg/gsl
         for (let deb of debPackage.filter(deb => deb.distribution === 'Ubuntu' && deb.releases === undefined)) {
@@ -195,13 +195,13 @@ export default class RParser extends Parser {
             const required = new SoftwarePackage()
             required.name = deb.buildtime
             required.runtimePlatform = 'deb'
-            pkg.softwareRequirementsPush(required)
+            pkg.softwareRequirements.push(required)
           }
           if (deb.runtime) {
             const required = new SoftwarePackage()
             required.name = deb.runtime
             required.runtimePlatform = 'deb'
-            pkg.softwareRequirementsPush(required)
+            pkg.softwareRequirements.push(required)
           }
         }
       }

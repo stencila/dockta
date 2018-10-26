@@ -1,6 +1,6 @@
 import DockerCompiler from '../src/DockerCompiler'
 import fixture from './fixture'
-import { SoftwareEnvironment, Person } from '../src/context';
+import { SoftwareEnvironment, Person } from '@stencila/schema';
 
 /**
  * Tests of compiling Dockerfile

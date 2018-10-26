@@ -1,7 +1,7 @@
 import Generator from './Generator'
 import PythonGenerator from './PythonGenerator'
 import RGenerator from './RGenerator'
-import { SoftwareEnvironment } from './context'
+import { SoftwareEnvironment } from '@stencila/schema'
 
 const PREFERRED_UBUNTU_VERSION = '18.04'
 
