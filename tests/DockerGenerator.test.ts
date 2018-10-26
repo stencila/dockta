@@ -40,5 +40,5 @@ test('generate:packages', async () => {
   environ.softwareRequirements = [pkg1, pkg2]
   
   const generator = new DockerGenerator(environ)
-  expect(generator.aptPackages(18.04)).toEqual(['libxml2-dev', 'python3', 'python3-pip', 'r-base'])
+  expect(generator.aptPackages('18.04')).toEqual(['libxml2-dev', 'python3', 'python3-pip', 'r-base'])
 })
