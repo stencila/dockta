@@ -1,17 +1,14 @@
 import fs from 'fs'
 import glob from 'fast-glob'
-// @ts-ignore
-import cachedRequest from 'cached-request'
+import got from 'got'
+import persist from 'node-persist'
 import path from 'path'
-import rimraf from 'rimraf'
-import request from 'request'
 import tmp from 'tmp'
 
-import { PermissionError, NetworkError, ApplicationError } from './errors'
+import { PermissionError, NetworkError } from './errors'
 
 const REQUEST_CACHE_DIR = '/tmp/dockter-request-cache'
-const requestCache = cachedRequest(request)
-requestCache.setCacheDirectory(REQUEST_CACHE_DIR)
+let REQUEST_CACHE_INITIALISED = false
 
 /**
  * A utility base class for the `Parser` and `Generator` classes
@@ -55,28 +52,46 @@ export default abstract class Doer {
     fs.writeFileSync(path.join(this.folder, subpath), content, 'utf8')
   }
 
-  fetch (url: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      requestCache({
-        url,
-        json: true,
+  async fetch (url: string): Promise<any> {
+    if (!REQUEST_CACHE_INITIALISED) {
+      await persist.init({
+        dir: REQUEST_CACHE_DIR,
         ttl: 60 * 60 * 1000 // Milliseconds to cache responses for
-      }, (error: any, response: any, body: any) => {
-        if (error) {
-          if (['ENOTFOUND', 'EAI_AGAIN', 'DEPTH_ZERO_SELF_SIGNED_CERT'].includes(error.code)) {
-            // These are usually connection errors
-            error = new NetworkError(`There was a problem fetching ${url} (${error.code}). Are you connected to the internet?`)
-          } else if (error instanceof SyntaxError && error.message.includes(' JSON ')) {
-            // We can get here if a previous attempt had a network error and resulted in corrupt
-            // JSON being written to the cache. So clear the cache...
-            rimraf.sync(REQUEST_CACHE_DIR)
-            // Ask the user to try again
-            error = new ApplicationError(`There was a problem fetching ${url}. Please try again.`)
-          }
-          return reject(error)
-        }
-        resolve(body)
       })
-    })
+      REQUEST_CACHE_INITIALISED = true
+    }
+
+    let value
+    try {
+      value = await persist.getItem(url)
+    } catch (error) {
+      if (error.message.includes('does not look like a valid storage file')) {
+        // It seems that `persist.setItem` is not atomic and that the storage file can
+        // have zero bytes when we make multiple requests, some of which are for the same
+        // url. So we ignore this error and continue with the duplicate request.
+      } else {
+        throw error
+      }
+    }
+
+    if (!value) {
+      try {
+        const response = await got(url, {
+          json: true
+        })
+        value = response.body
+      } catch (error) {
+        if (error.statusCode === 404) {
+          value = null
+        } else if (['ENOTFOUND', 'EAI_AGAIN', 'DEPTH_ZERO_SELF_SIGNED_CERT'].includes(error.code)) {
+          // These are usually connection errors
+          throw new NetworkError(`There was a problem fetching ${url} (${error.code}). Are you connected to the internet?`)
+        } else {
+          throw error
+        }
+      }
+      await persist.setItem(url, value)
+    }
+    return value
   }
 }

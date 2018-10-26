@@ -3,6 +3,38 @@ import PythonGenerator from './PythonGenerator'
 import RGenerator from './RGenerator'
 import { SoftwareEnvironment } from './context'
 
+const PREFERRED_UBUNTU_VERSION = '18.04'
+
+function versionCompare (versionOne: string, versionTwo: string) {
+  if (versionOne === versionTwo) {
+    return 0  // shortcut
+  }
+
+  let splitV1 = versionOne.split('.')
+  let splitV2 = versionTwo.split('.')
+
+  while (splitV1.length < splitV2.length) {
+    splitV1.push('0')
+  }
+
+  while (splitV2.length < splitV1.length) {
+    splitV2.push('0')
+  }
+
+  for (let i = 0; i < splitV1.length; i) {
+    let component1 = parseInt(splitV1[i], 10)
+    let component2 = parseInt(splitV2[i], 10)
+
+    if (component1 < component2) {
+      return -1
+    } else if (component1 > component2) {
+      return 1
+    }
+  }
+
+  return 0  // all components equal
+}
+
 /**
  * A Dockerfile generator that collects instructions from
  * all the other generators to allow for images that support
@@ -45,41 +77,44 @@ export default class DockerGenerator extends Generator {
     return true
   }
 
-  sysVersion (): number {
-    return Math.min(18.04, ...this.generators.map(generator => generator.sysVersion()))
+  baseVersion (): string {
+    return [PREFERRED_UBUNTU_VERSION].concat(
+        this.generators.filter(generator => generator.baseName() === this.baseName())  // filter to generators with matching base name
+            .map(generator => generator.baseVersion()))
+        .sort(versionCompare)[0]
   }
 
-  envVars (sysVersion: number): Array<[string, string]> {
+  envVars (sysVersion: string): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.envVars(sysVersion))
   }
 
-  aptRepos (sysVersion: number): Array<[string, string]> {
+  aptRepos (sysVersion: string): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.aptRepos(sysVersion))
   }
 
-  aptPackages (sysVersion: number): Array<string> {
+  aptPackages (sysVersion: string): Array<string> {
     // Get the set of unique apt packages requested by each child generator
     const pkgs = this.collect((generator: Generator) => generator.aptPackages(sysVersion)).sort()
     return Array.from(new Set(pkgs))
   }
 
-  installFiles (sysVersion: number): Array<[string, string]> {
+  installFiles (sysVersion: string): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.installFiles(sysVersion))
   }
 
-  installCommand (sysVersion: number): string | undefined {
+  installCommand (sysVersion: string): string | undefined {
     return this.generators.map((generator: Generator) => generator.installCommand(sysVersion))
-                          .filter(cmd => cmd)
-                          .join(' \\\n && ')
+        .filter(cmd => cmd)
+        .join(' \\\n && ')
   }
 
-  projectFiles (sysVersion: number): Array<[string, string]> {
+  projectFiles (sysVersion: string): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.projectFiles(sysVersion))
   }
 
-  runCommand (sysVersion: number): string | undefined {
+  runCommand (sysVersion: string): string | undefined {
     return this.generators.map((generator: Generator) => generator.runCommand(sysVersion))
-                          .filter(cmd => cmd)
-                          .join(';')
+        .filter(cmd => cmd)
+        .join(';')
   }
 }

@@ -1,3 +1,8 @@
+# Contributing
+
+🎉 Thanks for taking the time to contribute to Dockter! 🎉
+
+
 # Table of Contents
 
 [General contribution guidelines](#general-contribution-guidelines)
@@ -9,15 +14,15 @@
  * [Documentation generation](#documentation-generation)
  * [Commit messages](#commit-messages)
  * [Continuous integration](#continuous-integration)
-
-[Related packages](#related-packages)
-
-[Similar projects](#similar-projects)
+ * [using-the-router-and-server](using-the-router-and-server)
 
 # General contribution guidelines
 
 [Stencila][stencila-site] is an open-source community-driven project. We encourage
 and welcome contributions from all community members.
+
+These are mostly guidelines, not rules. 
+Use your best judgment, and feel free to propose changes to this document in a pull request.
 
 If you are comfortable with Git and GitHub, you can submit a pull request (PR). In Stencila we follow a commonly used workflow
 for [contributing to open source projects][how-contribute] (see also [GitHub instructions][github-flow]).
@@ -27,12 +32,21 @@ If you have specific suggestions or have found a bug, please [create an issue](h
 If you don't want to use GitHub, please tell us what you think on [our chat](https://gitter.im/stencila/stencila) on Gitter or have your say on our
 our [Community Forum](https://community.stenci.la/).
 
-## Licensing and contributor agreement
+## Licensing and code of conduct
 
 By contributing, you agree that we may redistribute your work under [our license](LICENSE).
 Everyone involved with Stencila agrees to abide by our [code of conduct][conduct].
 
-# Development
+## Get in touch!
+
+You can chat with the team at our [community forum][community-forum],
+on Twitter [@Stencila][stencila-twitter],
+[Gitter][stencila-gitter], or email to [hello@stenci.la][contact]
+
+
+## Development
+
+### Getting started
 
 ### Development environment
 
@@ -56,20 +70,34 @@ npm run cli -- compile tests/fixtures/dockerfile-date/Dockerfile
 
 This uses `ts-node` to compile and run Typescript on the fly so that you don't need to do a build step first.
 
+
+## Architecture
+
+Dockter implements a compiler design pattern. Source files are _parsed_ into a `SoftwareEnvironment` instance (the equivalent of an AST (Abstract Syntax Tree) in other programming language compilers) which is then used to generate a `Dockerfile` which is then built into a Docker image.
+
+The parser classes e.g. `PythonParser`, `RParser` scan for relevant source files and generate `SoftwareEnvironment` instances.
+The generator classes e.g. `PythonGenerator`, `RGenerator` generates a `Dockerfile` for a given `SoftwareEnvironment`.
+`DockerGenerator` is a super-generator which combines the other generators.
+`DockerBuilder` class builds 
+`DockerCompiler` links all of these together.
+
+For example, if a folder has single file in it `code.py`, `PythonParser` will parse that file and create a `SoftwareEnvironment` instance, which `DockerGenerator` uses to generate a `Dockerfile`, which `DockerBuilder` uses to build a Docker image.
+
+
 ### Linting and testing
 
-Then take a look at the docs ([online](https://stencila.github.io/dockter/) or inline) and start hacking! Please check that your changes pass linting and unit tests,
+Please check that your changes pass linting and unit tests,
 
 ```bash
 npm run lint # or, make lint
 npm test # or, make text
 ```
 
-Use `npm test -- <test file path>` to run a single test file
+Use `npm test -- <test file path>` to run a single test file.
 
 You can setup a Git pre-commit hook to perform these checks automatically before each commit using `make hooks`.
 
-Check that any changes you've made are covered 🏅 by unit tests using,
+You can check that any changes you've made are covered 🏅 by unit tests using,
 
 ```bash
 npm run cover # or, make cover
@@ -96,35 +124,34 @@ npm run commit # or, make commit
 
 ### Continuous integration
 
-Linting, test coverage, binary builds, package builds, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management, Github releases and NPM package publishing.
+Linting, test coverage, binary builds, package builds, and documentation generation are done on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management: minor version releases are done if any `feat(...)` commits are pushed, patch version releases are done if any `fix(...)` commits are pushed. Releases are made to [NPM](https://www.npmjs.com/package/@stencila/dockter) and [Github Releases](https://github.com/stencila/dockter/releases).
+
+### Using the router and server
+
+The [Express](https://expressjs.com) router provides `PUT /compile` and `PUT /execute` endpoints (which do the same thing as the corresponding CLI commands). You can serve them using,
+
+```bash
+npm start
+```
+
+Or, during development using,
+
+```bash
+npm run server
+```
+
+A minimal example of how to integrate the router into your own Express server,
+
+```js
+const app = require('express')()
+const { docker } = require('@stencila/dockter')
+
+const app = express()
+app.use('/docker', docker)
+app.listen(3000)
+```
 
 
-## Related packages
-
-Related Stencila packages include:
-
-- 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
-- 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
-
-
-## Similar projects
-There are several projects that create Docker images from source code and/or requirements files:
-
-- [`alibaba/derrick`](https://github.com/alibaba/derrick)
-- [`jupyter/repo2docker`](https://github.com/jupyter/repo2docker)
-- [`Gueils/whales`](https://github.com/Gueils/whales)
-- [`o2r-project/containerit`](https://github.com/o2r-project/containerit)
-- [`openshift/source-to-image`](https://github.com/openshift/source-to-image)
-- [`ViDA-NYU/reprozip`](https://github.com/ViDA-NYU/reprozip])
-
-Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repo2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code, managed builds and generated of image meta-data.
-
-
-## Get in touch!
-
-You can chat with the team at our [community forum][community-forum],
-on Twitter [@Stencila][stencila-twitter],
-[Gitter][stencila-gitter], or email to [hello@stenci.la][contact]
 
 [contact]: mailto:hello@stenci.la
 [conduct]: https://github.com/stencila/policies/blob/master/CONDUCT.md

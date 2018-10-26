@@ -29,7 +29,8 @@ test('generate:packages', async () => {
   const generator = new RGenerator(environ)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
 
-ENV TZ="Etc/UTC"
+ENV TZ="Etc/UTC" \\
+    R_LIBS_USER="~/R"
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -47,10 +48,15 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
+RUN mkdir ~/R \\
+ && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 `)
 })
 
@@ -64,7 +70,8 @@ test('generate:r-xml2', async () => {
   const dockerfile = await new RGenerator(environ, folder).generate(false)
   expect(dockerfile).toEqual(`FROM ubuntu:16.04
 
-ENV TZ="Etc/UTC"
+ENV TZ="Etc/UTC" \\
+    R_LIBS_USER="~/R"
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -83,10 +90,15 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
-RUN bash -c \"Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)\"
+RUN mkdir ~/R \\
+ && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
 COPY cmd.R cmd.R
 COPY other.R other.R

@@ -26,9 +26,9 @@ test('build:py-requests-no-dockter', async () => {
 })
 
 /**
- * Tests of build failiures
+ * Tests of build failures
  * 
- * Currently skipped because we are not handline messages right now
+ * Currently skipped because we are not handling messages right now
  */
 test.skip('build:py-requests-no-dockter', async () => {
   const builder = new DockerBuilder()

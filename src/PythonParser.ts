@@ -87,6 +87,7 @@ export default class PythonParser extends Parser {
       if (rawRequirement.type === RequirementType.Named) {
         let standardRequirement = new SoftwarePackage()
         standardRequirement.name = rawRequirement.value
+        standardRequirement.runtimePlatform = 'Python'
         if (rawRequirement.version) {
           standardRequirement.version = rawRequirement.version
         }
@@ -94,6 +95,7 @@ export default class PythonParser extends Parser {
         environ.softwareRequirementsPush(standardRequirement)
       } else if (rawRequirement.type === RequirementType.URL) {
         let sourceRequirement = new SoftwareSourceCode()
+        sourceRequirement.runtimePlatform = 'Python'
         sourceRequirement.codeRepository = rawRequirement.value
       }
     }

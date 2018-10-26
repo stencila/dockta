@@ -31,11 +31,14 @@ export default class DockerBuilder {
 
     // Collect all instructions prior to any `# dockter` comment into a
     // new Dockerfile and store remaining instructions for special handling
+    let workdir = '/'
     let dockterize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
-      if (instruction.name === 'COMMENT') {
+      if (instruction.name === 'WORKDIR') {
+        workdir = path.join(workdir, instruction.args as string)
+      } else if (instruction.name === 'COMMENT') {
         const arg = instruction.args as string
         if (arg.match(/^# *dockter/)) {
           instructions = instructions.slice(index + 1)
@@ -57,7 +60,6 @@ export default class DockerBuilder {
         // Ignore original Dockerfile
         // Ignore the special `snapshot` directory which exists when this
         // is run within a `pkg` binary and dir is `.`
-        // TODO: implement `.dockerignore` behavior
         return relpath === 'Dockerfile' || relpath[0] === '.' || relpath === 'snapshot'
       },
       finalize: false,
@@ -68,10 +70,10 @@ export default class DockerBuilder {
       }
     })
     const targz = tar.pipe(zlib.createGzip())
-    
+
     // The following line can be useful in debugging the
     // above tar stream generation
-    //targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
+    // targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
 
     const messages: Array<Object> = []
     const stream = await this.docker.buildImage(targz, {
@@ -165,11 +167,13 @@ export default class DockerBuilder {
     for (let instruction of instructions) {
       const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
+        case 'WORKDIR':
+          workdir = path.join(workdir, instruction.args as string)
+          break
+
         case 'COPY':
         case 'ADD':
           // Add files/subdirs to the container
-          // TODO: only copy files if they have changed
-          // TODO: to be consistent with Docker ADD should handle urls
           const copy = instruction.args as Array<string>
           console.error(step, instruction.name, copy.join(' '))
           const to = copy.pop() as string
@@ -185,7 +189,7 @@ export default class DockerBuilder {
               return !copy.includes(relativePath)
             }
           })
-          await container.putArchive(pack, { path: '.' }) // TODO this should put to WORKDIR if specified
+          await container.putArchive(pack, { path: workdir })
           break
 
         case 'RUN':
@@ -200,11 +204,9 @@ export default class DockerBuilder {
           })
           await exec.start()
 
-          // TODO: do something with stdout and stderr?
           exec.output.pipe(process.stdout)
 
           // Wait until the exec has finished running, checking every 100ms
-          // TODO: abort after an amount of time
           while (true) {
             let status = await exec.inspect()
             if (status.Running === false) break
@@ -213,7 +215,7 @@ export default class DockerBuilder {
           break
 
         case 'CMD':
-          // Dockerfile instructions to apply when commiting the image
+          // Dockerfile instructions to apply when committing the image
           changes += instruction.raw + '\n\n'
           break
 
