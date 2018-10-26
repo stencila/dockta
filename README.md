@@ -76,7 +76,7 @@ If the folder contains a `main.R` file, Dockter will set that to be the default 
 
 #### Python
 
-If the folder contains a 🦄 [#3](https://github.com/stencila/dockter/issues/3) [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [#4](https://github.com/stencila/dockter/issues/4) [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
+If the folder contains a [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [#4](https://github.com/stencila/dockter/issues/4) [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
 
 If the folder does not contain either of those files then Dockter will 🦄 [#5](https://github.com/stencila/dockter/issues/5) scan all the folder's `.py` files for `import` statements and create a `.requirements.txt` file for you.
 
@@ -173,7 +173,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 - *Code analysis*: To stop Dockter doing code analysis and take over specifying your project's package dependencies, just remove the leading '.' from the `.DESCRIPTION`, `.requirements.txt` or `.package.json` file that Dockter generates. 
 
-- *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They're a good place to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
+- *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They 🦄 [#36](https://github.com/stencila/dockter/issues/36) include comments on what each section does and are a good wat to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
 - *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
@@ -202,8 +202,6 @@ npm install @stencila/dockter
 
 ## Use
 
-### CLI
-
 The command line tool has three primary commands `compile`, `build` and `execute`. To get an overview of the commands available use the `--help` option i.e.
 
 ```bash
@@ -216,9 +214,9 @@ To get more detailed help on a particular command, also include the command name
 dockter compile --help
 ```
 
-#### Compile a project
+### Compile a project
 
-The `compile` command compiles a project folder into a specification of a software environment. It scans the folder for source code and package requirement files, parses them, and 🦄 creates an `.environ.jsonld` file. This file contains the information needed to build a Docker image for your project.
+The `compile` command compiles a project folder into a specification of a software environment. It scans the folder for source code and package requirement files, parses them, and creates an `.environ.jsonld` file. This file contains the information needed to build a Docker image for your project.
 
 For example, let's say your project folder has a single R file, `main.R` which uses the R package `lubridate` to print out the current time:
 
@@ -264,7 +262,7 @@ softwareRequirements:
 ...
 ```
 
-#### Build a Docker image
+### Build a Docker image
 
 Usually, you'll compile and build a Docker image for your project in one step using the `build` command. This takes the output of the `compile` command, generates a `.Dockerfile` for it and gets Docker to build that image.
 
@@ -280,7 +278,7 @@ REPOSITORY        TAG                 IMAGE ID            CREATED              S
 rdate             latest              545aa877bd8d        About a minute ago   766MB
 ```
 
-#### Execute a Docker image
+### Execute a Docker image
 
 You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your docker image in one step:
 
@@ -289,106 +287,9 @@ You can use Docker to run the created image. Or use Dockter's `execute` command 
 2018-10-23 00:58:39
 ```
 
-### Router and server
-
-The [Express](https://expressjs.com) router provides `PUT /compile` and `PUT /execute` endpoints (which do the same thing as the corresponding CLI commands). You can serve them using,
-
-```bash
-npm start
-```
-
-Or, during development using,
-
-```bash
-npm run server
-```
-
-A minimal example of how to integrate the router into your own Express server,
-
-```js
-const app = require('express')()
-const { docker } = require('@stencila/dockter')
-
-const app = express()
-app.use('/docker', docker)
-app.listen(3000)
-```
-
-## Architecture
-
-Dockter implements a compiler design pattern. Source files are _parsed_ into a `SoftwareEnvironment` instance (the equivalent of an AST (Abstract Syntax Tree) in other programming language compilers) which is then used to generate a `Dockerfile` which is then built into a Docker image.
-
-The parser classes e.g. `PythonParser`, `RParser` scan for relevant source files and generate `SoftwareEnvironment` instances.
-The generator classes e.g. `PythonGenerator`, `RGenerator` generates a `Dockerfile` for a given `SoftwareEnvironment`.
-`DockerGenerator` is a super-generator which combines the other generators.
-`DockerBuilder` class builds 
-`DockerCompiler` links all of these together.
-
-For example, if a folder has single file in it `code.py`, `PythonParser` will parse that file and create a `SoftwareEnvironment` instance, which `DockerGenerator` uses to generate a `Dockerfile`, which `DockerBuilder` uses to build a Docker image.
-
 ## Contribute
 
 We 💕 contributions! All contributions: ideas 💡, bug reports 🐛, documentation 🗎, code 💾. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
-
-To get started on developing the code,
-
-```bash
-git clone https://github.com/stencila/dockter
-cd dockter
-npm install
-```
-
-Then take a look at the docs ([online](https://stencila.github.io/dockter/) or inline) and start hacking! 
-
-To run the CLI during development use, `npm run cli -- <args>` e.g.
-
-```bash
-npm run cli -- compile tests/fixtures/dockerfile-date/Dockerfile
-```
-
-This uses `ts-node` to compile and run Typescript on the fly so that you don't need to do a build step first.
-
-### Linting and testing
-
-Please check that your changes pass linting and unit tests,
-
-```bash
-npm run lint # or, make lint
-npm test # or, make text
-```
-
-Use `npm test -- <test file path>` to run a single test file.
-
-You can setup a Git pre-commit hook to perform these checks automatically before each commit using `make hooks`.
-
-You can check that any changes you've made are covered 🏅 by unit tests using,
-
-```bash
-npm run cover # or, make cover
-open coverage/lcov-report/index.html
-```
-
-### Documentation generation
-
-If you've been working on in-code documentation 🙏 you can check that by building and viewing the docs,
-
-```bash
-npm run docs # or, make docs
-open docs/index.html
-```
-
-### Commit messages
-
-Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. This helps with automated semantic versioning. To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
-
-```bash
-npm run commit # or, make commit
-```
-
-### Continuous integration
-
-Linting, test coverage, binary builds, package builds, and documentation generation are done on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management: minor version releases are done if any `feat(...)` commits are pushed, patch version releases are done if any `fix(...)` commits are pushed. Releases are made to [NPM](https://www.npmjs.com/package/@stencila/dockter) and [Github Releases](https://github.com/stencila/dockter/releases).
-
 
 ## See also
 
