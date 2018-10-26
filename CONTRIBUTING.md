@@ -1,3 +1,19 @@
+# Table of Contents
+
+[General contribution guidelines](#general-contribution-guidelines)
+ * [Licensing and contributor agreement](#licensing-and-contributor-agreement)
+
+[Development](#development)
+ * [Development environment](#development-environment)
+ * [Linting and testing](#linting-and-testing)
+ * [Documentation generation](#documentation-generation)
+ * [Commit messages](#commit-messages)
+ * [Continuous integration](#continuous-integration)
+
+[Related packages](#related-packages)
+
+[Similar projects](#similar-projects)
+
 # General contribution guidelines
 
 [Stencila][stencila-site] is an open-source community-driven project. We encourage
@@ -17,6 +33,8 @@ By contributing, you agree that we may redistribute your work under [our license
 Everyone involved with Stencila agrees to abide by our [code of conduct][conduct].
 
 # Development
+
+### Development environment
 
 Dockter is implemented as a `Node.js` package in order to make it easier to integrate with other Stencila components written also in this language.
 Therefore, in order to develop Dockter you need to have `Node.js` installed on your machine, along with `npm`. 
@@ -69,7 +87,8 @@ open docs/index.html
 
 ### Commit messages
 
-Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. This help with automated semantic versioning. To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
+Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. See [the specifications](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) for full details. This help with automated semantic versioning. 
+To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
 
 ```bash
 npm run commit # or, make commit
@@ -80,13 +99,15 @@ npm run commit # or, make commit
 Linting, test coverage, binary builds, package builds, and documentation generation are done on each push on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management, Github releases and NPM package publishing.
 
 
-## See also
+## Related packages
 
 Related Stencila packages include:
 
 - 🦄 [`stencila/tunix`](https://github.com/stencila/tunix): compiles JSON-LD `SoftwareEnvironment` nodes to [NixOS](https://nixos.org/) environments
 - 🦄 [`stencila/kubex`](https://github.com/stencila/kubex): executes JSON-LD `SoftwareEnvironment` nodes on [Kubernetes](https://kubernetes.io/) clusters
 
+
+## Similar projects
 There are several projects that create Docker images from source code and/or requirements files:
 
 - [`alibaba/derrick`](https://github.com/alibaba/derrick)
