@@ -2,6 +2,22 @@
 
 🎉 Thanks for taking the time to contribute to Dockter! 🎉
 
+
+# Table of Contents
+
+[General contribution guidelines](#general-contribution-guidelines)
+ * [Licensing and contributor agreement](#licensing-and-contributor-agreement)
+
+[Development](#development)
+ * [Development environment](#development-environment)
+ * [Linting and testing](#linting-and-testing)
+ * [Documentation generation](#documentation-generation)
+ * [Commit messages](#commit-messages)
+ * [Continuous integration](#continuous-integration)
+ * [using-the-router-and-server](using-the-router-and-server)
+
+# General contribution guidelines
+
 [Stencila][stencila-site] is an open-source community-driven project. We encourage
 and welcome contributions from all community members.
 
@@ -31,6 +47,8 @@ on Twitter [@Stencila][stencila-twitter],
 ## Development
 
 ### Getting started
+
+### Development environment
 
 Dockter is implemented as a `Node.js` package in order to make it easier to integrate with other Stencila components written also in this language.
 Therefore, in order to develop Dockter you need to have `Node.js` installed on your machine, along with `npm`. 
@@ -97,7 +115,8 @@ open docs/index.html
 
 ### Commit messages
 
-Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. This helps with automated semantic versioning. To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
+Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. See [the specifications](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) for full details. This help with automated semantic versioning. 
+To make this easier, [Commitzen](http://commitizen.github.io/cz-cli/) is a development dependency and can be used via `npm` or `make`:
 
 ```bash
 npm run commit # or, make commit

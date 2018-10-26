@@ -12,9 +12,11 @@ check out the [Katakoda set of Docker courses](https://www.katacoda.com/courses/
 We encourage you to have a look at the above courses but the idea behind Dockter is that you don't need to master Docker. Dockter does most of the things for you
 in order to set up a reproducible research environment.
 
-Dockter is a tool to make it easier for researchers to create reproducible research environments. It generates a Docker image for a research project based on the source code in it. That means that you don’t need to learn a new file format (`Dockerfiles`) to create Docker images.
+Dockter is a tool to make it easier for researchers to create reproducible research environments. It generates a Docker image for a research project based on the source code in it. That means that you don’t need to learn a new file format (`Dockerfiles`) to create Docker images. Dockter makes it also easy to track dependencies and update the image when they change.
 
 In addition, Dockter manages the image building process to better fit your everyday workflow (determines package system dependencies, manages builds) and generates JSON-LD meta-data describing the image (from which citations etc can be generated).
+
+You can manually edit the files which Dockter generates so that the containers build of it exactly suit your project. 
 
 #### 1. Install
 
@@ -128,7 +130,7 @@ And you should see the image on the list:
 rnoviceinflammation                        latest              149d3dc3fc73        20 minutes ago      1.12GB
 ```
 
-#### Resources
+### Resources
 
 [A beginner's guide to containters](https://medium.freecodecamp.org/a-beginner-friendly-introduction-to-containers-vms-and-docker-79a9e3e119b)
 
