@@ -14,7 +14,7 @@
     "build": "npm run build-dist && npm run build-bins",
     "build-dist": "tsc",
     "build-bins": "pkg --out-path=build .",
-    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --out ./docs ./src",
+    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
     "start": "node ./dist/server.js",
