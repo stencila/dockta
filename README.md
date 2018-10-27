@@ -1,49 +1,47 @@
 <div align="center">
-	<img src="http://stenci.la/img/logo-name.png" alt="Stencila" style="max-width:100px">
+	<img src="http://stenci.la/img/logo-name.png" alt="Stencila" style="max-height:60px">
 </div>
 <br>
 
 # Dockter : a Docker image builder for researchers
 
+> :sparkles: Help us [choose a better name](https://github.com/stencila/dockter/issues/37) for this project! :sparkles:
+
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
 [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
 [![NPM](http://img.shields.io/npm/v/@stencila/dockter.svg?style=flat)](https://www.npmjs.com/package/@stencila/dockter)
+[![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://stencila.github.io/dockter/)
 [![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
-[![Docs](https://img.shields.io/badge/docs-API-blue.svg)](https://stencila.github.io/dockter/)
 
-Docker is a good tool for creating reproducible computing environments. But creating truly reproducible Docker images can be difficult. Dockter aims to make it easier for researchers to create Docker images for their research projects. Dockter automatically creates and manages a Docker image for _your_ project based on _your_ source source code.
+Docker is a useful tool for creating reproducible computing environments. But creating truly reproducible Docker images can be difficult - even if you already know how to write a `Dockerfile`. 
 
-> 🦄 Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
+Dockter makes it easier for researchers to create Docker images for their research projects. Dockter generates a `Dockerfile` and builds a image, for _your_ project, based on _your_ source code.
+
+> 🦄 Dockter is in early development. Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
 
 <!-- Automatically generated TOC. Don't edit, `make docs` instead>
 
 <!-- toc -->
 
 - [Features](#features)
-  * [Automatically builds a Docker image for your project](#automatically-builds-a-docker-image-for-your-project)
+  * [Builds a Docker image for your project sources](#builds-a-docker-image-for-your-project-sources)
     + [R](#r)
     + [Python](#python)
     + [Node.js](#nodejs)
     + [Jupyter](#jupyter)
-  * [Efficiently handling of updates to project code](#efficiently-handling-of-updates-to-project-code)
+  * [Quicker re-installation of language packages](#quicker-re-installation-of-language-packages)
+    + [An example](#an-example)
   * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
   * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
 - [Install](#install)
   * [CLI](#cli)
   * [Package](#package)
 - [Use](#use)
-  * [CLI](#cli-1)
-    + [Compile a project](#compile-a-project)
-    + [Build a Docker image](#build-a-docker-image)
-    + [Execute a Docker image](#execute-a-docker-image)
-  * [Router and server](#router-and-server)
-- [Architecture](#architecture)
+  * [Compile a project](#compile-a-project)
+  * [Build a Docker image](#build-a-docker-image)
+  * [Execute a Docker image](#execute-a-docker-image)
 - [Contribute](#contribute)
-  * [Linting and testing](#linting-and-testing)
-  * [Documentation generation](#documentation-generation)
-  * [Commit messages](#commit-messages)
-  * [Continuous integration](#continuous-integration)
 - [See also](#see-also)
 - [FAQ](#faq)
 - [Acknowledgments](#acknowledgments)
@@ -52,13 +50,15 @@ Docker is a good tool for creating reproducible computing environments. But crea
 
 ## Features
 
-### Automatically builds a Docker image for your project
+### Builds a Docker image for your project sources
 
-Dockter scans your project folder and builds a Docker image for it. If the the folder already has a Dockerfile, then Dockter will build the image from that. If not, Dockter will scan the files in the folder, generate a `.Dockerfile` and build the image from that. How Dockter builds the image from your source code depends on the language.
+Dockter scans your project folder and builds a Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder, generate a `.Dockerfile` and use that. 
+
+Dockter currently handles R and Python source code (with Node.js support planned). A project can have a mix of these languages.
 
 #### R
 
-If the folder contains a R [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file then Docker will build an image with the R packages listed under `Imports` installed. e.g.
+If the folder contains a R package [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file then Dockter will build an image with the R packages listed under `Imports` installed. e.g.
 
 ```
 Package: myrproject
@@ -72,7 +72,7 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 If the folder does not contain a `DESCRIPTION` file then Dockter will scan all the R files (files with the extension `.R` or `.Rmd`) in the folder for package import or usage statements, like `library(package)` and `package::function()`, and create a `.DESCRIPTION` file for you.
 
-If the folder contains a `main.R` file, Dockter will set that to be the default script to run in any container created from the image.
+Dockter checks if any of your dependenies (or dependencies of dependencies, or dependencies of...) requires system packages (e.g. `libxml-dev`) and installs those too. No more trial and error of build, fail, add dependency, repeat... cycles!
 
 #### Python
 
@@ -91,17 +91,25 @@ If the folder does not contain a `package.json` file, Dockter will 🦄 [#8](htt
 If the folder contains any 🦄 [#9](https://github.com/stencila/dockter/issues/9) `.ipynb` files, Dockter will scan the code cells in those files for any Python `import` or R `library` statements and extract a list of package dependencies. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add Jupyter to the built Docker image.
 
 
-### Efficiently handling of updates to project code
+### Quicker re-installation of language packages
 
-Docker layered filesystem has advantages but it can cause real delays when you are updating your project dependencies. For example, see [this issue](https://github.com/npm/npm/issues/11446) for the workarounds used by Node.js developers to prevent long waits when they update their `package.json`. The reason this happens is that when you update a requirements file Docker throws away all the subsequent layers, including the one where you install all your package dependencies.
+If you have built a Docker image you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
 
-Here's a simple motivating [example](fixtures/tests/py-pandas) of a Dockerized Python project. It's got a [`pip`](https://pypi.org/project/pip/) `requirements.txt` file which specifies that the project requires `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
+The reason this happens is that, due to Docker's layered filesystems, when you update a requirements file, Docker throws away all the subsequent layers - including the one where you previously installed your dependencies. That means that all those packages need to get reinstalled.
+
+Dockter takes a different approach. It leaves the installation of language packages to the language package managers: Python's [`pip`](https://pypi.org/project/pip/) , Node.js's `npm`, and R's `install.packages`. These package managers are good at the job they were designed for - to check which packages need to be updated and to only update them. The result is much faster rebuilds, especially for R packages, which often involve compilation.
+
+Dockter does this by looking for a special `# dockter` comment in a `Dockerfile`. Instead of throwing away layers, it executes all instructions after this comment in the same layer - thus reusing packages that were previously installed.
+
+#### An example
+
+Here's a simple motivating [example](fixtures/tests/py-pandas). It's a Python project with a `requirements.txt` file which specifies that the project depends upon `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
 
 ```
 pandas==0.23.0
 ```
 
-The project has also got a `Dockerfile` that specifies which Python version we want, copies `requirements.txt` into the image, and installs the packages:
+The project also has a `Dockerfile` which specifies which Python version we want to use, copies `requirements.txt` into the image, and uses `pip` to install the packages:
 
 ```Dockerfile
 FROM python:3.7.0
@@ -116,16 +124,15 @@ You can build a Docker image for that project using Docker,
 docker build .
 ```
 
-Docker will download the base Python image (if you don't yet have it), and download five packages (`pandas` and it's four dependencies) and install them. This took over 9 minutes when we ran it.
+Docker will download the base Python image (if you don't yet have it), download five packages (`pandas` and it's four dependencies) and install them. This took over 9 minutes when we ran it.
 
-Now, let's say that we want to do some plotting in our library, so we add `matplotlib` as a dependency in `requirements.txt`,
+Now, let's say that we want to get the latest version of `pandas` and increment the version in the `requirements.txt` file,
 
 ```
-pandas==0.23.0
-matplotlib==3.0.0
+pandas==0.23.1
 ```
 
-When we do `docker build .` again Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequent ones. This means that it will download and install **all** the necessary packages again, including the ones that we previously installed - and takes longer than the first install. For a more contrived illustration of this, simply add a space to a line in the `requirements.txt` file and notice how the package install gets repeated all over again.
+When we do `docker build .` again to update the image, Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequent ones. This means that it will download and install *all* the necessary packages again, including the ones that we previously installed. For a more contrived illustration of this, simply add a space to one of the lines in the `requirements.txt` file and notice how the package install gets repeated all over again.
 
 Now, let's add a special `# dockter` comment to the Dockerfile before the `COPY` directive,
 
@@ -138,38 +145,72 @@ COPY requirements.xt .
 RUN pip install -r requirements.txt
 ```
 
-The comment is ignored by Docker but tells `dockter` to run all subsequent directives and commit them into a single layer,
+The comment is ignored by Docker but tells `dockter` to run all subsequent instructions in a single filesystem layer,
 
 ```bash
 dockter build .
 ```
 
-> 🔧 Finish description of commit-based approach and illustrate speed up over normal Docker builds
+Now, if you change the `requirements.txt` file, instead of reinstalling everything again, `pip` will only reinstall what it needs to - the updated `pandas` version. The output looks like:
+
+```
+Step 1/1 : FROM python:3.7.0
+ ---> a9d071760c82
+Successfully built a9d071760c82
+Successfully tagged dockter-5058f1af8388633f609cadb75a75dc9d:system
+Dockter 1/2 : COPY requirements.txt requirements.txt
+Dockter 2/2 : RUN pip install -r requirements.txt
+Collecting pandas==0.23.1 (from -r requirements.txt (line 1))
+
+  <snip>
+  
+Successfully built pandas
+Installing collected packages: pandas
+  Found existing installation: pandas 0.23.0
+    Uninstalling pandas-0.23.0:
+      Successfully uninstalled pandas-0.23.0
+Successfully installed pandas-0.23.1
+
+```
+
 
 ### Generates structured meta-data for your project
 
-Dockter has been built to expose a JSON-LD API so that it works with other tools. It will parse a Dockerfile into a JSON-LD [`SoftwareSourceCode`](https://schema.org/SoftwareSourceCode) node extracting meta-data about the Dockerfile and build it into a `SoftwareEnvironment` node with links to the source files and the build image.
+Dockter uses [JSON-LD](https://json-ld.org/) as it's internal data structure. When it parses your project's source code it generates a JSON-LD tree using a vocabularies from [schema.org](https://schema.org) and [CodeMeta](https://codemeta.github.io/index.html).
 
-> 🔧 Illustrate how this is done for all project sources including non Dockerfiles
+For example, It will parse a `Dockerfile` into a schema.org [`SoftwareSourceCode`](https://schema.org/SoftwareSourceCode) node extracting meta-data about the Dockerfile. 
 
-> 🔧 Replace this JSON-LD with final version
+Dockter also fetches meta data on your project's dependencies, which could be used to generate a complete software citation for your project.
 
 ```json
 {
-  "@context": "https://schema.stenci.la",
-  "type": "SoftwareSourceCode",
-  "id": "https://hub.docker.com/#sha256:27d6e441706e89dac442c69c3565fc261b9830dd313963cb5488ba418afa3d02",
-  "author": [],
-  "text": "FROM busybox\nLABEL description=\"Prints the current date and time at UTC, to the nearest second, in ISO-8601 format\" \\\n      author=\"Nokome Bentley <nokome@stenci.la>\"\nCMD date -u -Iseconds\n",
-  "programmingLanguage": "Dockerfile",
-  "messages": [],
-  "description": "Prints the current date and time at UTC, to the nearest second, in ISO-8601 format"
-}
+  "name": "myproject",
+  "datePublished": "2017-10-19",
+  "description": "Regression analysis for my data",
+  "softwareRequirements": [
+    {
+      "description": "\nFunctions to Accompany J. Fox and S. Weisberg,\nAn R Companion to Applied Regression, Third Edition, Sage, in press.",
+      "name": "car",
+      "urls": [
+        "https://r-forge.r-project.org/projects/car/",
+        "https://CRAN.R-project.org/package=car",
+        "http://socserv.socsci.mcmaster.ca/jfox/Books/Companion/index.html"
+      ],
+      "authors": [
+        {
+          "name": "John Fox",
+          "familyNames": [
+            "Fox"
+          ],
+          "givenNames": [
+            "John"
+          ]
+        },
 ```
 
 ### Easy to pick up, easy to throw away
 
-Dockter is designed to make it easier to get started creating Docker images for your project. But it's also designed not to get in your way or restrict you from using bare Docker. You can easily and individually override any of the steps that Dockter takes to build an image. 
+Dockter is designed to make it easier to get started creating Docker images for your project. But it's also designed not to get in your way or restrict you from using bare Docker. You can easily, and individually, override any of the steps that Dockter takes to build an image. 
 
 - *Code analysis*: To stop Dockter doing code analysis and take over specifying your project's package dependencies, just remove the leading '.' from the `.DESCRIPTION`, `.requirements.txt` or `.package.json` file that Dockter generates. 
 
@@ -224,47 +265,24 @@ For example, let's say your project folder has a single R file, `main.R` which u
 lubridate::now()
 ```
 
-Let's compile that project and inspect the compiled software environment. Change into the project directory and run the `compile` command. The default output format is JSON but you can get YAML, which is easier to read, by using the `--format=yaml` option.
+Let's compile that project and inspect the compiled software environment. Change into the project directory and run the `compile` command.
 
 ```bash
-dockter compile --format=yaml
+dockter compile
 ```
 
-The output from this command is a YAML document describing the project's software environment including it's dependencies (in this case just `lubridate`). The environment's name is taken from the name of the folder, in this case `rdate`.
+You should find three new files in the folder created by Dockter:
 
-```yaml
-name: rdate
-datePublished: '2018-10-21'
-softwareRequirements:
-  - description: |-
-      Functions to work with date-times and time-spans: fast and user
-      friendly parsing of date-time data, extraction and updating of components of
-      a date-time (years, months, days, hours, minutes, and seconds), algebraic
-      manipulation on date-time and time-span objects. The 'lubridate' package has
-      a consistent and memorable syntax that makes working with dates easy and
-      fun.
-      Parts of the 'CCTZ' source code, released under the Apache 2.0 License,
-      are included in this package. See <https://github.com/google/cctz> for more
-      details.
-    name: lubridate
-    urls:
-      - 'http://lubridate.tidyverse.org'
-      - |-
+- `.DESCRIPTION`: A R package description file containing a list of the R packages required and other meta-data
 
-        https://github.com/tidyverse/lubridate
-    authors:
-      - &ref_0
-        givenNames:
-          - Vitalie
-        familyNames:
-          - Spinu
-        name: Vitalie Spinu
-...
-```
+- `.envrion.jsonld`: A JSON-LD document containing structure meatadata on your project and all of its dependencies
+
+- `.Dockerfile`: A `Dockerfile` generated from `.environ.jsonld`
+
 
 ### Build a Docker image
 
-Usually, you'll compile and build a Docker image for your project in one step using the `build` command. This takes the output of the `compile` command, generates a `.Dockerfile` for it and gets Docker to build that image.
+Usually, you'll compile and build a Docker image for your project in one step using the `build` command. This command runs the `compile` command and builds a Docker image from the generated `.Dockerfile` (or  handwritten `Dockerfile`):
 
 ```bash
 dockter build
@@ -280,7 +298,7 @@ rdate             latest              545aa877bd8d        About a minute ago   7
 
 ### Execute a Docker image
 
-You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your docker image in one step:
+You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your image in one step:
 
 ```bash
 > dockter execute
@@ -293,7 +311,7 @@ We 💕 contributions! All contributions: ideas 💡, bug reports 🐛, document
 
 ## See also
 
-There are several projects that create Docker images from source code and/or requirements files:
+There are several other projects that create Docker images from source code and/or requirements files including:
 
 - [`alibaba/derrick`](https://github.com/alibaba/derrick)
 - [`jupyter/repo2docker`](https://github.com/jupyter/repo2docker)
@@ -302,27 +320,55 @@ There are several projects that create Docker images from source code and/or req
 - [`openshift/source-to-image`](https://github.com/openshift/source-to-image)
 - [`ViDA-NYU/reprozip`](https://github.com/ViDA-NYU/reprozip])
 
-Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that by default (but optionally) it installs the necessary Stencila language packages so that the image can talk to Stencila client interfaces an provide code execution services. Like `repo2docker` it allows for multi-language images but has the additional features of package dependency analysis of source code, managed builds and generated of image meta-data.
+Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that it:
+
+- performs static code analysis for multiple languages to determine package requirements (🦄 well, right now just R).
+
+- uses package databases to determine package system dependencies and generate linked meta-data (`containerit` does this for R).
+
+- quicker installation of language package dependencies which can be useful during research projects when requirements often evolve
+
+- by default, but optionally, installs Stencila packages so that Stencila client interfaces can execute code in the container.
+
+`reprozip` and its extension `reprounzip-docker` may be a better choice if you want to share your existing local environment as a Docker image with someone else.
+
+`containerit` might suit you better if you only need support for R and don't want managed packaged installation
+
+`repo2docker` is likely to be better choice if you want to run Jupyter notebooks or RStudio in your container and don't need source code scanning to detect your requirements 
 
 If you don't want to build a Docker image and just want a tool that helps determining the package dependencies of your source code check out:
 
 - Node.js: [`detective`](https://github.com/browserify/detective)
 - Python: [`modulefinder`](https://docs.python.org/3.7/library/modulefinder.html)
-- R: [`hadley/requirements`](https://github.com/hadley/requirements)
+- R: [`requirements`](https://github.com/hadley/requirements)
 
 
 ## FAQ
 
-*Why is this a Node.js package?*
+*Why go to the effort of generating a JSON-LD intermediate representation instead of writing a Dockerfile directly?*
+
+Having an intermediate representation of the software environment allows this data to be used for other purposes (e.g. software citations, publishing, archiving). It also allows us to reuse much of this code for build targets other than Docker (e.g. Nix) and sources other than code files (e.g. a GUI). 
+
+*Why is Dockter a Node.js package?*
 
 We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments.
 
+*Why is Dockter implemented in Typescript?*
+
+We chose Typescript because it's type-checking and type-annotations reduce the number of runtime errors and improves developer experience.
+
+*I'd love to help out! Where do I start?*
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) (OK, so this isn't asked *that* frequently. But it's worth a try eh :woman_shrugging:.)
+
+
 ## Acknowledgments
 
-Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder) and [`repo2docker`](https://github.com/jupyter/repo2docker). It relies on many great open source projects, in particular:
+Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
 
  - [`crandb`](https://github.com/metacran/crandb)
  - [`dockerode`](https://www.npmjs.com/package/dockerode)
  - [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser)
+ - [`pypa`](https://warehouse.pypa.io)
  - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
  - and of course, [Docker](https://www.docker.com/)
