@@ -39,20 +39,14 @@ yargs
 
   // Compile command
   // @ts-ignore
-  .command('compile [folder] [format]', 'Compile a project to a software environment', yargs => {
+  .command('compile [folder]', 'Compile a project to a software environment', yargs => {
     yargs.positional('folder', {
       type: 'string',
       default: '.',
       describe: 'The path to the project folder'
-    }),
-    yargs.positional('format', {
-      type: 'string',
-      default: 'json',
-      describe: 'Format to output the environment: json or yaml'
     })
   }, async (args: any) => {
-    const node = await compiler.compile('file://' + args.folder, false).catch(error)
-    output(node, args.format)
+    await compiler.compile('file://' + args.folder, false).catch(error)
   })
 
   // Build command
@@ -69,7 +63,7 @@ yargs
 
   // Execute command
   // @ts-ignore
-  .command('execute [folder] [format]', 'Execute a project', yargs => {
+  .command('execute [folder]', 'Execute a project', yargs => {
     yargs.positional('folder', {
       type: 'string',
       default: '.',
