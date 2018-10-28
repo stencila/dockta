@@ -56,7 +56,7 @@ export default class DockerCompiler {
         if (!environ) environ = new SoftwareEnvironment()
 
         // Save environ as an intermediate file
-        fs.writeFileSync(path.join(folder, '.environ.jsonld'), JSON.stringify(environ, null, '  '))
+        fs.writeFileSync(path.join(folder, '.environ.jsonld'), JSON.stringify(environ.toJSONLD(), null, '  '))
       }
 
       // Generate Dockerfile

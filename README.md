@@ -5,7 +5,7 @@
 
 # Dockter : a Docker image builder for researchers
 
-> :sparkles: Help us [choose a better name](https://github.com/stencila/dockter/issues/37) for this project! :sparkles:
+> ✨ Help us [choose a better name](https://github.com/stencila/dockter/issues/37) for this project! ✨
 
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
