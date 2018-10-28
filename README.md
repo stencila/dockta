@@ -1,8 +1,3 @@
-<div align="center">
-	<img src="http://stenci.la/img/logo-name.png" alt="Stencila" style="max-height:60px">
-</div>
-<br>
-
 # Dockter : a Docker image builder for researchers
 
 > ✨ Help us [choose a better name](https://github.com/stencila/dockter/issues/37) for this project! ✨
@@ -18,7 +13,7 @@ Docker is a useful tool for creating reproducible computing environments. But cr
 
 Dockter makes it easier for researchers to create Docker images for their research projects. Dockter generates a `Dockerfile` and builds a image, for _your_ project, based on _your_ source code.
 
-> 🦄 Dockter is in early development. Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevent issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
+> 🦄 Dockter is in early development. Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevant issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
 
 <!-- Automatically generated TOC. Don't edit, `make docs` instead>
 
@@ -72,7 +67,7 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 If the folder does not contain a `DESCRIPTION` file then Dockter will scan all the R files (files with the extension `.R` or `.Rmd`) in the folder for package import or usage statements, like `library(package)` and `package::function()`, and create a `.DESCRIPTION` file for you.
 
-Dockter checks if any of your dependenies (or dependencies of dependencies, or dependencies of...) requires system packages (e.g. `libxml-dev`) and installs those too. No more trial and error of build, fail, add dependency, repeat... cycles!
+Dockter checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages (e.g. `libxml-dev`) and installs those too. No more trial and error of build, fail, add dependency, repeat... cycles!
 
 #### Python
 
@@ -95,7 +90,7 @@ If the folder contains any 🦄 [#9](https://github.com/stencila/dockter/issues/
 
 If you have built a Docker image you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
 
-The reason this happens is that, due to Docker's layered filesystems, when you update a requirements file, Docker throws away all the subsequent layers - including the one where you previously installed your dependencies. That means that all those packages need to get reinstalled.
+The reason this happens is that, due to Docker's layered filesystem, when you update a requirements file, Docker throws away all the subsequent layers - including the one where you previously installed your dependencies. That means that all those packages need to get reinstalled.
 
 Dockter takes a different approach. It leaves the installation of language packages to the language package managers: Python's [`pip`](https://pypi.org/project/pip/) , Node.js's `npm`, and R's `install.packages`. These package managers are good at the job they were designed for - to check which packages need to be updated and to only update them. The result is much faster rebuilds, especially for R packages, which often involve compilation.
 
@@ -214,7 +209,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 - *Code analysis*: To stop Dockter doing code analysis and take over specifying your project's package dependencies, just remove the leading '.' from the `.DESCRIPTION`, `.requirements.txt` or `.package.json` file that Dockter generates. 
 
-- *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They 🦄 [#36](https://github.com/stencila/dockter/issues/36) include comments on what each section does and are a good wat to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
+- *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They 🦄 [#36](https://github.com/stencila/dockter/issues/36) include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
 - *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
@@ -275,7 +270,7 @@ You should find three new files in the folder created by Dockter:
 
 - `.DESCRIPTION`: A R package description file containing a list of the R packages required and other meta-data
 
-- `.envrion.jsonld`: A JSON-LD document containing structure meatadata on your project and all of its dependencies
+- `.envrion.jsonld`: A JSON-LD document containing structure meta-data on your project and all of its dependencies
 
 - `.Dockerfile`: A `Dockerfile` generated from `.environ.jsonld`
 
@@ -326,7 +321,7 @@ Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is
 
 - uses package databases to determine package system dependencies and generate linked meta-data (`containerit` does this for R).
 
-- quicker installation of language package dependencies which can be useful during research projects when requirements often evolve
+- quicker installation of language package dependencies (which can be useful during research projects where dependencies often change).
 
 - by default, but optionally, installs Stencila packages so that Stencila client interfaces can execute code in the container.
 
