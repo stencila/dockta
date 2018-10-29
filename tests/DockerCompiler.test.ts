@@ -29,6 +29,6 @@ test('compile:multi-lang', async () => {
   let environ = await compiler.compile('file://' + fixture('multi-lang'), false, false)
 
   const actual = fs.readFileSync(fixture('multi-lang/.Dockerfile'), 'utf8')
-  const expected = fs.readFileSync(fixture('multi-lang/.Dockerfile.expected'), 'utf8')
+  const expected = fs.readFileSync(fixture('multi-lang/Dockerfile.expected'), 'utf8')
   expect(actual).toEqual(expected)
 })
