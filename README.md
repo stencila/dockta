@@ -47,13 +47,11 @@ Dockter makes it easier for researchers to create Docker images for their resear
 
 ### Builds a Docker image for your project sources
 
-Dockter scans your project folder and builds a Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder, generate a `.Dockerfile` and use that. 
-
-Dockter currently handles R and Python source code (with Node.js support planned). A project can have a mix of these languages.
+Dockter scans your project folder and builds a Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder and generate one for you. Dockter currently handles R and Python source code (with Node.js support planned). A project can have a mix of these languages.
 
 #### R
 
-If the folder contains a R package [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file then Dockter will build an image with the R packages listed under `Imports` installed. e.g.
+If the folder contains a R package [`DESCRIPTION`](http://r-pkgs.had.co.nz/description.html) file then Dockter will install the R packages listed under `Imports` into the image. e.g.
 
 ```
 Package: myrproject
