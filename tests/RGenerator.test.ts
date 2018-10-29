@@ -55,6 +55,7 @@ WORKDIR /home/dockteruser
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
+
 RUN mkdir ~/R \\
  && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 `)
@@ -97,6 +98,7 @@ WORKDIR /home/dockteruser
 # dockter
 
 COPY .DESCRIPTION DESCRIPTION
+
 RUN mkdir ~/R \\
  && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
