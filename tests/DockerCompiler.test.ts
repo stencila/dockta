@@ -2,9 +2,11 @@ import fs from 'fs'
 
 import DockerCompiler from '../src/DockerCompiler'
 import fixture from './fixture'
-import { SoftwareEnvironment, Person } from '@stencila/schema';
+import { SoftwareEnvironment, Person } from '@stencila/schema'
 
 /**
+ * Tests of compiling Dockerfile
+ *
  * To avoid actual building of the Docker image these tests
  * set the build flag to false
  */
