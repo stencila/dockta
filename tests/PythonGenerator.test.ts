@@ -98,3 +98,46 @@ COPY cmd.py cmd.py
 CMD python  cmd.py
 `)
 })
+
+/**
+ * If the environ passed to the generator has a Python package that requires extra system (apt) packages to be
+ * installed, these should be found and added to the apt-get install lines
+ */
+test('generate:requirements-file', async () => {
+  const environ = new SoftwareEnvironment()
+
+  const pyGitPackage = new SoftwarePackage()
+  pyGitPackage.name = 'pygit2'
+  pyGitPackage.version = '==0.27.0'
+  pyGitPackage.runtimePlatform = 'Python'
+
+  environ.softwareRequirements = [pyGitPackage]
+
+  const generator = new PythonGenerator(environ, fixture('py-date'), 2)
+
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
+
+RUN apt-get update \\
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
+      python \\
+      python-pip \\
+      libgit2-dev \\
+ && apt-get autoremove -y \\
+ && apt-get clean \\
+ && rm -rf /var/lib/apt/lists/*
+
+RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
+USER dockteruser
+WORKDIR /home/dockteruser
+
+# dockter
+
+COPY .requirements.txt requirements.txt
+
+RUN pip install --user --requirement requirements.txt
+
+COPY cmd.py cmd.py
+
+CMD python  cmd.py
+`)
+})

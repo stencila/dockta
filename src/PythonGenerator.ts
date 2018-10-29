@@ -1,5 +1,6 @@
 import Generator from './Generator'
 import { SoftwareEnvironment } from '@stencila/schema'
+import PythonSystemPackageLookup from './PythonSystemPackageLookup'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
@@ -8,6 +9,7 @@ const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
  */
 export default class PythonGenerator extends Generator {
   private readonly pythonMajorVersion: number
+  private readonly systemPackageLookup: PythonSystemPackageLookup
 
   // Methods that override those in `Generator`
 
@@ -15,6 +17,7 @@ export default class PythonGenerator extends Generator {
     super(environ, folder)
     this.environ = environ
     this.pythonMajorVersion = pythonMajorVersion
+    this.systemPackageLookup = PythonSystemPackageLookup.fromFile(__dirname + '/PythonSystemDependencies.json')
   }
 
   /**
@@ -34,7 +37,25 @@ export default class PythonGenerator extends Generator {
   }
 
   aptPackages (sysVersion: string): Array<string> {
-    return [`python${this.pythonVersionSuffix()}`, `python${this.pythonVersionSuffix()}-pip`]
+    let aptRequirements: Array<string> = []
+
+    this.filterPackages('Python').map(requirement => {
+      aptRequirements = aptRequirements.concat(
+          this.systemPackageLookup.lookupSystemPackage(
+              requirement.name, this.pythonMajorVersion, 'deb', sysVersion
+          )
+      )
+    })
+
+    let dedupedRequirements: Array<string> = []
+    aptRequirements.map(aptRequirement => {
+      if (dedupedRequirements.indexOf(aptRequirement) === -1) {
+        dedupedRequirements.push(aptRequirement)
+      }
+    })
+    return [`python${this.pythonVersionSuffix()}`, `python${this.pythonVersionSuffix()}-pip`].concat(
+        dedupedRequirements
+    )
   }
 
   generateRequirementsContent (): string {
