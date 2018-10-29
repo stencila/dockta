@@ -218,12 +218,38 @@ Dockter is available as pre-compiled, standalone command line tool (CLI), or as 
 
 ### CLI
 
-Download the command line interface (CLI) as a pre-compiled, standalone binary for Windows, MacOS or Linux from the [releases page](https://github.com/stencila/dockter/releases).
+#### Windows
 
-For example, on Linux, you can download and install Dockter using the following command (change the version to the latest):
+To install the latest release of the `dockter` command line tool, download `dockter-win-x64.zip` for the [latest release](https://github.com/stencila/dockter/releases/) and place it somewhere on your `PATH`.
+
+#### MacOS
+
+To install the latest release of the `dockter` command line tool to `/usr/local/bin` just,
 
 ```bash
-curl -sL https://github.com/stencila/dockter/releases/download/v0.2.4/dockter-linux -o ~/.local/bin/dockter && chmod +x ~/.local/bin/dockter
+curl -L https://unpkg.com/@stencila/dockter/install-latest-macos.sh | sudo bash
+```
+
+Or, if you'd prefer to do things manually, download `dockter-macos-x64.tar.gz` for the [latest release](https://github.com/stencila/dockter/releases/) and then,
+
+```bash
+tar xvf dockter-macos-x64.tar.gz
+sudo mv -f dockter /usr/local/bin
+```
+
+##### Linux
+
+To install the latest release of the `dockter` command line tool to `~/.local/bin/` just,
+
+```bash
+curl -L https://unpkg.com/@stencila/dockter/install-latest-linux.sh | bash
+```
+
+Or, if you'd prefer to do things manually, or place Dockter elewhere, download `dockter-linux-x64.tar.gz` for the [latest release](https://github.com/stencila/dockter/releases/) and then,
+
+```bash
+tar xvf dockter-linux-x64.tar.gz
+mv -f dockter ~/.local/bin/ # or wherever you like
 ```
 
 ### Package

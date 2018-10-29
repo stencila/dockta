@@ -19,6 +19,9 @@ build:
 	npm run build
 .PHONY: build
 
+bundle:
+	npm run bundle
+
 docs:
 	npm run docs
 .PHONY: docs
