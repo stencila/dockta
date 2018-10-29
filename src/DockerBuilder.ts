@@ -230,7 +230,7 @@ export default class DockerBuilder {
       // Options to commit
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageCommit
       repo: name,
-      comment: 'Updated application layer',
+      comment: instructions.length > 0 ? 'Updated application layer' : 'No updates requested',
       changes,
       Labels: {
         systemLayer: currentSystemLayer
