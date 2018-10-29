@@ -7,7 +7,6 @@ const packageLookup = PythonSystemPackageLookup.fromFile(fixture('py-system-pack
  * Test reading the system requirements of a Python package where all matching values are found.
  */
 test('python-sys-lookup:full-depth', () => {
-
   const requirements = packageLookup.lookupSystemPackage(
       'numpy',
       3,
