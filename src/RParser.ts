@@ -1,7 +1,7 @@
 import path from 'path'
 
 import Parser from './Parser'
-import { SoftwarePackage, SoftwareEnvironment, Person } from '@stencila/schema'
+import { SoftwarePackage, Person } from '@stencila/schema'
 
 /**
  * Dockter `Parser` class for R requirements files and source code.
@@ -16,10 +16,10 @@ export default class RParser extends Parser {
 
   /**
    * Parse a folder by detecting any R requirements or source code files
-   * and return a `SoftwareEnvironment` instance
+   * and return a `SoftwarePackage` instance
    */
-  async parse (): Promise<SoftwareEnvironment | null> {
-    const environ = new SoftwareEnvironment()
+  async parse (): Promise<SoftwarePackage | null> {
+    const pkg = new SoftwarePackage()
 
     let name
     let version
@@ -97,18 +97,18 @@ export default class RParser extends Parser {
     // Default to yesterday's date (to ensure MRAN is available for the date)
     if (!date) date = new Date(Date.now() - 24 * 3600 * 1000)
 
-    // Set environs properties
-    environ.name = name
-    // environ.version = version
-    environ.datePublished = date.toISOString().substring(0,10)
+    // Set package properties
+    pkg.name = name
+    pkg.runtimePlatform = 'R'
+    pkg.datePublished = date.toISOString().substring(0,10)
 
     // For each dependency, query https://crandb.r-pkg.org to get a manifest including it's own
     // dependencies and convert it to a `SoftwarePackage`
-    environ.softwareRequirements = await Promise.all(
+    pkg.softwareRequirements = await Promise.all(
       packages.map(name => this.createPackage(name))
     )
 
-    return environ
+    return pkg
   }
 
   /**
