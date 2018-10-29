@@ -31,6 +31,9 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
 - [Install](#install)
   * [CLI](#cli)
+    + [Windows](#windows)
+    + [MacOS](#macos)
+    + [Linux](#linux)
   * [Package](#package)
 - [Use](#use)
   * [Compile a project](#compile-a-project)
@@ -237,7 +240,7 @@ tar xvf dockter-macos-x64.tar.gz
 sudo mv -f dockter /usr/local/bin
 ```
 
-##### Linux
+#### Linux
 
 To install the latest release of the `dockter` command line tool to `~/.local/bin/` just,
 
