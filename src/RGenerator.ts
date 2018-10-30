@@ -13,9 +13,9 @@ export default class RGenerator extends Generator {
   constructor (environ: SoftwareEnvironment, folder?: string) {
     super(environ, folder)
 
-    //Ensure a name and date (needed for for DESCRIPTION file)
+    // Ensure a name and date (needed for for DESCRIPTION file)
     this.name = this.environ.name || 'unnamed'
-    //Default to yesterday's date (to ensure MRAN is available for the date)
+    // Default to yesterday's date (to ensure MRAN is available for the date)
     let date = this.environ.datePublished
     if (!date) date = (new Date(Date.now() - 24 * 3600 * 1000)).toISOString().substring(0,10)
     this.date = date

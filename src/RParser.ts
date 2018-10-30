@@ -8,7 +8,7 @@ import { SoftwarePackage, Person } from '@stencila/schema'
  *
  * For each package, meta-data is obtained from http://crandb.r-pkg.org and used to create a `SoftwarePackage` instance
  * using crosswalks from column "R Package Description" in https://github.com/codemeta/codemeta/blob/master/crosswalk.csv
- * 
+ *
  * System dependencies for each package are obtained from https://sysreqs.r-hub.io.
  */
 export default class RParser extends Parser {
