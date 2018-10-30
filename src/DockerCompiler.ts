@@ -4,8 +4,9 @@ import { SoftwareEnvironment } from '@stencila/schema'
 
 import Parser from './Parser'
 import DockerParser from './DockerParser'
-import RParser from './RParser'
+import JavascriptParser from './JavascriptParser'
 import PythonParser from './PythonParser'
+import RParser from './RParser'
 
 import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
@@ -47,8 +48,9 @@ export default class DockerCompiler {
         environ = new SoftwareEnvironment()
         let parser: Parser
         for (parser of [
-          new RParser(folder),
-          new PythonParser(folder)
+          new JavascriptParser(folder),
+          new PythonParser(folder),
+          new RParser(folder)
         ]) {
           const pkg = await parser.parse()
           if (pkg) environ.softwareRequirements.push(pkg)
