@@ -76,6 +76,12 @@ RUN apt-get update \\
 `
     }
 
+    let stencilaInstall = this.stencilaInstall(baseIdentifier)
+    if (stencilaInstall) {
+      if (comments) dockerfile += '\n# This section runs commands to install Stencila execution hosts.'
+      dockerfile += `\nRUN ${stencilaInstall}\n`
+    }
+
     // Once everything that needs root permissions is installed, switch the user to non-root for installing the rest of the packages.
     if (comments) {
       dockerfile += `
@@ -186,6 +192,15 @@ WORKDIR /home/dockteruser
 
   aptPackages (sysVersion: string): Array<string> {
     return this.filterPackages('deb').map(pkg => pkg.name || '')
+  }
+
+  /**
+   * The Bash command to run to install Stencila execution host package/s
+   *
+   * @param sysVersion The Ubuntu system version being used
+   */
+  stencilaInstall (sysVersion: string): string | undefined {
+    return
   }
 
   /**

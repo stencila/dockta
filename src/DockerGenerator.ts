@@ -98,6 +98,12 @@ export default class DockerGenerator extends Generator {
     return Array.from(new Set(pkgs))
   }
 
+  stencilaInstall (sysVersion: string): string | undefined {
+    return this.generators.map((generator: Generator) => generator.stencilaInstall(sysVersion))
+        .filter(cmd => cmd)
+        .join(' \\\n && ')
+  }
+
   installFiles (sysVersion: string): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.installFiles(sysVersion))
   }

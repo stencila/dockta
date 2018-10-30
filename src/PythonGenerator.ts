@@ -64,8 +64,12 @@ export default class PythonGenerator extends Generator {
     }
 
     return this.filterPackages('Python').map(
-        requirement => `${requirement.name}${requirement.version}`
+      requirement => `${requirement.name}${requirement.version}`
     ).join('\n')
+  }
+
+  stencilaInstall (sysVersion: string): string | undefined {
+    return `pip${this.pythonVersionSuffix()} install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip`
   }
 
   installFiles (sysVersion: string): Array<[string, string]> {
