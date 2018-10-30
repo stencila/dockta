@@ -230,7 +230,7 @@ To install the latest release of the `dockter` command line tool, download `dock
 To install the latest release of the `dockter` command line tool to `/usr/local/bin` just,
 
 ```bash
-curl -L https://unpkg.com/@stencila/dockter/install-latest-macos.sh | sudo bash
+curl -L https://unpkg.com/@stencila/dockter/install-latest-macos.sh | bash
 ```
 
 Or, if you'd prefer to do things manually, download `dockter-macos-x64.tar.gz` for the [latest release](https://github.com/stencila/dockter/releases/) and then,
