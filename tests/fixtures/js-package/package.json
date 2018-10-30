@@ -1,0 +1,13 @@
+{
+  "name": "js-package",
+  "version": "1.0.0",
+  "description": "A test Node.js package",
+  "main": "index.js",
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mkdirp": "0.5.1",
+    "rimraf": "2.6.2"
+  }
+}

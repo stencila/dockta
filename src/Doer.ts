@@ -52,7 +52,7 @@ export default abstract class Doer {
     fs.writeFileSync(path.join(this.folder, subpath), content, 'utf8')
   }
 
-  async fetch (url: string): Promise<any> {
+  async fetch (url: string, options: any = { json: true }): Promise<any> {
     if (!REQUEST_CACHE_INITIALISED) {
       await persist.init({
         dir: REQUEST_CACHE_DIR,
@@ -76,9 +76,7 @@ export default abstract class Doer {
 
     if (!value) {
       try {
-        const response = await got(url, {
-          json: true
-        })
+        const response = await got(url, options)
         value = response.body
       } catch (error) {
         if (error.statusCode === 404) {

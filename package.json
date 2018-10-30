@@ -74,6 +74,7 @@
   },
   "dependencies": {
     "@stencila/schema": "0.2.1",
+    "detective": "^5.1.0",
     "docker-file-parser": "^1.0.4",
     "dockerode": "^2.5.7",
     "express": "^4.16.3",
