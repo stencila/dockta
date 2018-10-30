@@ -219,6 +219,10 @@ export default class DockerBuilder {
           changes += instruction.raw + '\n\n'
           break
 
+        case 'COMMENT':
+          // Just ignore it!
+          break
+
         default:
           throw new Error(`Dockter can not yet handle a ${instruction.name} instruction. Put it before the # dockter comment in your Dockerfile.`)
       }
