@@ -100,3 +100,17 @@ test('parse:py-pandas', async () => {
 
   expect(await parser.parse()).toEqual(environ)
 })
+
+/**
+ * The parser should be able to go through a directory of Python files without a requirements.txt file and understand
+ * the imports that are required by parsing the source files directly.
+ */
+test('parse:py-generated-requirements', async () => {
+  const parser = new PythonParser(fixture('py-generated-requirements'))
+  let environ = await parser.parse()
+  expect(environ).not.toBeNull()
+  let requirementNames = environ!.softwareRequirements.map(requirement => requirement.name)
+  expect(requirementNames.length).toEqual(2)
+  expect(requirementNames).toContain('django')
+  expect(requirementNames).toContain('requests')
+})

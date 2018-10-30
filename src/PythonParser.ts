@@ -1,6 +1,7 @@
 import Parser from './Parser'
 import { SoftwareEnvironment, SoftwarePackage, SoftwareSourceCode } from '@stencila/schema'
-import { basename } from 'path'
+import { basename, dirname } from 'path'
+import fs from 'fs'
 
 const REQUIREMENTS_COMMENT_REGEX = /^\s*#/
 const REQUIREMENTS_EDITABLE_SOURCE_REGEX = /^\s*-e\s*([^\s]+)\s*/
@@ -63,11 +64,6 @@ interface PythonRequirement {
 export default class PythonParser extends Parser {
 
   async parse (): Promise<SoftwareEnvironment | null> {
-    if (!this.exists('requirements.txt')) {
-      // no requirements file so can't generate an environment
-      return null
-    }
-
     const files = this.glob(['**/*.py'])
 
     if (!files.length) {
@@ -81,7 +77,13 @@ export default class PythonParser extends Parser {
       environ.name = basename(this.folder)
     }
 
-    const requirements = await this.parseRequirementsFile('requirements.txt')
+    let requirements
+
+    if (this.exists('requirements.txt')) {
+      requirements = await this.parseRequirementsFile('requirements.txt')
+    } else {
+      requirements = this.generateRequirementsFromSource()
+    }
 
     for (let rawRequirement of requirements) {
       if (rawRequirement.type === RequirementType.Named) {
@@ -137,5 +139,51 @@ export default class PythonParser extends Parser {
     }
 
     return requirements
+  }
+
+  generateRequirementsFromSource (): Array<PythonRequirement> {
+    let pythonSystemModules = fs.readFileSync(__dirname + '/PythonBuiltins.txt', 'utf8').split('\n')
+
+    const nonSystemImports = this.findImports().filter(pythonImport => !pythonSystemModules.includes(pythonImport))
+
+    return nonSystemImports.map(nonSystemImport => {
+      return {
+        value: nonSystemImport, type: RequirementType.Named, version: ''
+      }
+    })
+  }
+
+  findImports (): Array<string> {
+    const files = this.glob(['**/*.py'])
+
+    const imports: Array<string> = []
+
+    if (files.length) {
+      for (let file of files) {
+        for (let importName of this.readImportsInFile(file)) {
+          if (!imports.includes(importName)) imports.push(importName)
+        }
+      }
+    }
+    return imports
+  }
+
+  readImportsInFile (path: string): Array<string> {
+    const fileContent = this.read(path)
+    const importRegex = /^from ([\w_]+)|^import ([\w_]+)/gm
+    const imports: Array<string> = []
+    const fileDirectory = dirname(path)
+    while (true) {
+      let match = importRegex.exec(fileContent)
+
+      if (!match) break
+
+      const pkg = match[1] || match[2]
+      if (this.glob([fileDirectory + '/' + pkg + '.py', fileDirectory + '/' + pkg + '/__init__.py']).length) {
+        continue
+      }
+      if (!imports.includes(pkg)) imports.push(pkg)
+    }
+    return imports
   }
 }

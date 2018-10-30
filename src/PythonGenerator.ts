@@ -49,7 +49,7 @@ export default class PythonGenerator extends Generator {
 
     let dedupedRequirements: Array<string> = []
     aptRequirements.map(aptRequirement => {
-      if (dedupedRequirements.indexOf(aptRequirement) === -1) {
+      if (!dedupedRequirements.includes(aptRequirement)) {
         dedupedRequirements.push(aptRequirement)
       }
     })
