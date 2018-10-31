@@ -1,6 +1,6 @@
 {
   "name": "@stencila/dockter",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "A Docker image builder for researchers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
