@@ -32,9 +32,19 @@ test('parse:js-package', async () => {
   const pkg = await parser.parse() as SoftwarePackage
   
   expect(pkg.name).toEqual('js-package')
-  expect(pkg.softwareRequirements.length).toEqual(2)
-  expect(pkg.softwareRequirements[0].name).toEqual('mkdirp')
-  expect(pkg.softwareRequirements[1].name).toEqual('rimraf')
+  expect(pkg.softwareRequirements.length).toEqual(5)
+  const expecteds = [
+    ['is-array', '1.0.1'],
+    ['mkdirp', '0.5.1'],
+    ['rimraf', '2.6.2'],
+    ['array-swap', '0.0.2'],
+    ['a-package-that-is-not-on-npm', 'org/repo']
+  ]
+  for (let index in expecteds) {
+    let {name, version} = pkg.softwareRequirements[index]
+    expect(name).toEqual(expecteds[index][0])
+    expect(version).toEqual(expecteds[index][1])
+  }
 })
 
 

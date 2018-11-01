@@ -1,9 +1,11 @@
 // @ts-ignore
 import detective from 'detective'
 import path from 'path'
+import semver from 'semver'
 
 import Parser from './Parser'
 import { SoftwarePackage, Person } from '@stencila/schema'
+import { version } from 'punycode';
 
 /**
  * Dockter `Parser` class for Node.js.
@@ -72,17 +74,36 @@ export default class JavascriptParser extends Parser {
     // stencila:SoftwarePackage
     if (data.dependencies) {
       pkg.softwareRequirements = await Promise.all(
-        Object.entries(data.dependencies).map(async ([name, version]) => {
-          // TODO: handle version property. Currently using `${version}` instead of
-          // `latest` in this URL fails with version like "^0.4.5".
-          // Can we use the `semver` package to help here?
-          const data = await this.fetch(`https://registry.npmjs.org/${name}/latest`, {
+        Object.entries(data.dependencies).map(async ([name, versionRange]) => {
+          // Determine the minimum version that satisfies the range specified in the
+          // If we can't determine a minimum version from the versionRange 
+          // (e.g. because it's a github url) then try to get latest
+          let version = 'latest'
+          if (versionRange !== 'latest' || versionRange !== '*') {
+            const range = semver.validRange(versionRange as string)
+            if (range) {
+              const match = range.match(/(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/)
+              if (match) version = match[0]
+            }
+          }
+
+          // Fetch meta-data from NPM
+          const data = await this.fetch(`https://registry.npmjs.org/${name}/${version}`, {
             json: true,
             headers: {
               'Accept': 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
             }
           })
-          return this.createPackage(data)
+
+          if (data) return this.createPackage(data)
+          else {
+            // All we know is name and version, so return that
+            const dependency = new SoftwarePackage()
+            dependency.name = name
+            dependency.version = versionRange as string
+            dependency.runtimePlatform = 'Node.js'
+            return dependency
+          }
         })
       )
     }
