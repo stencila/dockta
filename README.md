@@ -74,22 +74,26 @@ Dockter checks if any of your dependencies (or dependencies of dependencies, or 
 
 If the folder contains a [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [#4](https://github.com/stencila/dockter/issues/4) [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
 
-If the folder does not contain either of those files then Dockter will 🦄 [#5](https://github.com/stencila/dockter/issues/5) scan all the folder's `.py` files for `import` statements and create a `.requirements.txt` file for you.
+If the folder does not contain either of those files then Dockter will scan all the folder's `.py` files for `import` statements and create a `.requirements.txt` file for you.
 
 #### Node.js
 
-If the folder contains a 🦄 [#7](https://github.com/stencila/dockter/issues/7) [`package.json`](https://docs.npmjs.com/files/package.json) file, Dockter will copy it into the Docker image and use `npm` to install the specified packages.
+If the folder contains a [`package.json`](https://docs.npmjs.com/files/package.json) file, Dockter will copy it into the Docker image and use `npm` to install the specified packages.
 
-If the folder does not contain a `package.json` file, Dockter will 🦄 [#8](https://github.com/stencila/dockter/issues/8) scan all the folder's `.js` files for `import` or `require` statements and create a `.package.json` file for you.
+If the folder does not contain a `package.json` file, Dockter will scan all the folder's `.js` files for `require` calls and create a `.package.json` file for you.
+
+#### JATS
+
+If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_Tag_Suite) files (`.xml` files with `<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) ...`), 🦄 [#X](https://github.com/stencila/dockter/issues/X) Docker will scan reproducible elements defined in the [Dar JATS extension](https://github.com/substance/dar/blob/master/DarArticle.md) for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image.
 
 #### Jupyter
 
-If the folder contains any 🦄 [#9](https://github.com/stencila/dockter/issues/9) `.ipynb` files, Dockter will scan the code cells in those files for any Python `import` or R `library` statements and extract a list of package dependencies. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add Jupyter to the built Docker image.
+If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockter/issues/9) Dockter will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add the necesary Jupyter kernels to the built Docker image.
 
 
 ### Quicker re-installation of language packages
 
-If you have built a Docker image you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
+If you have built a Docker image before, you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
 
 The reason this happens is that, due to Docker's layered filesystem, when you update a requirements file, Docker throws away all the subsequent layers - including the one where you previously installed your dependencies. That means that all those packages need to get reinstalled.
 
@@ -301,6 +305,7 @@ You should find three new files in the folder created by Dockter:
 
 - `.Dockerfile`: A `Dockerfile` generated from `.environ.jsonld`
 
+To stop Dockter generating any of these files and start editing it yourself, remove the leading `.` from the name of the file you want to take over creating.
 
 ### Build a Docker image
 
@@ -317,6 +322,8 @@ After the image has finished building you should have a new docker image on your
 REPOSITORY        TAG                 IMAGE ID            CREATED              SIZE
 rdate             latest              545aa877bd8d        About a minute ago   766MB
 ```
+
+If you want to build your image with bare Docker rename `.Dockerfile` to `Dockerfile` and run `docker build .` instead. This might be a good approach when you have finished the exploratory phase of your project (i.e. there is litte or no churn in your package dependencies) and want to create a more final image.
 
 ### Execute a Docker image
 
