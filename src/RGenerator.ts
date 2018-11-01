@@ -47,13 +47,13 @@ export default class RGenerator extends Generator {
     ]
   }
 
-  aptRepos (sysVersion: string): Array<[string, string]> {
-    const sysVersionName = this.sysVersionName(sysVersion)
+  aptKeysCommand (sysVersion: string): string {
+    return 'apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9'
+  }
+
+  aptRepos (base: string): Array<string> {
     return [
-      [
-        `deb https://mran.microsoft.com/snapshot/${this.date}/bin/linux/ubuntu ${sysVersionName}/`,
-        '51716619E084DAB9'
-      ]
+      `deb https://mran.microsoft.com/snapshot/${this.date}/bin/linux/ubuntu ${this.baseVersionName(base)}/`
     ]
   }
 

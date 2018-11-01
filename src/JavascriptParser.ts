@@ -5,7 +5,7 @@ import semver from 'semver'
 
 import Parser from './Parser'
 import { SoftwarePackage, Person } from '@stencila/schema'
-import { version } from 'punycode';
+import { version } from 'punycode'
 
 /**
  * Dockter `Parser` class for Node.js.
@@ -76,7 +76,7 @@ export default class JavascriptParser extends Parser {
       pkg.softwareRequirements = await Promise.all(
         Object.entries(data.dependencies).map(async ([name, versionRange]) => {
           // Determine the minimum version that satisfies the range specified in the
-          // If we can't determine a minimum version from the versionRange 
+          // If we can't determine a minimum version from the versionRange
           // (e.g. because it's a github url) then try to get latest
           let version = 'latest'
           if (versionRange !== 'latest' || versionRange !== '*') {
@@ -95,8 +95,9 @@ export default class JavascriptParser extends Parser {
             }
           })
 
-          if (data) return this.createPackage(data)
-          else {
+          if (data) {
+            return this.createPackage(data)
+          } else {
             // All we know is name and version, so return that
             const dependency = new SoftwarePackage()
             dependency.name = name

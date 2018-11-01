@@ -36,10 +36,11 @@ RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
       apt-transport-https \\
       ca-certificates \\
+      curl \\
       software-properties-common
 
-RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu xenial/\" \\
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu xenial/"
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -88,10 +89,11 @@ RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
       apt-transport-https \\
       ca-certificates \\
+      curl \\
       software-properties-common
 
-RUN apt-add-repository \"deb https://mran.microsoft.com/snapshot/${environ.datePublished}/bin/linux/ubuntu xenial/\" \\
- && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${environ.datePublished}/bin/linux/ubuntu xenial/"
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\

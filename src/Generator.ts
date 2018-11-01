@@ -1,5 +1,6 @@
 import Doer from './Doer'
 import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
+import { join } from 'path'
 
 const VERSION = require('../package').version
 
@@ -35,28 +36,34 @@ export default class Generator extends Doer {
 
     if (!this.applies()) return dockerfile
 
-    const envVars = this.envVars(this.baseVersion())
+    const envVars = this.envVars(baseIdentifier)
     if (envVars.length) {
       if (comments) dockerfile += '\n# This section sets environment variables within the image.'
       const pairs = envVars.map(([key, value]) => `${key}="${value.replace('"', '\\"')}"`)
       dockerfile += `\nENV ${pairs.join(' \\\n    ')}\n`
     }
 
-    const aptRepos: Array<[string, string]> = this.aptRepos(this.baseVersion())
-    if (aptRepos.length) {
-      if (comments) dockerfile += '\n# This section adds repositories to install required system packages from.'
+    const aptRepos = this.aptRepos(baseIdentifier)
+    let aptKeysCommand = this.aptKeysCommand(baseIdentifier)
+
+    if (aptRepos.length || aptKeysCommand) {
+      if (comments) dockerfile += '\n# This section installs system packages needed to add extra system repositories.'
       dockerfile += `
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
       apt-transport-https \\
       ca-certificates \\
+      curl \\
       software-properties-common
 `
+    }
 
-      // Add each repository and fetch signing key if defined
-      for (let [deb, key] of aptRepos) {
-        dockerfile += `\nRUN apt-add-repository "${deb}"${key ? ` \\\n && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ${key}` : ''}\n`
-      }
+    if (aptRepos.length) {
+      if (comments) dockerfile += '\n# This section adds system repositories required to install extra system packages.'
+      dockerfile += `\nRUN ${aptRepos.map(repo => `apt-add-repository "${repo}"`).join(' \\\n && ')}\n`
+    }
+    if (aptKeysCommand) {
+      dockerfile += `RUN ${aptKeysCommand}\n`
     }
 
     let aptPackages: Array<string> = this.aptPackages(baseIdentifier)
@@ -167,26 +174,36 @@ WORKDIR /home/dockteruser
     return '18.04'
   }
 
+  baseVersionName (baseIdentifier: string): string {
+    let [name, version] = baseIdentifier.split(':')
+    const lookup: { [key: string]: string } = {
+      '14.04': 'trusty',
+      '16.04': 'xenial',
+      '18.04': 'bionic'
+    }
+    return lookup[version]
+  }
+
   baseIdentifier (): string {
     const joiner = this.baseVersion() === '' ? '' : ':'
 
     return `${this.baseName()}${joiner}${this.baseVersion()}`
   }
 
-  sysVersionName (sysVersion: string): string {
-    const lookup: { [key: string]: string } = {
-      '14.04': 'trusty',
-      '16.04': 'xenial',
-      '18.04': 'bionic'
-    }
-    return lookup[sysVersion]
-  }
-
   envVars (sysVersion: string): Array<[string, string]> {
     return []
   }
 
-  aptRepos (sysVersion: string): Array<[string, string]> {
+  /**
+   * The Bash command to run to install apt keys
+   *
+   * @param sysVersion The Ubuntu system version being used
+   */
+  aptKeysCommand (sysVersion: string): string | undefined {
+    return
+  }
+
+  aptRepos (sysVersion: string): Array<string> {
     return []
   }
 
