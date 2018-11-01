@@ -17,7 +17,7 @@
     "bundle": "npm run bundle-linux && npm run bundle-macos && npm run bundle-win",
     "bundle-linux": "tar --transform 's|build/dockter-linux|dockter|' -czvf build/dockter-linux-x64.tar.gz build/dockter-linux",
     "bundle-macos": "tar --transform 's|build/dockter-macos|dockter|' -czvf build/dockter-macos-x64.tar.gz build/dockter-macos",
-    "bundle-win": "mv build/dockter-win.exe build/dockter.exe ; zip -j build/dockter-win-x64.zip build/dockter.exe",
+    "bundle-win": "./bundle-win.sh",
     "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
