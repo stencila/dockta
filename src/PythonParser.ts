@@ -1,7 +1,9 @@
-import Parser from './Parser'
+import { default as path, dirname, basename } from 'path'
 import { SoftwareEnvironment, SoftwarePackage, SoftwareSourceCode } from '@stencila/schema'
-import { basename, dirname } from 'path'
 import fs from 'fs'
+
+import Parser from './Parser'
+import { default as pythonSystemModules } from './PythonBuiltins'
 
 const REQUIREMENTS_COMMENT_REGEX = /^\s*#/
 const REQUIREMENTS_EDITABLE_SOURCE_REGEX = /^\s*-e\s*([^\s]+)\s*/
@@ -142,8 +144,6 @@ export default class PythonParser extends Parser {
   }
 
   generateRequirementsFromSource (): Array<PythonRequirement> {
-    let pythonSystemModules = fs.readFileSync(__dirname + '/PythonBuiltins.txt', 'utf8').split('\n')
-
     const nonSystemImports = this.findImports().filter(pythonImport => !pythonSystemModules.includes(pythonImport))
 
     return nonSystemImports.map(nonSystemImport => {

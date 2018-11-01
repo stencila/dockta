@@ -12,7 +12,7 @@
     "test": "jest",
     "cover": "jest --collectCoverage",
     "build": "npm run build-dist && npm run build-bins",
-    "build-dist": "tsc",
+    "build-dist": "tsc && cp ./src/*.json dist",
     "build-bins": "pkg --out-path=build .",
     "bundle": "npm run bundle-linux && npm run bundle-macos && npm run bundle-win",
     "bundle-linux": "tar --transform 's|build/dockter-linux|dockter|' -czvf build/dockter-linux-x64.tar.gz build/dockter-linux",
@@ -94,6 +94,10 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "pkg": {
+    "scripts": "./dist/**/*.js",
+    "assets": "./dist/**/*.json"
   },
   "release": {
     "plugins": [

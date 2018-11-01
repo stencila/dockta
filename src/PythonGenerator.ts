@@ -1,5 +1,7 @@
-import Generator from './Generator'
 import { SoftwareEnvironment } from '@stencila/schema'
+import path from 'path'
+
+import Generator from './Generator'
 import PythonSystemPackageLookup from './PythonSystemPackageLookup'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
@@ -17,7 +19,7 @@ export default class PythonGenerator extends Generator {
     super(environ, folder)
     this.environ = environ
     this.pythonMajorVersion = pythonMajorVersion
-    this.systemPackageLookup = PythonSystemPackageLookup.fromFile(__dirname + '/PythonSystemDependencies.json')
+    this.systemPackageLookup = PythonSystemPackageLookup.fromFile(path.join(__dirname, 'PythonSystemDependencies.json'))
   }
 
   /**
