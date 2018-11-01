@@ -1,9 +1,7 @@
 import { SoftwareEnvironment } from '@stencila/schema'
 
 import Generator from './Generator'
-import JavascriptGenerator from './JavascriptGenerator'
-import PythonGenerator from './PythonGenerator'
-import RGenerator from './RGenerator'
+import generators from './generators'
 
 const PREFERRED_UBUNTU_VERSION = '18.04'
 
@@ -53,13 +51,9 @@ export default class DockerGenerator extends Generator {
   constructor (environ: SoftwareEnvironment, folder?: string) {
     super(environ, folder)
 
-    // List of possible generators filtered by those that apply to the
-    // environment
-    this.generators = [
-      new JavascriptGenerator(environ, folder),
-      new PythonGenerator(environ, folder),
-      new RGenerator(environ, folder)
-    ].filter(generator => generator.applies())
+    // List of generators filtered by those that apply to the environment
+    this.generators = generators.map(GeneratorClass => new GeneratorClass(environ, folder))
+                                .filter(generator => generator.applies())
   }
 
   /**
