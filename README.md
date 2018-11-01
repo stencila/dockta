@@ -50,7 +50,7 @@ Dockter makes it easier for researchers to create Docker images for their resear
 
 ### Builds a Docker image for your project sources
 
-Dockter scans your project folder and builds a Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder and generate one for you. Dockter currently handles R and Python source code (with Node.js support planned). A project can have a mix of these languages.
+Dockter scans your project folder and builds a Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder and generate one for you. Dockter currently handles R, Python and Node.js source code. A project can have a mix of these languages.
 
 #### R
 
@@ -84,7 +84,7 @@ If the folder does not contain a `package.json` file, Dockter will scan all the 
 
 #### JATS
 
-If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_Tag_Suite) files (`.xml` files with `<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) ...`), 🦄 [#X](https://github.com/stencila/dockter/issues/X) Docker will scan reproducible elements defined in the [Dar JATS extension](https://github.com/substance/dar/blob/master/DarArticle.md) for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image.
+If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_Tag_Suite) files (`.xml` files with `<!DOCTYPE article PUBLIC "-//NLM//DTD JATS (Z39.96) ...`), 🦄 [#52](https://github.com/stencila/dockter/issues/52) Docker will scan reproducible elements defined in the [Dar JATS extension](https://github.com/substance/dar/blob/master/DarArticle.md) for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image.
 
 #### Jupyter
 
@@ -351,7 +351,7 @@ There are several other projects that create Docker images from source code and/
 
 Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don't support R). Dockter differs to these projects principally in that it:
 
-- performs static code analysis for multiple languages to determine package requirements (🦄 well, right now just R).
+- performs static code analysis for multiple languages to determine package requirements.
 
 - uses package databases to determine package system dependencies and generate linked meta-data (`containerit` does this for R).
 
