@@ -9,7 +9,7 @@ services:
 
 # Install code signing tool and decrypt code signing certificates (see https://docs.travis-ci.com/user/encrypting-files/)
 before_install:
-  - sudo apt-get install osslsigncode
+  - sudo apt-get update && sudo apt-get install osslsigncode
   - openssl aes-256-cbc -K $encrypted_1d93d61b46d3_key -iv $encrypted_1d93d61b46d3_iv -in win-cert.p12.enc -out win-cert.p12 -d
 
 # Do linting, coverage, and build docs (to upload to Github pages)
