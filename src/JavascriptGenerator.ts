@@ -1,6 +1,6 @@
-import { SoftwareEnvironment } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
 
-import Generator from './Generator'
+import PackageGenerator from './PackageGenerator'
 
 const PACKAGE_JSON_GENERATED = '.package.json'
 const PACKAGE_JSON = 'package.json'
@@ -8,7 +8,7 @@ const PACKAGE_JSON = 'package.json'
 /**
  * A Dockerfile generator for Javascript projects
  */
-export default class JavascriptGenerator extends Generator {
+export default class JavascriptGenerator extends PackageGenerator {
 
   /**
    * The major version of Node.js to use.
@@ -19,14 +19,14 @@ export default class JavascriptGenerator extends Generator {
 
   // Methods that override those in `Generator`
 
-  constructor (environ: SoftwareEnvironment, folder?: string, nodeMajorVersion: number = 10) {
-    super(environ, folder)
+  constructor (pkg: SoftwarePackage, folder?: string, nodeMajorVersion: number = 10) {
+    super(pkg, folder)
 
     this.nodeMajorVersion = nodeMajorVersion
   }
 
-  appliesRuntime (): string {
-    return 'Node.js'
+  applies (): boolean {
+    return this.package.runtimePlatform === 'Node.js'
   }
 
   aptKeysCommand (sysVersion: string) {

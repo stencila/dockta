@@ -1,23 +1,23 @@
-import { SoftwareEnvironment } from '@stencila/schema'
+import { SoftwarePackage, SoftwareEnvironment } from '@stencila/schema'
 import path from 'path'
 
-import Generator from './Generator'
+import PackageGenerator from './PackageGenerator'
 import PythonSystemPackageLookup from './PythonSystemPackageLookup'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
 /**
- * A Dockerfile generator for Python environments
+ * A Dockerfile generator for Python packages
  */
-export default class PythonGenerator extends Generator {
+export default class PythonGenerator extends PackageGenerator {
   private readonly pythonMajorVersion: number
   private readonly systemPackageLookup: PythonSystemPackageLookup
 
   // Methods that override those in `Generator`
 
-  constructor (environ: SoftwareEnvironment, folder?: string, pythonMajorVersion: number = 3) {
-    super(environ, folder)
-    this.environ = environ
+  constructor (pkg: SoftwarePackage, folder?: string, pythonMajorVersion: number = 3) {
+    super(pkg, folder)
+
     this.pythonMajorVersion = pythonMajorVersion
     this.systemPackageLookup = PythonSystemPackageLookup.fromFile(path.join(__dirname, 'PythonSystemDependencies.json'))
   }
@@ -31,17 +31,13 @@ export default class PythonGenerator extends Generator {
   }
 
   applies (): boolean {
-    return this.exists('requirements.txt') || super.applies()
-  }
-
-  appliesRuntime (): string {
-    return 'Python'
+    return this.package.runtimePlatform === 'Python'
   }
 
   aptPackages (sysVersion: string): Array<string> {
     let aptRequirements: Array<string> = []
 
-    this.filterPackages('Python').map(requirement => {
+    this.package.softwareRequirements.map(requirement => {
       aptRequirements = aptRequirements.concat(
           this.systemPackageLookup.lookupSystemPackage(
               requirement.name, this.pythonMajorVersion, 'deb', sysVersion
@@ -61,7 +57,7 @@ export default class PythonGenerator extends Generator {
   }
 
   generateRequirementsContent (): string {
-    if (!this.environ.softwareRequirements) {
+    if (!this.package.softwareRequirements) {
       return ''
     }
 

@@ -11,7 +11,7 @@ RUN apt-get update \
       software-properties-common
 
 RUN apt-add-repository "deb https://deb.nodesource.com/node_10.x xenial main" \
- && apt-add-repository "deb https://mran.microsoft.com/snapshot/2018-10-31/bin/linux/ubuntu xenial/"
+ && apt-add-repository "deb https://mran.microsoft.com/snapshot/2018-11-01/bin/linux/ubuntu xenial/"
 RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
@@ -21,15 +21,12 @@ RUN apt-get update \
       libssl-dev \
       make \
       nodejs \
-      python3 \
-      python3-pip \
       r-base \
  && apt-get autoremove -y \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 RUN npm install stencila-node@0.28.15 \
- && pip3 install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip \
  && apt-get update \
  && apt-get install -y  zlib1g-dev libxml2-dev pkg-config \
  && apt-get autoremove -y \
@@ -47,11 +44,9 @@ WORKDIR /home/dockteruser
 # dockter
 
 COPY .package.json package.json
-COPY requirements.txt requirements.txt
 COPY .DESCRIPTION DESCRIPTION
 
 RUN npm install package.json \
- && pip3 install --user --requirement requirements.txt \
  && mkdir ~/R \
  && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 

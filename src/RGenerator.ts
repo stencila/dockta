@@ -1,21 +1,21 @@
-import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
 import path from 'path'
 
-import Generator from './Generator'
+import PackageGenerator from './PackageGenerator'
 
 /**
- * A Dockerfile generator for R environments
+ * A Dockerfile generator for R packages
  */
-export default class RGenerator extends Generator {
+export default class RGenerator extends PackageGenerator {
 
   date: string
 
-  constructor (environ: SoftwareEnvironment, folder?: string) {
-    super(environ, folder)
+  constructor (pkg: SoftwarePackage, folder?: string) {
+    super(pkg, folder)
 
     // Default to yesterday's date (to ensure MRAN is available for the date)
     // Set here as it is required in two methods below
-    let date = this.environ.datePublished
+    let date = this.package.datePublished
     if (!date) date = (new Date(Date.now() - 24 * 3600 * 1000)).toISOString().substring(0,10)
     this.date = date
   }
@@ -23,8 +23,8 @@ export default class RGenerator extends Generator {
   // Methods that override those in `Generator`.
   // See that class for documentation on what each function does
 
-  appliesRuntime (): string {
-    return 'R'
+  applies (): boolean {
+    return this.package.runtimePlatform === 'R'
   }
 
   baseVersion (): string {
@@ -57,25 +57,21 @@ export default class RGenerator extends Generator {
   }
 
   aptPackages (sysVersion: string): Array<string> {
-    // Walk through R packages and find any deb packages
-    let debpkgs: Array<string> = []
+    let pkgs: Array<string> = [
+      'r-base'
+    ]
 
+    // Recurse through `softwareRequirements` and find any deb packages
     function find (pkg: any) {
       if (pkg.runtimePlatform !== 'R' || !pkg.softwareRequirements) return
       for (let subpkg of pkg.softwareRequirements) {
-        if (subpkg.runtimePlatform === 'deb') {
-          debpkgs.push(subpkg.name || '')
-        } else {
-          find(subpkg)
-        }
+        if (subpkg.runtimePlatform === 'deb') pkgs.push(subpkg.name || '')
+        else find(subpkg)
       }
     }
+    find(this.package)
 
-    for (let pkg of this.environ.softwareRequirements || []) find(pkg)
-
-    return debpkgs.concat([
-      'r-base'
-    ])
+    return pkgs
   }
 
   stencilaInstall (sysVersion: string): string | undefined {
@@ -96,7 +92,7 @@ export default class RGenerator extends Generator {
     if (this.exists('DESCRIPTION')) return [['DESCRIPTION', 'DESCRIPTION']]
 
     // Generate a .DESCRIPTION with valid name to copy into image
-    const name = (this.environ.name || 'unnamed').replace(/[^a-zA-Z0-9]/,'')
+    const name = (this.package.name || 'unnamed').replace(/[^a-zA-Z0-9]/,'')
     const pkgs = this.filterPackages('R').map(pkg => pkg.name)
     let desc = `Package: ${name}
 Version: 1.0.0

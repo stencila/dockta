@@ -4,6 +4,8 @@ import DockerCompiler from '../src/DockerCompiler'
 import fixture from './fixture'
 import { SoftwareEnvironment, Person } from '@stencila/schema'
 
+jest.setTimeout(30 * 60 * 1000)
+
 /**
  * Tests of compiling Dockerfile
  *

@@ -42,6 +42,8 @@ function versionCompare (versionOne: string, versionTwo: string) {
  */
 export default class DockerGenerator extends Generator {
 
+  environ: SoftwareEnvironment
+
   /**
    * The child generators from which this 'super' generator
    * collects instructions.
@@ -49,11 +51,24 @@ export default class DockerGenerator extends Generator {
   protected generators: Array<Generator>
 
   constructor (environ: SoftwareEnvironment, folder?: string) {
-    super(environ, folder)
+    super(folder)
+    this.environ = environ
 
-    // List of generators filtered by those that apply to the environment
-    this.generators = generators.map(GeneratorClass => new GeneratorClass(environ, folder))
-                                .filter(generator => generator.applies())
+    // Each of the environment's `softwareRequirements` is
+    // matched to one of the language specific generators
+    // (the first that says that it `applies`)
+    this.generators = []
+    for (let pkg of this.environ.softwareRequirements) {
+      for (let GeneratorClass of generators) {
+        // @ts-ignore
+        const generator = new GeneratorClass(pkg, folder)
+        if (generator.applies()) {
+          this.generators.push(generator)
+          break
+        }
+      }
+    }
+
   }
 
   /**

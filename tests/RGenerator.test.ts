@@ -1,15 +1,15 @@
 import fixture from './fixture'
 import RParser from '../src/RParser'
 import RGenerator from '../src/RGenerator'
-import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
 
 /**
- * When applied to an empty environment, generate should return
+ * When applied to an empty package, generate should return
  * Dockerfile with just FROM
  */
 test('generate:empty', async () => {
-  const environ = new SoftwareEnvironment()
-  const generator = new RGenerator(environ)
+  const pkg = new SoftwarePackage()
+  const generator = new RGenerator(pkg)
   expect(await generator.generate(false)).toEqual('FROM ubuntu:16.04\n')
 })
 
@@ -18,15 +18,16 @@ test('generate:empty', async () => {
  * Dockerfile with R and the packages installed
  */
 test('generate:packages', async () => {
-  const pkg = new SoftwarePackage()
-  pkg.name = 'ggplot2'
-  pkg.runtimePlatform = 'R'
+  const pkg1 = new SoftwarePackage()
+  pkg1.name = 'ggplot2'
+  pkg1.runtimePlatform = 'R'
 
-  const environ = new SoftwareEnvironment()
-  environ.datePublished = '2017-01-01'
-  environ.softwareRequirements = [pkg]
+  const pkg2 = new SoftwarePackage()
+  pkg2.runtimePlatform = 'R'
+  pkg2.datePublished = '2017-01-01'
+  pkg2.softwareRequirements = [pkg1]
   
-  const generator = new RGenerator(environ)
+  const generator = new RGenerator(pkg2)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
 
 ENV TZ="Etc/UTC" \\
@@ -78,8 +79,8 @@ RUN mkdir ~/R \\
  */
 test('generate:r-xml2', async () => {
   const folder = fixture('r-xml2')
-  const environ = await new RParser(folder).parse() as SoftwareEnvironment
-  const dockerfile = await new RGenerator(environ, folder).generate(false)
+  const pkg = await new RParser(folder).parse() as SoftwarePackage
+  const dockerfile = await new RGenerator(pkg, folder).generate(false)
   expect(dockerfile).toEqual(`FROM ubuntu:16.04
 
 ENV TZ="Etc/UTC" \\
@@ -92,13 +93,13 @@ RUN apt-get update \\
       curl \\
       software-properties-common
 
-RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${environ.datePublished}/bin/linux/ubuntu xenial/"
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${pkg.datePublished}/bin/linux/ubuntu xenial/"
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
-      libxml2-dev \\
       r-base \\
+      libxml2-dev \\
  && apt-get autoremove -y \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
