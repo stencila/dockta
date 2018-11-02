@@ -1,21 +1,20 @@
-import Generator from './Generator'
 import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
+import path from 'path'
+
+import Generator from './Generator'
 
 /**
  * A Dockerfile generator for R environments
  */
 export default class RGenerator extends Generator {
 
-  name: string
-
   date: string
 
   constructor (environ: SoftwareEnvironment, folder?: string) {
     super(environ, folder)
 
-    // Ensure a name and date (needed for for DESCRIPTION file)
-    this.name = this.environ.name || 'unnamed'
     // Default to yesterday's date (to ensure MRAN is available for the date)
+    // Set here as it is required in two methods below
     let date = this.environ.datePublished
     if (!date) date = (new Date(Date.now() - 24 * 3600 * 1000)).toISOString().substring(0,10)
     this.date = date
@@ -96,9 +95,10 @@ export default class RGenerator extends Generator {
     if (this.exists('install.R')) return [['install.R', 'install.R']]
     if (this.exists('DESCRIPTION')) return [['DESCRIPTION', 'DESCRIPTION']]
 
-    // Generate a .DESCRIPTION to copy into image
+    // Generate a .DESCRIPTION with valid name to copy into image
+    const name = (this.environ.name || 'unnamed').replace(/[^a-zA-Z0-9]/,'')
     const pkgs = this.filterPackages('R').map(pkg => pkg.name)
-    let desc = `Package: ${this.name}
+    let desc = `Package: ${name}
 Version: 1.0.0
 Date: ${this.date}
 Imports:\n  ${pkgs.join(',\n  ')}

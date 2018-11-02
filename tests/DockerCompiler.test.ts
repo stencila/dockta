@@ -15,7 +15,9 @@ test('compile:empty', async () => {
   const compiler = new DockerCompiler()
   let environ = await compiler.compile('file://' + fixture('empty'), false)
 
-  expect(environ).toEqual(new SoftwareEnvironment())
+  let expected = new SoftwareEnvironment()
+  expected.name = 'empty'
+  expect(environ).toEqual(expected)
 })
 
 test('compile:dockerfile-date', async () => {
