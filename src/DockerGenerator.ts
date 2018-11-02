@@ -141,6 +141,6 @@ export default class DockerGenerator extends Generator {
   }
 
   runCommand (sysVersion: string): string | undefined {
-    return this.join((generator: Generator) => generator.runCommand(sysVersion), ';')
+    return this.join((generator: Generator) => generator.runCommand(sysVersion))
   }
 }

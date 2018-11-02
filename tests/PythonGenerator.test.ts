@@ -93,7 +93,7 @@ RUN pip install --user --requirement requirements.txt
 
 COPY cmd.py cmd.py
 
-CMD python  cmd.py
+CMD python cmd.py
 `)
 })
 

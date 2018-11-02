@@ -30,7 +30,7 @@ test('compile:dockerfile-date', async () => {
   expect(environ && environ.authors && (environ.authors[0] as Person).name).toEqual('Nokome Bentley')
 })
 
-test.skip('compile:multi-lang', async () => {
+test('compile:multi-lang', async () => {
   const compiler = new DockerCompiler()
   let environ = await compiler.compile('file://' + fixture('multi-lang'), false, false)
 

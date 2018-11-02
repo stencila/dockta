@@ -112,7 +112,7 @@ export default class PythonGenerator extends PackageGenerator {
     if (pyFiles.includes('main.py')) script = 'main.py'
     else if (pyFiles.includes('cmd.py')) script = 'cmd.py'
     else script = pyFiles[0]
-    return `python${this.pythonVersionSuffix()}  ${script}`
+    return `python${this.pythonVersionSuffix()} ${script}`
   }
 
 }

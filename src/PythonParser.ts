@@ -155,6 +155,7 @@ export default class PythonParser extends Parser {
     }
 
     const pkg = new SoftwarePackage()
+    pkg.runtimePlatform = 'Python'
 
     if (this.folder) {
       pkg.name = basename(this.folder)
