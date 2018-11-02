@@ -7,7 +7,7 @@ import tmp from 'tmp'
 
 import { PermissionError, NetworkError } from './errors'
 
-const REQUEST_CACHE_DIR = '/tmp/dockter-request-cache'
+export const REQUEST_CACHE_DIR = '/tmp/dockter-request-cache'
 let REQUEST_CACHE_INITIALISED = false
 
 /**

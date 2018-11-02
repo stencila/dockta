@@ -61,7 +61,7 @@ function splitStandardRequirementVersion (requirement: string): [string, string 
 function buildClassifierMap (classifiers: Array<string>): Map<string, Array<string>> {
   const classifierMap = new Map<string, Array<string>>()
 
-  for (let classifier in classifiers) {
+  for (let classifier of classifiers) {
     let doubleColonPosition = classifier.indexOf('::')
 
     let classifierKey = classifier.substring(0, doubleColonPosition).trim()
@@ -203,7 +203,8 @@ export default class PythonParser extends Parser {
       }
 
       if (pyPiMetadata.info.classifiers) {
-        let classifiers = buildClassifierMap(pyPiMetadata.info.classifiers)
+        const classifiers = buildClassifierMap(pyPiMetadata.info.classifiers)
+
         if (classifiers.has('Topic')) {
           let [topics, subTopics] = parseTopics(classifiers.get('Topic')!)
 
