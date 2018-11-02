@@ -1,1 +1,3 @@
-cat(strftime(lubridate::now()), '\n')
+library(lubridate)
+
+cat(strftime(now()), '\n')
