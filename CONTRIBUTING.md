@@ -14,7 +14,8 @@
  * [Documentation generation](#documentation-generation)
  * [Commit messages](#commit-messages)
  * [Continuous integration](#continuous-integration)
- * [using-the-router-and-server](using-the-router-and-server)
+ * [Python System Dependencies](#python-system-dependencies)
+ * [Using The Router and Server](#using-the-router-and-server)
 
 # General contribution guidelines
 
@@ -125,6 +126,17 @@ npm run commit # or, make commit
 ### Continuous integration
 
 Linting, test coverage, binary builds, package builds, and documentation generation are done on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management: minor version releases are done if any `feat(...)` commits are pushed, patch version releases are done if any `fix(...)` commits are pushed. Releases are made to [NPM](https://www.npmjs.com/package/@stencila/dockter) and [Github Releases](https://github.com/stencila/dockter/releases).
+
+
+### Python System Dependencies
+
+We maintain a list of system packages (e.g `deb`/`rpm`) that a Python packages installed through `pip` might need to include. These are in the file `PythonSystemDependencies.json`.
+If you find a Python package that relies on a system library you can add the lookup to this file; the mapping is in the format `lookup[pythonPackageName][pythonVersion(str)][packagingType][osVersion]`. The `"default"` can be used as a fallback at any level. For example:
+
+- `["pypackage"]["2"]["deb"]["trusty"] = ["some-deb-package"]`
+- `["otherpypackage"]["3"]["rpm"]["default"] = ["some-rpm-package"]`
+- `["thirdpypackage"]["default"]["default"]["default"] = ["some-consistent-package", "some-other-package"]`
+
 
 ### Using the router and server
 
