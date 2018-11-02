@@ -53,7 +53,7 @@ export default class JavascriptGenerator extends PackageGenerator {
     if (this.exists(PACKAGE_JSON)) return [[PACKAGE_JSON, PACKAGE_JSON]]
 
     // Generate a `.package.json` file to copy into image
-    const dependencies = this.filterPackages('Javascript').map(pkg => pkg.name)
+    const dependencies = this.filterPackages('Node.js').map(pkg => pkg.name)
     const pkgjson = {
       dependencies
     }
