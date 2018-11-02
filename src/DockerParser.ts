@@ -1,7 +1,7 @@
 import { SoftwareEnvironment, Person } from '@stencila/schema'
 import parser from 'docker-file-parser'
 
-import Parser from './Parser'
+import Doer from './Doer'
 
 /**
  * Parser for Dockerfiles
@@ -45,7 +45,7 @@ import Parser from './Parser'
  *
  */
 
-export default class DockerParser extends Parser {
+export default class DockerParser extends Doer {
 
   /**
    * Parse a folder by detecting any Dockerfile

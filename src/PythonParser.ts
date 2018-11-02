@@ -3,7 +3,7 @@ import {
   ComputerLanguage,
   Person,
   SoftwareApplication,
-  SoftwareEnvironment,
+  SoftwarePackage,
   SoftwareSourceCode
 } from '@stencila/schema'
 import OperatingSystem from '@stencila/schema/dist/OperatingSystem'
@@ -146,7 +146,7 @@ interface PythonRequirement {
 
 export default class PythonParser extends Parser {
 
-  async parse (): Promise<SoftwareEnvironment | null> {
+  async parse (): Promise<SoftwarePackage | null> {
     const files = this.glob(['**/*.py'])
 
     if (!files.length) {
@@ -154,10 +154,10 @@ export default class PythonParser extends Parser {
       return null
     }
 
-    const environ = new SoftwareEnvironment()
+    const pkg = new SoftwarePackage()
 
     if (this.folder) {
-      environ.name = basename(this.folder)
+      pkg.name = basename(this.folder)
     }
 
     let requirements
@@ -170,7 +170,7 @@ export default class PythonParser extends Parser {
 
     for (let rawRequirement of requirements) {
       if (rawRequirement.type === RequirementType.Named) {
-        environ.softwareRequirements.push(await this.createApplication(rawRequirement))
+        pkg.softwareRequirements.push(await this.createApplication(rawRequirement))
       } else if (rawRequirement.type === RequirementType.URL) {
         let sourceRequirement = new SoftwareSourceCode()
         sourceRequirement.runtimePlatform = 'Python'
@@ -178,7 +178,7 @@ export default class PythonParser extends Parser {
       }
     }
 
-    return environ
+    return pkg
   }
 
   private async createApplication (requirement: PythonRequirement): Promise<SoftwareApplication> {

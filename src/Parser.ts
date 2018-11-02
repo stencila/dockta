@@ -1,5 +1,5 @@
 import Doer from './Doer'
-import { SoftwareEnvironment } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
 
 /**
  * A base class for language parsers
@@ -15,5 +15,5 @@ import { SoftwareEnvironment } from '@stencila/schema'
  * generates a package list from those statements and creates a requirements file.
  */
 export default abstract class Parser extends Doer {
-  abstract async parse (): Promise<SoftwareEnvironment | null>
+  abstract async parse (): Promise<SoftwarePackage | null>
 }

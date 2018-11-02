@@ -2,7 +2,7 @@ import fixture from './fixture'
 import fs from 'fs'
 
 import PythonParser, { RequirementType } from '../src/PythonParser'
-import { ComputerLanguage, OperatingSystem, Person, SoftwareApplication, SoftwareEnvironment } from '@stencila/schema'
+import { ComputerLanguage, OperatingSystem, Person, SoftwareApplication, SoftwarePackage } from '@stencila/schema'
 import { REQUEST_CACHE_DIR } from '../src/Doer'
 
 describe('PythonParser', () => {
@@ -118,7 +118,7 @@ describe('PythonParser', () => {
     arrowPackage.license = 'Free Software License'
     arrowPackage.description = 'This is the long description that will be used in priority over description'
 
-    const environ = new SoftwareEnvironment()
+    const environ = new SoftwarePackage()
     environ.name = 'py-date'
     environ.softwareRequirements = [arrowPackage]
 
