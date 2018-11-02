@@ -24,6 +24,7 @@ Dockter makes it easier for researchers to create Docker images for their resear
     + [R](#r)
     + [Python](#python)
     + [Node.js](#nodejs)
+    + [JATS](#jats)
     + [Jupyter](#jupyter)
   * [Quicker re-installation of language packages](#quicker-re-installation-of-language-packages)
     + [An example](#an-example)
