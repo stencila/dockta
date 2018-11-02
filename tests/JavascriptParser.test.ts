@@ -27,7 +27,7 @@ test('parse:r-date', async () => {
  * a `SoftwarePackage` with `name`, `softwareRequirements` etc
  * populated correctly.
  */
-test.skip('parse:js-package', async () => {
+test('parse:js-package', async () => {
   const parser = new JavascriptParser(fixture('js-package'))
   const pkg = await parser.parse() as SoftwarePackage
   
@@ -53,7 +53,7 @@ test.skip('parse:js-package', async () => {
  * a `SoftwarePackage` with `name`, `softwareRequirements` etc
  * populated correctly.
  */
-test.skip('parse:js-sources', async () => {
+test('parse:js-sources', async () => {
   const parser = new JavascriptParser(fixture('js-sources'))
   const pkg = await parser.parse() as SoftwarePackage
   

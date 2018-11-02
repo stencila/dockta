@@ -27,7 +27,7 @@ test('parse:dockerfile-date', async () => {
  * a `SoftwareEnvironment` with `name`, `softwareRequirements` etc
  * populated correctly.
  */
-test.skip('parse:r-date', async () => {
+test('parse:r-date', async () => {
   const parser = new RParser(fixture('r-date'))
   const environ = await parser.parse() as SoftwarePackage
   expect(environ.name).toEqual('rdate')
@@ -43,7 +43,7 @@ test.skip('parse:r-date', async () => {
  * parse should generate a `.DESCRIPTION` file and 
  * return a `SoftwareEnvironment` with packages listed.
  */
-test.skip('parse:r-no-desc', async () => {
+test('parse:r-no-desc', async () => {
   const parser = new RParser(fixture('r-no-desc'))
   const environ = await parser.parse() as SoftwarePackage
   
@@ -57,7 +57,7 @@ test.skip('parse:r-no-desc', async () => {
 /**
  * When applied to fixture with more system dependencies...
  */
-test.skip('parse:r-elife', async () => {
+test('parse:r-elife', async () => {
   const parser = new RParser(fixture('r-elife'))
   const environ = await parser.parse() as SoftwarePackage
 

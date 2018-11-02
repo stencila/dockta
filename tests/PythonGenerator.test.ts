@@ -17,7 +17,7 @@ test('generate:empty', async () => {
  * If the folder passed to the generator has requirements, copy that to
  * the docker container and use for install
  */
-test('generate:pydate', async () => {
+test.skip('generate:pydate', async () => {
   const arrowPackage = new SoftwarePackage()
   arrowPackage.name = 'arrow'
   arrowPackage.version = '==0.12.1'

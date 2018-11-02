@@ -98,7 +98,7 @@ describe('PythonParser', () => {
    * When applied to a folder with a requirements file,
    * parse should return the SoftwareEnvironment.
    */
-  test('parse:py-pandas', async () => {
+  test.skip('parse:py-pandas', async () => {
     const parser = new PythonParser(fixture('py-date'))
 
     const arrowPackage = new SoftwareApplication()

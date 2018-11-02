@@ -77,7 +77,7 @@ RUN mkdir ~/R \\
  * When applied to a project with R packages that have system dependencies
  * adds the right apt packages to the Dockerfile
  */
-test.skip('generate:r-xml2', async () => {
+test('generate:r-xml2', async () => {
   const folder = fixture('r-xml2')
   const pkg = await new RParser(folder).parse() as SoftwarePackage
   const dockerfile = await new RGenerator(pkg, folder).generate(false)
