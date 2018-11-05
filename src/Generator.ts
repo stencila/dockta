@@ -51,12 +51,12 @@ RUN apt-get update \\
 `
     }
 
+    if (aptKeysCommand) {
+      dockerfile += `RUN ${aptKeysCommand}\n`
+    }
     if (aptRepos.length) {
       if (comments) dockerfile += '\n# This section adds system repositories required to install extra system packages.'
       dockerfile += `\nRUN ${aptRepos.map(repo => `apt-add-repository "${repo}"`).join(' \\\n && ')}\n`
-    }
-    if (aptKeysCommand) {
-      dockerfile += `RUN ${aptKeysCommand}\n`
     }
 
     let aptPackages: Array<string> = this.aptPackages(baseIdentifier)
