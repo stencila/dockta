@@ -1,4 +1,4 @@
-# Use Node.js 8 and cache packages
+# Use Node.js 8
 language: node_js
 node_js:
   - 8
@@ -7,7 +7,19 @@ node_js:
 services:
   docker
 
-# Do linting, coverage, and build docs (to upload to github pages)
+# Install code signing tool 
+addons:
+  apt:
+    sources:
+      - sourceline: ppa:likemartinma/osslsigncode
+    packages:
+      - osslsigncode
+
+# Decrypt code signing certificates (see https://docs.travis-ci.com/user/encrypting-files/)
+before_install:
+  - openssl aes-256-cbc -K $encrypted_1d93d61b46d3_key -iv $encrypted_1d93d61b46d3_iv -in win-cert.p12.enc -out win-cert.p12 -d
+
+# Do linting, coverage, and build docs (to upload to Github pages)
 script:
   - make lint
   - make cover
@@ -17,6 +29,11 @@ script:
 # See https://docs.codecov.io/v5.0.0/docs/about-the-codecov-bash-uploader
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+# Prevent Github Pages from using Jekyll
+# which causes docs files starting with undescores to be ignored
+before_deploy:
+  - touch docs/.nojekyll
 
 deploy:
   # Deploy a new version of NPM package and create a Github release

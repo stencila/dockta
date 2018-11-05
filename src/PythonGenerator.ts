@@ -1,20 +1,25 @@
-import Generator from './Generator'
-import { ComputerLanguage, SoftwareEnvironment } from './context'
+import { SoftwarePackage, SoftwareEnvironment } from '@stencila/schema'
+import path from 'path'
+
+import PackageGenerator from './PackageGenerator'
+import PythonSystemPackageLookup from './PythonSystemPackageLookup'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
 /**
- * A Dockerfile generator for Python environments
+ * A Dockerfile generator for Python packages
  */
-export default class PythonGenerator extends Generator {
+export default class PythonGenerator extends PackageGenerator {
   private readonly pythonMajorVersion: number
+  private readonly systemPackageLookup: PythonSystemPackageLookup
 
   // Methods that override those in `Generator`
 
-  constructor (environ: SoftwareEnvironment, folder?: string, pythonMajorVersion: number = 3) {
-    super(environ, folder)
-    this.environ = environ
+  constructor (pkg: SoftwarePackage, folder?: string, pythonMajorVersion: number = 3) {
+    super(pkg, folder)
+
     this.pythonMajorVersion = pythonMajorVersion
+    this.systemPackageLookup = PythonSystemPackageLookup.fromFile(path.join(__dirname, 'PythonSystemDependencies.json'))
   }
 
   /**
@@ -26,25 +31,43 @@ export default class PythonGenerator extends Generator {
   }
 
   applies (): boolean {
-    return this.exists('requirements.txt') || super.applies()
-  }
-
-  appliesRuntime (): string {
-    return 'Python'
+    return this.package.runtimePlatform === 'Python'
   }
 
   aptPackages (sysVersion: string): Array<string> {
-    return [`python${this.pythonVersionSuffix()}`, `python${this.pythonVersionSuffix()}-pip`]
+    let aptRequirements: Array<string> = []
+
+    this.package.softwareRequirements.map(requirement => {
+      aptRequirements = aptRequirements.concat(
+          this.systemPackageLookup.lookupSystemPackage(
+              requirement.name, this.pythonMajorVersion, 'deb', sysVersion
+          )
+      )
+    })
+
+    let dedupedRequirements: Array<string> = []
+    aptRequirements.map(aptRequirement => {
+      if (!dedupedRequirements.includes(aptRequirement)) {
+        dedupedRequirements.push(aptRequirement)
+      }
+    })
+    return [`python${this.pythonVersionSuffix()}`, `python${this.pythonVersionSuffix()}-pip`].concat(
+        dedupedRequirements
+    )
   }
 
   generateRequirementsContent (): string {
-    if (!this.environ.softwareRequirements) {
+    if (!this.package.softwareRequirements) {
       return ''
     }
 
     return this.filterPackages('Python').map(
-        requirement => requirement.identifier()
+      requirement => `${requirement.name}${requirement.version}`
     ).join('\n')
+  }
+
+  stencilaInstall (sysVersion: string): string | undefined {
+    return `pip${this.pythonVersionSuffix()} install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip`
   }
 
   installFiles (sysVersion: string): Array<[string, string]> {
@@ -89,7 +112,7 @@ export default class PythonGenerator extends Generator {
     if (pyFiles.includes('main.py')) script = 'main.py'
     else if (pyFiles.includes('cmd.py')) script = 'cmd.py'
     else script = pyFiles[0]
-    return `python${this.pythonVersionSuffix()}  ${script}`
+    return `python${this.pythonVersionSuffix()} ${script}`
   }
 
 }

@@ -1,6 +1,6 @@
 {
   "name": "@stencila/dockter",
-  "version": "0.3.0",
+  "version": "0.10.3",
   "description": "A Docker image builder for researchers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,14 +12,18 @@
     "test": "jest",
     "cover": "jest --collectCoverage",
     "build": "npm run build-dist && npm run build-bins",
-    "build-dist": "tsc",
+    "build-dist": "tsc && cp ./src/*.json dist",
     "build-bins": "pkg --out-path=build .",
-    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --out ./docs ./src",
+    "bundle": "npm run bundle-linux && npm run bundle-macos && npm run bundle-win",
+    "bundle-linux": "tar --transform 's|build/dockter-linux|dockter|' -czvf build/dockter-linux-x64.tar.gz build/dockter-linux",
+    "bundle-macos": "tar --transform 's|build/dockter-macos|dockter|' -czvf build/dockter-macos-x64.tar.gz build/dockter-macos",
+    "bundle-win": "./bundle-win.sh",
+    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
     "start": "node ./dist/server.js",
     "commit": "git-cz",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run build && npm run bundle",
     "semantic-release": "semantic-release"
   },
   "repository": {
@@ -47,13 +51,12 @@
     "@semantic-release/release-notes-generator": "^7.1.1",
     "@types/dockerode": "^2.5.5",
     "@types/express": "^4.16.0",
-    "@types/got": "^8.3.4",
+    "@types/got": "^9.2.0",
     "@types/jest": "^23.3.3",
     "@types/js-yaml": "^3.11.2",
     "@types/node-persist": "0.0.33",
-    "@types/request": "^2.47.1",
+    "@types/semver": "^5.5.0",
     "@types/tar-fs": "^1.16.1",
-    "@types/tar-stream": "^1.6.0",
     "@types/tmp": "0.0.33",
     "@types/yargs": "^12.0.1",
     "commitizen": "^3.0.4",
@@ -71,6 +74,8 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
+    "@stencila/schema": "^0.2.2",
+    "detective": "^5.1.0",
     "docker-file-parser": "^1.0.4",
     "dockerode": "^2.5.7",
     "express": "^4.16.3",
@@ -78,10 +83,9 @@
     "got": "^9.2.2",
     "js-yaml": "^3.12.0",
     "node-persist": "^3.0.1",
-    "request": "^2.88.0",
     "rimraf": "^2.6.2",
+    "semver": "^5.6.0",
     "tar-fs": "^1.16.3",
-    "tar-stream": "^1.6.2",
     "tmp": "0.0.33",
     "yargonaut": "^1.1.4",
     "yargs": "^12.0.2"
@@ -90,6 +94,10 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "pkg": {
+    "scripts": "./dist/**/*.js",
+    "assets": "./dist/**/*.json"
   },
   "release": {
     "plugins": [
@@ -102,16 +110,16 @@
         {
           "assets": [
             {
-              "path": "build/dockter-linux",
-              "label": "dockter-linux"
+              "path": "build/dockter-linux-x64.tar.gz",
+              "label": "dockter-linux-x64.tar.gz"
             },
             {
-              "path": "build/dockter-macos",
-              "label": "dockter-macos"
+              "path": "build/dockter-macos-x64.tar.gz",
+              "label": "dockter-macos-x64.tar.gz"
             },
             {
-              "path": "build/dockter-win.exe",
-              "label": "dockter-win.exe"
+              "path": "build/dockter-win-x64.zip",
+              "label": "dockter-win-x64.zip"
             }
           ]
         }

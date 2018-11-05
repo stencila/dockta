@@ -4,6 +4,5 @@
 /docs
 /node_modules
 /tests/**/.*
-/tests/**/dockter-generated-requirements.txt
 .idea
 .Rproj.user

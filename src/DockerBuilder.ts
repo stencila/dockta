@@ -219,6 +219,10 @@ export default class DockerBuilder {
           changes += instruction.raw + '\n\n'
           break
 
+        case 'COMMENT':
+          // Just ignore it!
+          break
+
         default:
           throw new Error(`Dockter can not yet handle a ${instruction.name} instruction. Put it before the # dockter comment in your Dockerfile.`)
       }
@@ -230,7 +234,7 @@ export default class DockerBuilder {
       // Options to commit
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageCommit
       repo: name,
-      comment: 'Updated application layer',
+      comment: instructions.length > 0 ? 'Updated application layer' : 'No updates requested',
       changes,
       Labels: {
         systemLayer: currentSystemLayer

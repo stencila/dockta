@@ -1,0 +1,23 @@
+{
+  "--comment--": "The dependencies in this file are made up for testing only.",
+  "numpy": {
+    "3": {
+      "deb": {
+        "xenial": [
+          "xenial-numpy-dependencies"
+        ],
+        "default": [
+          "deb-default-dependencies"
+        ]
+      },
+      "default": {
+        "default": ["default-default-dependencies"]
+      }
+    },
+    "default": {
+      "deb": {
+        "xenial": ["python-2-dependency"]
+      }
+    }
+  }
+}

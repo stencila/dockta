@@ -1,5 +1,5 @@
 import DockerParser from '../src/DockerParser'
-import {Person, SoftwareEnvironment} from '../src/context'
+import {Person, SoftwareEnvironment} from '@stencila/schema'
 import fixture from './fixture'
 
 /**
@@ -11,7 +11,7 @@ test('parse:strings', async () => {
   let environ
 
   environ = await parser.parse('FROM ubuntu') as SoftwareEnvironment
-  expect(environ.authors).toBeUndefined()
+  expect(environ.authors).toEqual([])
 
   // Single label
   environ = await parser.parse('LABEL maintainer="Joe Bloggs <joe@bloggs.com> (https://bloggs.com/joe)"') as SoftwareEnvironment

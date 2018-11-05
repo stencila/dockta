@@ -1,7 +1,7 @@
+import { SoftwareEnvironment } from '@stencila/schema'
+
 import Generator from './Generator'
-import PythonGenerator from './PythonGenerator'
-import RGenerator from './RGenerator'
-import { SoftwareEnvironment } from './context'
+import generators from './generators'
 
 const PREFERRED_UBUNTU_VERSION = '18.04'
 
@@ -42,6 +42,8 @@ function versionCompare (versionOne: string, versionTwo: string) {
  */
 export default class DockerGenerator extends Generator {
 
+  environ: SoftwareEnvironment
+
   /**
    * The child generators from which this 'super' generator
    * collects instructions.
@@ -49,14 +51,24 @@ export default class DockerGenerator extends Generator {
   protected generators: Array<Generator>
 
   constructor (environ: SoftwareEnvironment, folder?: string) {
-    super(environ, folder)
+    super(folder)
+    this.environ = environ
 
-    // List of possible generators filtered by those that apply to the
-    // environment
-    this.generators = [
-      new PythonGenerator(environ, folder),
-      new RGenerator(environ, folder)
-    ].filter(generator => generator.applies())
+    // Each of the environment's `softwareRequirements` is
+    // matched to one of the language specific generators
+    // (the first that says that it `applies`)
+    this.generators = []
+    for (let pkg of this.environ.softwareRequirements) {
+      for (let GeneratorClass of generators) {
+        // @ts-ignore
+        const generator = new GeneratorClass(pkg, folder)
+        if (generator.applies()) {
+          this.generators.push(generator)
+          break
+        }
+      }
+    }
+
   }
 
   /**
@@ -69,6 +81,16 @@ export default class DockerGenerator extends Generator {
   private collect (func: any): Array<any> {
     // @ts-ignore
     return this.generators.map(func).reduce((memo, items) => (memo.concat(items)), [])
+  }
+
+  /**
+   * Join strings from each child generator
+   *
+   * @param func The child generator method to call
+   */
+  private join (func: any, sep: string = ' \\\n && '): string {
+    // @ts-ignore
+    return this.generators.map(func).filter(cmd => cmd).join(sep)
   }
 
   // Methods that override those in `Generator`
@@ -88,7 +110,11 @@ export default class DockerGenerator extends Generator {
     return this.collect((generator: Generator) => generator.envVars(sysVersion))
   }
 
-  aptRepos (sysVersion: string): Array<[string, string]> {
+  aptKeysCommand (sysVersion: string): string | undefined {
+    return this.join((generator: Generator) => generator.aptKeysCommand(sysVersion))
+  }
+
+  aptRepos (sysVersion: string): Array<string> {
     return this.collect((generator: Generator) => generator.aptRepos(sysVersion))
   }
 
@@ -98,14 +124,16 @@ export default class DockerGenerator extends Generator {
     return Array.from(new Set(pkgs))
   }
 
+  stencilaInstall (sysVersion: string): string | undefined {
+    return this.join((generator: Generator) => generator.stencilaInstall(sysVersion))
+  }
+
   installFiles (sysVersion: string): Array<[string, string]> {
     return this.collect((generator: Generator) => generator.installFiles(sysVersion))
   }
 
   installCommand (sysVersion: string): string | undefined {
-    return this.generators.map((generator: Generator) => generator.installCommand(sysVersion))
-        .filter(cmd => cmd)
-        .join(' \\\n && ')
+    return this.join((generator: Generator) => generator.installCommand(sysVersion))
   }
 
   projectFiles (sysVersion: string): Array<[string, string]> {
@@ -113,8 +141,6 @@ export default class DockerGenerator extends Generator {
   }
 
   runCommand (sysVersion: string): string | undefined {
-    return this.generators.map((generator: Generator) => generator.runCommand(sysVersion))
-        .filter(cmd => cmd)
-        .join(';')
+    return this.join((generator: Generator) => generator.runCommand(sysVersion))
   }
 }

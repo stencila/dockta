@@ -1,6 +1,6 @@
 import fixture from './fixture'
 import RParser from '../src/RParser'
-import { SoftwareEnvironment } from '../src/context'
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 
 // Increase timeout (in milliseconds) to allow for HTTP requests
 // to get package meta data
@@ -29,7 +29,7 @@ test('parse:dockerfile-date', async () => {
  */
 test('parse:r-date', async () => {
   const parser = new RParser(fixture('r-date'))
-  const environ = await parser.parse() as SoftwareEnvironment
+  const environ = await parser.parse() as SoftwarePackage
   expect(environ.name).toEqual('rdate')
   
   const reqs = environ.softwareRequirements
@@ -45,7 +45,7 @@ test('parse:r-date', async () => {
  */
 test('parse:r-no-desc', async () => {
   const parser = new RParser(fixture('r-no-desc'))
-  const environ = await parser.parse() as SoftwareEnvironment
+  const environ = await parser.parse() as SoftwarePackage
   
   expect(environ.name).toEqual('rnodesc')
 
@@ -59,7 +59,7 @@ test('parse:r-no-desc', async () => {
  */
 test('parse:r-elife', async () => {
   const parser = new RParser(fixture('r-elife'))
-  const environ = await parser.parse() as SoftwareEnvironment
+  const environ = await parser.parse() as SoftwarePackage
 
   const reqs = environ.softwareRequirements
   expect(reqs).toBeDefined()

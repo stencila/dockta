@@ -1,3 +1,5 @@
+import Docker from 'dockerode'
+
 import DockerBuilder from '../src/DockerBuilder'
 import fixture from './fixture'
 
@@ -11,8 +13,28 @@ jest.setTimeout(30 * 60 * 1000)
  */
 test('build:py-requests-dockter', async () => {
   const builder = new DockerBuilder()
+  const docker = new Docker()
 
-  await builder.build(fixture('py-requests-dockter'))
+  // Remove any existing images
+  try {
+    await docker.getImage('py-requests-dockter:latest').remove()
+  } catch (error) {
+    if (!error.message.includes('No such image')) throw error
+  }
+
+  // Build it
+  await builder.build(fixture('py-requests-dockter'), 'py-requests-dockter')
+
+  // Get info for expectations
+  const latest = docker.getImage('py-requests-dockter:latest')
+  const history = await latest.history()
+  const latestInfo = await latest.inspect()
+  const system = docker.getImage('py-requests-dockter:system')
+  const systemInfo = await system.inspect()
+  
+  expect(history[0].Comment).toEqual('Updated application layer')
+  expect(history[0].Size).toBeGreaterThan(0)
+  // TODO : add more expectations!
 })
 
 /**
@@ -21,8 +43,28 @@ test('build:py-requests-dockter', async () => {
  */
 test('build:py-requests-no-dockter', async () => {
   const builder = new DockerBuilder()
+  const docker = new Docker()
+  
+  // Remove any existing images
+  try {
+    await docker.getImage('py-requests-no-dockter:latest').remove()
+  } catch (error) {
+    if (!error.message.includes('No such image')) throw error
+  }
 
-  await builder.build(fixture('py-requests-no-dockter'))
+  // Build it
+  await builder.build(fixture('py-requests-no-dockter'), 'py-requests-no-dockter')
+
+  // Get info for expectations
+  const latest = docker.getImage('py-requests-no-dockter:latest')
+  const history = await latest.history()
+  const latestInfo = await latest.inspect()
+  const system = docker.getImage('py-requests-no-dockter:system')
+  const systemInfo = await system.inspect()
+  
+  expect(history[0].Comment).toEqual('No updates requested')
+  expect(history[0].Size).toEqual(0)
+  // TODO : add more expectations!
 })
 
 /**

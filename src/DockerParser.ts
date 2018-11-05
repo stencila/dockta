@@ -1,7 +1,7 @@
+import { SoftwareEnvironment, Person } from '@stencila/schema'
 import parser from 'docker-file-parser'
 
-import Parser from './Parser'
-import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } from './context'
+import Doer from './Doer'
 
 /**
  * Parser for Dockerfiles
@@ -45,7 +45,7 @@ import { ComputerLanguage, SoftwarePackage, SoftwareEnvironment, push, Person } 
  *
  */
 
-export default class DockerParser extends Parser {
+export default class DockerParser extends Doer {
 
   /**
    * Parse a folder by detecting any Dockerfile
@@ -88,7 +88,7 @@ export default class DockerParser extends Parser {
             break
           case 'maintainer':
           case 'author':
-            environ.authorsPush(Person.fromText(value))
+            environ.authors.push(Person.fromText(value))
             break
         }
       }
@@ -99,7 +99,7 @@ export default class DockerParser extends Parser {
       let author = ''
       if (typeof instruction.args === 'string') author = instruction.args
       else throw new Error(`Unexpected type of instruction arguments ${typeof instruction.args}`)
-      environ.authorsPush(Person.fromText(author))
+      environ.authors.push(Person.fromText(author))
     }
 
     return environ
