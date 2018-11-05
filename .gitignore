@@ -4,4 +4,15 @@
 /docs
 /node_modules
 /tests/**/.*
+/tests/**/dockter-generated-requirements.txt
 .idea
+.Rproj.user
+doc/R-spatial-analysis/R-spatial-analysis.Rproj
+doc/.DESCRIPTION
+doc/.Dockerfile
+doc/R-spatial-analysis/.DESCRIPTION
+doc/R-spatial-analysis/.Dockerfile
+doc/R-spatial-analysis/.RData
+doc/R-spatial-analysis/.Rhistory
+doc/R-spatial-analysis/.environ.jsonld
+doc/R-spatial-analysis/data/.DS_Store
