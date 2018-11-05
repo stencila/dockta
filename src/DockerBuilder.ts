@@ -133,7 +133,7 @@ export default class DockerBuilder {
 
     // Check for any error message
     const errors = messages.filter(message => message.level === 'error')
-    if (errors) throw new Error(`There was an error when building the image: ${errors.map(error => error.message).join(',')}`)
+    if (errors.length) throw new Error(`There was an error when building the image: ${errors.map(error => error.message).join(',')}`)
 
     // Get information on the current
     const image = this.docker.getImage(name + ':latest')

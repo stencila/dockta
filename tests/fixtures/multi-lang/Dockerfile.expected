@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 ENV TZ="Etc/UTC" \
     R_LIBS_USER="~/R"
@@ -10,10 +10,10 @@ RUN apt-get update \
       curl \
       software-properties-common
 
-RUN apt-add-repository "deb https://deb.nodesource.com/node_10.x xenial main" \
- && apt-add-repository "deb https://mran.microsoft.com/snapshot/2018-11-01/bin/linux/ubuntu xenial/"
 RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+RUN apt-add-repository "deb https://deb.nodesource.com/node_10.x bionic main" \
+ && apt-add-repository "deb https://mran.microsoft.com/snapshot/2018-11-04/bin/linux/ubuntu bionic-cran35/"
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
