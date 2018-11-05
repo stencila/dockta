@@ -28,10 +28,7 @@ export default class RGenerator extends PackageGenerator {
   }
 
   baseVersion (): string {
-    // At time of writing, MRAN did not have an ubuntu:18.04(bionic) repo which supported R 3.4 (only bionic_3.5)
-    // See https://cran.microsoft.com/snapshot/2018-10-05/bin/linux/ubuntu/
-    // So require ubuntu:16.04(xenial).
-    return '16.04'
+    return '18.04'
   }
 
   envVars (sysVersion: string): Array<[string, string]> {
@@ -51,8 +48,13 @@ export default class RGenerator extends PackageGenerator {
   }
 
   aptRepos (base: string): Array<string> {
+    let version = this.baseVersionName(base)
+    // At time of writing, MRAN did not have an ubuntu:18.04(bionic) repo which supported R 3.4 (only bionic_3.5)
+    // See https://cran.microsoft.com/snapshot/2018-11-05/bin/linux/ubuntu/
+    // So append that to the deb line
+    if (version === 'bionic') version += '-cran35'
     return [
-      `deb https://mran.microsoft.com/snapshot/${this.date}/bin/linux/ubuntu ${this.baseVersionName(base)}/`
+      `deb https://mran.microsoft.com/snapshot/${this.date}/bin/linux/ubuntu ${version}/`
     ]
   }
 
