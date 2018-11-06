@@ -13,8 +13,9 @@ export default class Generator extends Doer {
    * Generate a Dockerfile for a `SoftwareEnvironment` instance
    *
    * @param comments Should a comments be added to the Dockerfile?
+   * @param stencila Should relevant Stencila language packages be installed in the image?
    */
-  generate (comments: boolean = true): string {
+  generate (comments: boolean = true, stencila: boolean = false): string {
     let dockerfile = ''
 
     if (comments) {
@@ -74,10 +75,12 @@ RUN apt-get update \\
 `
     }
 
-    let stencilaInstall = this.stencilaInstall(baseIdentifier)
-    if (stencilaInstall) {
-      if (comments) dockerfile += '\n# This section runs commands to install Stencila execution hosts.'
-      dockerfile += `\nRUN ${stencilaInstall}\n`
+    if (stencila) {
+      let stencilaInstall = this.stencilaInstall(baseIdentifier)
+      if (stencilaInstall) {
+        if (comments) dockerfile += '\n# This section runs commands to install Stencila execution hosts.'
+        dockerfile += `\nRUN ${stencilaInstall}\n`
+      }
     }
 
     // Once everything that needs root permissions is installed, switch the user to non-root for installing the rest of the packages.

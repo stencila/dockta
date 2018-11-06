@@ -79,8 +79,6 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip
-
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
 USER dockteruser
 WORKDIR /home/dockteruser
