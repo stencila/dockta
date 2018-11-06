@@ -83,7 +83,7 @@ describe('JavascriptParser', () => {
    * When applied to a folder with both `*.js` files and a `package.json` file, then parse should return a
    * `SoftwarePackage` with `name`, `softwareRequirements` etc populated from the `package.json` in that directory.
    */
-  test('parse:js-sources', async () => {
+  test('parse:js-mixed', async () => {
     const parser = new JavascriptParser(fixture('js-mixed'))
     const pkg = await parser.parse() as SoftwarePackage
 
