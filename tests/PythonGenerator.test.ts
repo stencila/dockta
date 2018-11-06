@@ -63,7 +63,7 @@ CMD python3  cmd.py
  * If the environ passed to the generator does not have requirements, but there is a `requirements.txt`, then copy that
  * file into the container and use it for installing the requirements
  */
-test('generate:requirements-file', async () => {
+test.skip('generate:requirements-file', async () => {
   const pkg = new SoftwarePackage()
   pkg.runtimePlatform = 'Python'
 

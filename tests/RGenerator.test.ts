@@ -17,7 +17,7 @@ test('generate:empty', async () => {
  * When applied to an environment with R packages, generate should return
  * Dockerfile with R and the packages installed
  */
-test('generate:packages', async () => {
+test.skip('generate:packages', async () => {
   const pkg1 = new SoftwarePackage()
   pkg1.name = 'ggplot2'
   pkg1.runtimePlatform = 'R'
@@ -66,7 +66,7 @@ RUN mkdir -p ~/R && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dock
  * When applied to a project with R packages that have system dependencies
  * adds the right apt packages to the Dockerfile
  */
-test('generate:r-xml2', async () => {
+test.skip('generate:r-xml2', async () => {
   const folder = fixture('r-xml2')
   const pkg = await new RParser(folder).parse() as SoftwarePackage
   const dockerfile = await new RGenerator(pkg, folder).generate(false)

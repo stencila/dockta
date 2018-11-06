@@ -13,8 +13,9 @@ test('generate:empty', async () => {
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
 
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
-USER dockteruser
 WORKDIR /home/dockteruser
+
+USER dockteruser
 `)
 })
 

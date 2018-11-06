@@ -21,7 +21,9 @@ export default class DockerExecutor {
       output += chunk
     }
 
-    const container = await docker.run(name, [], outputStream)
+    const container = await docker.run(name, [], outputStream, {
+      // Options from https://docs.docker.com/engine/api/v1.37/#operation/ContainerCreate
+    })
 
     let value
     try {
