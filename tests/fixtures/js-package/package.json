@@ -4,7 +4,11 @@
   "description": "A test Node.js package",
   "main": "index.js",
   "scripts": {},
-  "author": "",
+  "author": {
+    "name": "Jason Bloggs",
+    "email": "j.bloggs@example.com",
+    "url": "https://jbloggs.example.com"
+  },
   "license": "ISC",
   "dependencies": {
     "is-array": "1.0.1",
@@ -12,5 +16,9 @@
     "rimraf": "~2.6.2",
     "array-swap": "0.0.2-0.0.4",
     "a-package-that-is-not-on-npm": "org/repo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stencila/dockter/"
   }
 }

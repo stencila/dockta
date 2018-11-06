@@ -9,7 +9,11 @@ describe('PythonParser', () => {
   beforeEach(() => {
     if (fs.existsSync(REQUEST_CACHE_DIR)) {
       for (let item of fs.readdirSync(REQUEST_CACHE_DIR)) {
-        fs.unlinkSync(REQUEST_CACHE_DIR + '/' + item)
+        try {
+          fs.unlinkSync(REQUEST_CACHE_DIR + '/' + item)
+        } catch (e) {
+          // Cleanups might execute in parallel in multiple test runs so don't worry if remove fails
+        }
       }
     }
   })

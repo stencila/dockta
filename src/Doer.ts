@@ -63,7 +63,7 @@ export default abstract class Doer {
 
     let value
     try {
-      value = await persist.getItem(url)
+      value = false // await persist.getItem(url)
     } catch (error) {
       if (error.message.includes('does not look like a valid storage file')) {
         // It seems that `persist.setItem` is not atomic and that the storage file can
