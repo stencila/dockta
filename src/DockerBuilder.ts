@@ -42,14 +42,18 @@ export default class DockerBuilder {
     let instructions = parser.parse(content, { includeComments: true })
 
     // Collect all instructions prior to any `# dockter` comment into a
-    // new Dockerfile and store remaining instructions for special handling
+    // new Dockerfile and store remaining instructions for special handling.
+    // Keep track of `WORKDIR` and `USER` instructions for consistent handling of those
     let workdir = '/'
+    let user = 'root'
     let dockterize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
       if (instruction.name === 'WORKDIR') {
         workdir = path.join(workdir, instruction.args as string)
+      } else if (instruction.name === 'USER') {
+        user = instruction.args as string
       } else if (instruction.name === 'COMMENT') {
         const arg = instruction.args as string
         if (arg.match(/^# *dockter/)) {
@@ -179,7 +183,6 @@ export default class DockerBuilder {
     // Handle the remaining instructions
     let count = 1
     let changes = ''
-    let user
     for (let instruction of instructions) {
       const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
@@ -218,6 +221,7 @@ export default class DockerBuilder {
             Cmd: ['bash', '-c', `${script}`],
             AttachStdout: true,
             AttachStderr: true,
+            User: user,
             Tty: true
           })
           await exec.start()
