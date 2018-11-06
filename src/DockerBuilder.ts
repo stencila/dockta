@@ -179,9 +179,14 @@ export default class DockerBuilder {
     // Handle the remaining instructions
     let count = 1
     let changes = ''
+    let user
     for (let instruction of instructions) {
       const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
+        case 'USER':
+          user = instruction.args as string
+          break
+
         case 'WORKDIR':
           workdir = path.join(workdir, instruction.args as string)
           break
@@ -249,6 +254,8 @@ export default class DockerBuilder {
       repo: name,
       comment: instructions.length > 0 ? 'Updated application layer' : 'No updates requested',
       changes,
+      User: user,
+      WorkingDir: workdir,
       Labels: {
         systemLayer: currentSystemLayer
       }
