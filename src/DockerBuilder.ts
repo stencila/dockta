@@ -75,7 +75,7 @@ export default class DockerBuilder {
     // above tar stream generation
     // targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
 
-    const messages: Array<Object> = []
+    const messages: Array<any> = []
     const stream = await this.docker.buildImage(targz, {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
@@ -130,6 +130,10 @@ export default class DockerBuilder {
       stream.on('end', () => resolve(id))
       stream.on('error', reject)
     })
+
+    // Check for any error message
+    const errors = messages.filter(message => message.level === 'error')
+    if (errors.length) throw new Error(`There was an error when building the image: ${errors.map(error => error.message).join(',')}`)
 
     // Get information on the current
     const image = this.docker.getImage(name + ':latest')

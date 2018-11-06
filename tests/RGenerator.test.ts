@@ -10,7 +10,7 @@ import { SoftwarePackage } from '@stencila/schema'
 test('generate:empty', async () => {
   const pkg = new SoftwarePackage()
   const generator = new RGenerator(pkg)
-  expect(await generator.generate(false)).toEqual('FROM ubuntu:16.04\n')
+  expect(await generator.generate(false)).toEqual('FROM ubuntu:18.04\n')
 })
 
 /**
@@ -28,7 +28,7 @@ test('generate:packages', async () => {
   pkg2.softwareRequirements = [pkg1]
   
   const generator = new RGenerator(pkg2)
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:16.04
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
 
 ENV TZ="Etc/UTC" \\
     R_LIBS_USER="~/R"
@@ -40,8 +40,8 @@ RUN apt-get update \\
       curl \\
       software-properties-common
 
-RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu xenial/"
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu bionic-cran35/"
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -81,7 +81,7 @@ test('generate:r-xml2', async () => {
   const folder = fixture('r-xml2')
   const pkg = await new RParser(folder).parse() as SoftwarePackage
   const dockerfile = await new RGenerator(pkg, folder).generate(false)
-  expect(dockerfile).toEqual(`FROM ubuntu:16.04
+  expect(dockerfile).toEqual(`FROM ubuntu:18.04
 
 ENV TZ="Etc/UTC" \\
     R_LIBS_USER="~/R"
@@ -93,8 +93,8 @@ RUN apt-get update \\
       curl \\
       software-properties-common
 
-RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${pkg.datePublished}/bin/linux/ubuntu xenial/"
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${pkg.datePublished}/bin/linux/ubuntu bionic-cran35/"
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\

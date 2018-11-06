@@ -51,13 +51,11 @@ RUN apt-get update \\
 `
     }
 
-    if (aptRepos.length) {
-      if (comments) dockerfile += '\n# This section adds system repositories required to install extra system packages.'
-      dockerfile += `\nRUN ${aptRepos.map(repo => `apt-add-repository "${repo}"`).join(' \\\n && ')}\n`
+    if (comments && (aptKeysCommand || aptRepos.length)) {
+      dockerfile += '\n# This section adds system repositories required to install extra system packages.'
     }
-    if (aptKeysCommand) {
-      dockerfile += `RUN ${aptKeysCommand}\n`
-    }
+    if (aptKeysCommand) dockerfile += `\nRUN ${aptKeysCommand}`
+    if (aptRepos.length) dockerfile += `\nRUN ${aptRepos.map(repo => `apt-add-repository "${repo}"`).join(' \\\n && ')}\n`
 
     let aptPackages: Array<string> = this.aptPackages(baseIdentifier)
     if (aptPackages.length) {
