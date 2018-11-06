@@ -6,6 +6,18 @@ import path from 'path'
 import tarFs from 'tar-fs'
 import zlib from 'zlib'
 
+const ndjson = require('ndjson')
+
+interface DockerMessageAux {
+  ID?: string
+}
+
+interface DockerMessage {
+  error?: string
+  stream?: string
+  aux?: DockerMessageAux
+}
+
 /**
  * Builds Docker images from Dockerfiles
  *
@@ -108,8 +120,7 @@ export default class DockerBuilder {
     // Wait for build to finish and record the id of the system layer
     let currentSystemLayer = await new Promise<string>((resolve, reject) => {
       let id: string
-      stream.on('data', data => {
-        data = JSON.parse(data)
+      stream.pipe(ndjson.parse()).on('data', (data: DockerMessage) => {
         if (data.error) {
           messages.push({
             level: 'error',
@@ -179,7 +190,6 @@ export default class DockerBuilder {
         case 'ADD':
           // Add files/subdirs to the container
           const copy = instruction.args as Array<string>
-          console.error(step, instruction.name, copy.join(' '))
           const to = copy.pop() as string
           const pack = tarFs.pack(dir, {
             // Set the destination of each file (last item in `COPY` command)
@@ -199,7 +209,6 @@ export default class DockerBuilder {
         case 'RUN':
           // Execute code in the container
           const script = instruction.args as string
-          console.error(step, 'RUN', script)
           const exec = await container.exec({
             Cmd: ['bash', '-c', `${script}`],
             AttachStdout: true,
