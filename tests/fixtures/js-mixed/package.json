@@ -1,0 +1,16 @@
+{
+  "name": "js-mixed",
+  "version": "1.2.3",
+  "description": "A test Node.js package for js-mixed",
+  "main": "index.js",
+  "scripts": {},
+  "author": {
+    "name": "Jason Bloggs",
+    "email": "j.bloggs@example.com",
+    "url": "https://jbloggs.example.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "is-even": "4.5.6"
+  }
+}

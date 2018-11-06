@@ -31,8 +31,8 @@ describe('JavascriptParser', () => {
   /**
    * When applied to a folder with no JS code, parse should return null.
    */
-  test('parse:r-date', async () => {
-    const parser = new JavascriptParser(fixture('empty'))
+  test('parse:non-js', async () => {
+    const parser = new JavascriptParser(fixture('r-date'))
     expect(await parser.parse()).toBeNull()
   })
 
@@ -41,8 +41,8 @@ describe('JavascriptParser', () => {
    * a `SoftwarePackage` with `name`, `softwareRequirements` etc
    * populated correctly.
    */
-  test('parse:js-package', async () => {
-    const parser = new JavascriptParser(fixture('js-package'))
+  test('parse:js-requirements', async () => {
+    const parser = new JavascriptParser(fixture('js-requirements'))
     const pkg = await parser.parse() as SoftwarePackage
 
     expect(pkg.name).toEqual('js-package')
@@ -77,5 +77,21 @@ describe('JavascriptParser', () => {
     expect(pkg.softwareRequirements.length).toEqual(2)
     expect(pkg.softwareRequirements[1].name).toEqual('array-swap')
     expect(pkg.softwareRequirements[0].name).toEqual('is-sorted')
+  })
+
+  /**
+   * When applied to a folder with both `*.js` files and a `package.json` file, then parse should return a
+   * `SoftwarePackage` with `name`, `softwareRequirements` etc populated from the `package.json` in that directory.
+   */
+  test('parse:js-sources', async () => {
+    const parser = new JavascriptParser(fixture('js-mixed'))
+    const pkg = await parser.parse() as SoftwarePackage
+
+    expect(pkg.name).toEqual('js-mixed')
+    expect(pkg.description).toEqual('A test Node.js package for js-mixed')
+    expect(pkg.version).toEqual('1.2.3')
+    expect(pkg.softwareRequirements.length).toEqual(1)
+    expect(pkg.softwareRequirements[0].name).toEqual('is-even')
+    expect(pkg.softwareRequirements[0].version).toEqual('4.5.6')
   })
 })
