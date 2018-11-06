@@ -13,8 +13,9 @@ export default class Generator extends Doer {
    * Generate a Dockerfile for a `SoftwareEnvironment` instance
    *
    * @param comments Should a comments be added to the Dockerfile?
+   * @param stencila Should relevant Stencila language packages be installed in the image?
    */
-  generate (comments: boolean = true): string {
+  generate (comments: boolean = true, stencila: boolean = false): string {
     let dockerfile = ''
 
     if (comments) {
@@ -28,13 +29,6 @@ export default class Generator extends Doer {
     dockerfile += `FROM ${baseIdentifier}\n`
 
     if (!this.applies()) return dockerfile
-
-    const envVars = this.envVars(baseIdentifier)
-    if (envVars.length) {
-      if (comments) dockerfile += '\n# This section sets environment variables within the image.'
-      const pairs = envVars.map(([key, value]) => `${key}="${value.replace('"', '\\"')}"`)
-      dockerfile += `\nENV ${pairs.join(' \\\n    ')}\n`
-    }
 
     const aptRepos = this.aptRepos(baseIdentifier)
     let aptKeysCommand = this.aptKeysCommand(baseIdentifier)
@@ -57,6 +51,14 @@ RUN apt-get update \\
     if (aptKeysCommand) dockerfile += `\nRUN ${aptKeysCommand}`
     if (aptRepos.length) dockerfile += `\nRUN ${aptRepos.map(repo => `apt-add-repository "${repo}"`).join(' \\\n && ')}\n`
 
+    // Set env vars after previous section to improve caching
+    const envVars = this.envVars(baseIdentifier)
+    if (envVars.length) {
+      if (comments) dockerfile += '\n# This section sets environment variables within the image.'
+      const pairs = envVars.map(([key, value]) => `${key}="${value.replace('"', '\\"')}"`)
+      dockerfile += `\nENV ${pairs.join(' \\\n    ')}\n`
+    }
+
     let aptPackages: Array<string> = this.aptPackages(baseIdentifier)
     if (aptPackages.length) {
       if (comments) {
@@ -74,22 +76,22 @@ RUN apt-get update \\
 `
     }
 
-    let stencilaInstall = this.stencilaInstall(baseIdentifier)
-    if (stencilaInstall) {
-      if (comments) dockerfile += '\n# This section runs commands to install Stencila execution hosts.'
-      dockerfile += `\nRUN ${stencilaInstall}\n`
+    if (stencila) {
+      let stencilaInstall = this.stencilaInstall(baseIdentifier)
+      if (stencilaInstall) {
+        if (comments) dockerfile += '\n# This section runs commands to install Stencila execution hosts.'
+        dockerfile += `\nRUN ${stencilaInstall}\n`
+      }
     }
 
     // Once everything that needs root permissions is installed, switch the user to non-root for installing the rest of the packages.
     if (comments) {
       dockerfile += `
 # It's good practice to run Docker images as a non-root user.
-# This section creates a new user, sets it as the user for the image, and it's
-# home directory as the working directory.`
+# This section creates a new user and it's home directory as the default working directory.`
     }
     dockerfile += `
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
-USER dockteruser
 WORKDIR /home/dockteruser
 `
 
@@ -121,6 +123,10 @@ WORKDIR /home/dockteruser
       if (comments) dockerfile += '\n# This section copies your project\'s files into the image'
       dockerfile += '\n' + projectFiles.map(([src, dest]) => `COPY ${src} ${dest}`).join('\n') + '\n'
     }
+
+    // Now all installation is finished set the user
+    if (comments) dockerfile += '\n# This sets the default user when the container is run'
+    dockerfile += '\nUSER dockteruser\n'
 
     // Add any CMD
     if (runCommand) {

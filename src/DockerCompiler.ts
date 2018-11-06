@@ -17,8 +17,9 @@ export default class DockerCompiler {
    * @param source The folder, Dockerfile or `SoftwareEnvironment` to compile
    * @param build Should the Docker image be built?
    * @param comments Should comments be added to the Dockerfile?
+   * @param stencila Should relevant Stencila language packages be installed in the image?
    */
-  async compile (source: string, build: boolean = true, comments: boolean = true): Promise<SoftwareEnvironment | null> {
+  async compile (source: string, build: boolean = true, comments: boolean = true, stencila: boolean = false): Promise<SoftwareEnvironment | null> {
     let folder
     if (source.substring(0, 7) === 'file://') {
       folder = source.substring(7)
@@ -57,7 +58,7 @@ export default class DockerCompiler {
 
       // Generate Dockerfile
       dockerfile = '.Dockerfile'
-      new DockerGenerator(environ, folder).generate(comments)
+      new DockerGenerator(environ, folder).generate(comments, stencila)
     }
 
     if (build) {

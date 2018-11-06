@@ -60,8 +60,6 @@ export default class JavascriptParser extends Parser {
     // properties in order of type hierarchy: Thing > CreativeWork > SoftwareSourceCode > SoftwarePackage
     const pkg = new SoftwarePackage()
 
-    // TODO: populate properties based on CodeMeta crosswalk (see note above)
-
     // schema:Thing
     pkg.name = data.name
 
@@ -71,41 +69,65 @@ export default class JavascriptParser extends Parser {
     // schema:SoftwareSourceCode
     pkg.runtimePlatform = 'Node.js'
 
+    pkg.license = data.license
+    pkg.description = data.description
+
+    if (data.author) {
+      if (typeof data.author === 'string') {
+        pkg.authors = [Person.fromText(data.author)]
+      } else {
+        let authorStr = ''
+        if (data.author.name) authorStr = data.author.name
+        if (data.author.email) authorStr += ` <${data.author.email}>`
+        if (data.author.url) authorStr += ` (${data.author.url})`
+
+        pkg.authors = [Person.fromText(authorStr)]
+      }
+    }
+
+    if (data.repository) {
+      if (typeof data.repository === 'string') {
+        pkg.codeRepository = data.repository
+      } else {
+        pkg.codeRepository = data.repository.url
+      }
+    }
+
     // stencila:SoftwarePackage
     if (data.dependencies) {
       pkg.softwareRequirements = await Promise.all(
-        Object.entries(data.dependencies).map(async ([name, versionRange]) => {
-          // Determine the minimum version that satisfies the range specified in the
-          // If we can't determine a minimum version from the versionRange
-          // (e.g. because it's a github url) then try to get latest
-          let version = 'latest'
-          if (versionRange !== 'latest' || versionRange !== '*') {
-            const range = semver.validRange(versionRange as string)
-            if (range) {
-              const match = range.match(/(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/)
-              if (match) version = match[0]
+          Object.entries(data.dependencies).map(async ([name, versionRange]) => {
+            // Determine the minimum version that satisfies the range specified in the
+            // If we can't determine a minimum version from the versionRange
+            // (e.g. because it's a github url) then try to get latest
+            let version = 'latest'
+            if (versionRange !== 'latest' || versionRange !== '*') {
+              const range = semver.validRange(versionRange as string)
+              if (range) {
+                const match = range.match(/(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/)
+                if (match) version = match[0]
+              }
             }
-          }
 
-          // Fetch meta-data from NPM
-          const data = await this.fetch(`https://registry.npmjs.org/${name}/${version}`, {
-            json: true,
-            headers: {
-              'Accept': 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
+            // Fetch meta-data from NPM
+            const data = await this.fetch(`https://registry.npmjs.org/${name}/${version}`, {
+              json: true,
+              headers: {
+                'Accept': 'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
+              }
+            })
+
+            if (data) {
+              return this.createPackage(data)
+            } else {
+              // All we know is name and version, so return that
+              const dependency = new SoftwarePackage()
+              dependency.name = name
+              dependency.version = versionRange as string
+              dependency.runtimePlatform = 'Node.js'
+              return dependency
             }
           })
-
-          if (data) {
-            return this.createPackage(data)
-          } else {
-            // All we know is name and version, so return that
-            const dependency = new SoftwarePackage()
-            dependency.name = name
-            dependency.version = versionRange as string
-            dependency.runtimePlatform = 'Node.js'
-            return dependency
-          }
-        })
       )
     }
 

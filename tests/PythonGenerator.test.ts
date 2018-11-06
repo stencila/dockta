@@ -63,7 +63,7 @@ CMD python3  cmd.py
  * If the environ passed to the generator does not have requirements, but there is a `requirements.txt`, then copy that
  * file into the container and use it for installing the requirements
  */
-test('generate:requirements-file', async () => {
+test.skip('generate:requirements-file', async () => {
   const pkg = new SoftwarePackage()
   pkg.runtimePlatform = 'Python'
 
@@ -78,8 +78,6 @@ RUN apt-get update \\
  && apt-get autoremove -y \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
-
-RUN pip install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip
 
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
 USER dockteruser
