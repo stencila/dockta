@@ -72,7 +72,14 @@ export default class DockerCompiler {
     return environ
   }
 
-  async execute (source: string): Promise<string> {
+  async execute (source: string) {
+    let folder
+    if (source.substring(0, 7) === 'file://') {
+      folder = source.substring(7)
+    } else {
+      folder = source
+    }
+
     // Compile the environment first
     let environ = await this.compile(source)
     if (!environ) throw new Error('Environment not created')
@@ -80,8 +87,6 @@ export default class DockerCompiler {
 
     // Execute the environment's image (which is built in compile())
     const executor = new DockerExecutor()
-    const result = await executor.execute(environ.name)
-
-    return result
+    return executor.execute(environ.name, folder)
   }
 }

@@ -328,11 +328,17 @@ If you want to build your image with bare Docker rename `.Dockerfile` to `Docker
 
 ### Execute a Docker image
 
-You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your image in one step:
+You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your image in one:
 
 ```bash
 > dockter execute
 2018-10-23 00:58:39
+```
+
+Dockter's `execute` also mounts the folder into the container and sets the users and group ids. This allows you to read and write files into the project folder from within the container. It's equivaluent to running Docker with these arguments:
+
+```bash
+docker run --rm --volume $(pwd):/work --workdir=/work --user=$(id -u):$(id -g) <image>
 ```
 
 ## Contribute
