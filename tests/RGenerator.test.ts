@@ -58,8 +58,7 @@ WORKDIR /home/dockteruser
 
 COPY .DESCRIPTION DESCRIPTION
 
-RUN mkdir ~/R \\
- && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
+RUN mkdir -p ~/R && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 `)
 })
 
@@ -102,8 +101,7 @@ WORKDIR /home/dockteruser
 
 COPY .DESCRIPTION DESCRIPTION
 
-RUN mkdir ~/R \\
- && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
+RUN mkdir -p ~/R && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
 COPY cmd.R cmd.R
 COPY other.R other.R

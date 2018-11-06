@@ -86,7 +86,7 @@ export default class JavascriptParser extends Parser {
     }
 
     if (data.repository) {
-      if(typeof data.repository === 'string') {
+      if (typeof data.repository === 'string') {
         pkg.codeRepository = data.repository
       } else {
         pkg.codeRepository = data.repository.url

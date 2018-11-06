@@ -40,8 +40,7 @@ COPY .DESCRIPTION DESCRIPTION
 
 RUN npm install package.json \
  && pip3 install --user --requirement requirements.txt \
- && mkdir ~/R \
- && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
+ && mkdir -p ~/R && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
 COPY script.py script.py
 COPY script.R script.R
