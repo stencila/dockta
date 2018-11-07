@@ -1,23 +1,9 @@
 import fixture from './fixture'
-import fs from 'fs'
 
 import PythonParser, { RequirementType } from '../src/PythonParser'
 import { ComputerLanguage, OperatingSystem, Person, SoftwareApplication, SoftwarePackage } from '@stencila/schema'
-import { REQUEST_CACHE_DIR } from '../src/Doer'
 
 describe('PythonParser', () => {
-  /*beforeEach(() => {
-    if (fs.existsSync(REQUEST_CACHE_DIR)) {
-      for (let item of fs.readdirSync(REQUEST_CACHE_DIR)) {
-        try {
-          fs.unlinkSync(REQUEST_CACHE_DIR + '/' + item)
-        } catch (e) {
-          // Cleanups might execute in parallel in multiple test runs so don't worry if remove fails
-        }
-      }
-    }
-  })*/
-
   /**
    * When applied to an empty folder, parse should return null.
    */

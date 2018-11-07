@@ -9,11 +9,4 @@ Imports:
   coin,
   ggplot2,
   httr,
-  lsmeans,
-  MBESS,
-  metafor,
-  pander,
-  psychometric,
-  reshape2,
-  rjson,
-  tidyr
+  lsmeans
