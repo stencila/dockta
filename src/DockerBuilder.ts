@@ -26,12 +26,6 @@ interface DockerMessage {
  */
 export default class DockerBuilder {
 
-  private docker: Docker
-
-  constructor () {
-    this.docker = new Docker()
-  }
-
   async build (dir: string, name?: string, dockerfile: string = 'Dockerfile') {
     if (!name) {
       const hash = crypto.createHash('md5').update(dir).digest('hex')
@@ -91,8 +85,10 @@ export default class DockerBuilder {
     // above tar stream generation
     // targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
 
+    const docker = new Docker()
+
     const messages: Array<any> = []
-    const stream = await this.docker.buildImage(targz, {
+    const stream = await docker.buildImage(targz, {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
       t: name + ':system'
@@ -151,7 +147,7 @@ export default class DockerBuilder {
     if (errors.length) throw new Error(`There was an error when building the image: ${errors.map(error => error.message).join(',')}`)
 
     // Get information on the current
-    const image = this.docker.getImage(name + ':latest')
+    const image = docker.getImage(name + ':latest')
     let appLayer
     let lastSystemLayer
     try {
@@ -173,7 +169,7 @@ export default class DockerBuilder {
     }
 
     // Create a container from the layer and start it up
-    let container = await this.docker.createContainer({
+    let container = await docker.createContainer({
       Image: layer,
       Tty: true,
       Cmd: ['/bin/bash']
