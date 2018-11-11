@@ -7,6 +7,9 @@ import PackageGenerator from './PackageGenerator'
  */
 export default class RGenerator extends PackageGenerator {
 
+  /**
+   * Date used to pin the CRAN mirror used
+   */
   date: string
 
   constructor (pkg: SoftwarePackage, folder?: string) {
@@ -24,10 +27,6 @@ export default class RGenerator extends PackageGenerator {
 
   applies (): boolean {
     return this.package.runtimePlatform === 'R'
-  }
-
-  baseVersion (): string {
-    return '18.04'
   }
 
   envVars (sysVersion: string): Array<[string, string]> {
@@ -58,7 +57,9 @@ export default class RGenerator extends PackageGenerator {
       'r-base'
     ]
 
-    // Recurse through `softwareRequirements` and find any deb packages
+    /**
+     * Recurse through `softwareRequirements` and find any deb packages
+     */
     function find (pkg: any) {
       if (pkg.runtimePlatform !== 'R' || !pkg.softwareRequirements) return
       for (let subpkg of pkg.softwareRequirements) {

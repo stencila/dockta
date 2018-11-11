@@ -1,3 +1,5 @@
+/* tslint:disable: completed-docs */
+
 import { dirname, basename } from 'path'
 import {
   ComputerLanguage,

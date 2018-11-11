@@ -76,10 +76,21 @@ yargs
 
   .parse()
 
-function output (node: any, format: string) {
-  if (node) console.log(format === 'yaml' ? yaml.safeDump(node, { lineWidth: 120 }) : JSON.stringify(node, null, '  '))
+/**
+ * Print output to stdout
+ *
+ * @param object The object to print
+ * @param format The format use: `json` or `yaml`
+ */
+function output (object: any, format: string = 'json') {
+  if (object) console.log(format === 'yaml' ? yaml.safeDump(object, { lineWidth: 120 }) : JSON.stringify(object, null, '  '))
 }
 
+/**
+ * Print an error to stderr
+ *
+ * @param error The error to print
+ */
 function error (error: Error) {
   if (error instanceof ApplicationError) {
     console.error(error.message)

@@ -34,8 +34,8 @@
     "Docker",
     "Dockerfile",
     "JSON-LD",
-    "reproducibility",
-    "reasearch"
+    "research",
+    "reproducibility"
   ],
   "author": "Contributors (https://github.com/stencila/dockter/contributors)",
   "license": "Apache-2.0",

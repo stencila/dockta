@@ -6,6 +6,10 @@ const compiler = new DockerCompiler()
 
 router.use(json())
 
+/**
+ * Run a method of `DockerCompiler`
+ * @param method The method to run e.g `compile`, `build`
+ */
 function run (method: string) {
   return async (req: Request, res: Response) => {
     try {

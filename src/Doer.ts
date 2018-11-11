@@ -26,10 +26,20 @@ export default abstract class Doer {
     this.folder = folder
   }
 
+  /**
+   * Does a path exist within the project folder?
+   *
+   * @param subpath The path within the folder
+   */
   exists (subpath: string): boolean {
     return fs.existsSync(path.join(this.folder, subpath))
   }
 
+  /**
+   * Get a list of paths that match a pattern in the project folder.
+   *
+   * @param pattern The glob pattern
+   */
   glob (pattern: string | Array<string>): Array<string> {
     try {
       return glob.sync(pattern, {
@@ -44,14 +54,31 @@ export default abstract class Doer {
     }
   }
 
+  /**
+   * Read a file within the project folder
+   *
+   * @param subpath The path within the folder
+   */
   read (subpath: string): string {
     return fs.readFileSync(path.join(this.folder, subpath), 'utf8')
   }
 
+  /**
+   * Write to a file within the project folder
+   *
+   * @param subpath The path within the folder
+   * @param content The content to write to the file
+   */
   write (subpath: string, content: string) {
     fs.writeFileSync(path.join(this.folder, subpath), content, 'utf8')
   }
 
+  /**
+   * Fetch content from a URL
+   *
+   * @param url The URL to fetch
+   * @param options Request options
+   */
   async fetch (url: string, options: any = { json: true }): Promise<any> {
     if (!REQUEST_CACHE_INITIALISED) {
       await persist.init({

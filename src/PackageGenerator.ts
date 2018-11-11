@@ -2,8 +2,14 @@ import { SoftwarePackage } from '@stencila/schema'
 
 import Generator from './Generator'
 
+/**
+ * Generates a Dockerfile for a `SoftwarePackage` instance
+ */
 export default class PackageGenerator extends Generator {
 
+  /**
+   * The package that this generator generates a Dockerfile for
+   */
   package: SoftwarePackage
 
   constructor (pkg: SoftwarePackage, folder?: string) {

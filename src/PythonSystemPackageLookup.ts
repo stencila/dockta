@@ -1,3 +1,5 @@
+/* tslint:disable: completed-docs */
+
 import fs from 'fs'
 
 type PythonSystemPackageLookupMap = Map<string, Map<string, Map<string, Map<string, Array<string> | null>>>>

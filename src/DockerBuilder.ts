@@ -21,11 +21,19 @@ interface DockerMessage {
 /**
  * Builds Docker images from Dockerfiles
  *
- * The Dockerfile may be handwritten, or generated
- * from requirements files or source code.
+ * Detect's the special `# dockter` comment and,
+ *  - sends the instructions prior to the comment to Docker to be built as normal and
+ *  - applies all following instructions into a single layer
  */
 export default class DockerBuilder {
 
+  /**
+   * Build a Docker image for a project
+   *
+   * @param dir The project directory
+   * @param name The name to tag the image with
+   * @param dockerfile The name of the Dockerfile within `dir` to use for the build
+   */
   async build (dir: string, name?: string, dockerfile: string = 'Dockerfile') {
     if (!name) {
       const hash = crypto.createHash('md5').update(dir).digest('hex')

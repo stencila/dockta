@@ -5,6 +5,12 @@ import generators from './generators'
 
 const PREFERRED_UBUNTU_VERSION = '18.04'
 
+/**
+ * Compare semantic version numbers
+ *
+ * @param versionOne
+ * @param versionTwo
+ */
 function versionCompare (versionOne: string, versionTwo: string) {
   if (versionOne === versionTwo) {
     return 0  // shortcut
@@ -42,6 +48,10 @@ function versionCompare (versionOne: string, versionTwo: string) {
  */
 export default class DockerGenerator extends Generator {
 
+  /**
+   * The software environment for which a Dockerfile
+   * will be generated
+   */
   environ: SoftwareEnvironment
 
   /**

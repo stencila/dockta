@@ -27,6 +27,12 @@ import { resolve } from 'dns'
  */
 export default class DockerExecutor {
 
+  /**
+   * Run a Docker container
+   *
+   * @param name Name of the Docker image to use
+   * @param folder Path of the project folder which will be mounted into the image
+   */
   async execute (name: string, folder: string) {
     // Capture stdout so we can attempt to parse it
     // to JSON

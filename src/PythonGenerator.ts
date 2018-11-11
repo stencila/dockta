@@ -1,3 +1,5 @@
+/* tslint:disable: completed-docs */
+
 import { SoftwarePackage, SoftwareEnvironment } from '@stencila/schema'
 import path from 'path'
 

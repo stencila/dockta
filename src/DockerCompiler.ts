@@ -9,10 +9,13 @@ import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
 import DockerExecutor from './DockerExecutor'
 
+/**
+ * Compiles a project into a Dockerfile, or Docker image
+ */
 export default class DockerCompiler {
 
   /**
-   * Compile a folder into a Docker image
+   * Compile a project
    *
    * @param source The folder, Dockerfile or `SoftwareEnvironment` to compile
    * @param build Should the Docker image be built?
@@ -72,6 +75,11 @@ export default class DockerCompiler {
     return environ
   }
 
+  /**
+   * Execute the project by compiling, building and running a Docker container for it
+   *
+   * @param source The project to execute
+   */
   async execute (source: string) {
     let folder
     if (source.substring(0, 7) === 'file://') {
