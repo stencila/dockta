@@ -1,7 +1,5 @@
 # Dockter : a Docker image builder for researchers
 
-> ✨ Help us [choose a better name](https://github.com/stencila/dockter/issues/37) for this project! ✨
-
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
 [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
@@ -40,6 +38,8 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Compile a project](#compile-a-project)
   * [Build a Docker image](#build-a-docker-image)
   * [Execute a Docker image](#execute-a-docker-image)
+  * [Docter who?](#docter-who)
+- [Roadmap](#roadmap)
 - [Contribute](#contribute)
 - [See also](#see-also)
 - [FAQ](#faq)
@@ -217,7 +217,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 - *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
-- *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
+- *Image building*: Dockter manages incremental builds using a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
 
 ## Install
@@ -341,6 +341,29 @@ Dockter's `execute` also mounts the folder into the container and sets the users
 docker run --rm --volume $(pwd):/work --workdir=/work --user=$(id -u):$(id -g) <image>
 ```
 
+### Docter who?
+
+Dockter compiles a meta-data tree of all the packages that your project relies on. Use the `who` 🦄 [#54](https://github.com/stencila/dockter/issues/54) command to get a list of the authors of those packages:
+
+```bash
+> dockter who
+Roger Bivand (rgdal, sp), Tim Keitt (rgdal), Barry Rowlingson (rgdal), Edzer Pebesma (sp)
+```
+
+Use the  `depth` option to restrict the listing to a particular depth in the dependency tree. For example, to list the authors of the packages that your project directly relies upon use:
+
+
+```bash
+> dockter who --depth=1
+```
+
+## Roadmap
+
+Dockter is in initial development and mostly intended as a proof of concept of building reproducible computing environments from shared, cross-language schemas for decribing software packages, such as [CodeMeta](https://codemeta.github.io/). Our plan is to extend this approach, from the current target of building Docker images, to the building of Nix environments.
+
+- Dec 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
+- Jan 2018: feactor out `Parser` and compilation code into a separate repo to be used by Docker and it's sister project targettting Nix
+
 ## Contribute
 
 We 💕 contributions! All contributions: ideas 💡, bug reports 🐛, documentation 🗎, code 💾. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
@@ -366,11 +389,15 @@ Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is
 
 - by default, but optionally, installs Stencila packages so that Stencila client interfaces can execute code in the container.
 
+The approach taken in Dockter to building Docker images is a mix of Dockerfile generation, as in `repo2docker`, and code injection and incremental builds as in `source-to-image`.
+
 `reprozip` and its extension `reprounzip-docker` may be a better choice if you want to share your existing local environment as a Docker image with someone else.
 
-`containerit` might suit you better if you only need support for R and don't want managed packaged installation
+`containerit` might suit you better if you only need support for R and don't want managed packaged installation.
 
-`repo2docker` is likely to be better choice if you want to run Jupyter notebooks or RStudio in your container and don't need source code scanning to detect your requirements 
+`repo2docker` is probably a better choice if you want to run Jupyter notebooks or RStudio in your container and don't need source code scanning to detect your requirements.
+
+`source-to-image` might suit you better if your focus is on web development (e.g. Ruby, Node.js) and want a more stable, feature complete implementation of incremental builds.
 
 If you don't want to build a Docker image and just want a tool that helps determining the package dependencies of your source code check out:
 
@@ -387,11 +414,15 @@ Having an intermediate representation of the software environment allows this da
 
 *Why is Dockter a Node.js package?*
 
-We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments.
+We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments. We already had familiarity with using `dockerode` the Node.js package that we use to talk to Docker for incremental builds and container execution.
 
 *Why is Dockter implemented in Typescript?*
 
-We chose Typescript because it's type-checking and type-annotations reduce the number of runtime errors and improves developer experience.
+Typescript's type-checking and type-annotations can reduce the number of runtime errors and improves developer experience. For this partiular project, we wanted to use the Typescript type defintions for `SoftwarePackage`, `CreativeWork`, `Person` etc that are defined in [stencila/schema](https://github.com/stencila/schema).
+
+*Why didn't you use, and contribute to, an existing project rather than creating a new tool*
+
+When existing projects don't take the approach or provide the features you want, it's often a difficult decision to make whether to invest the time to understand and refactor an existing code base or to start fresh. In this case, we chose to start fresh for the reasons and differences outlined above. We felt it would take too much refactoring of existing projects to shoehorn in the approach we wanted to take and we wanted to be able to resuse much of this code in another sister project targetting Nix environments.
 
 *I'd love to help out! Where do I start?*
 
@@ -402,9 +433,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) (OK, so this isn't asked *that* frequentl
 
 Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
 
+ - [CodeMeta](https://codemeta.github.io/)
  - [`crandb`](https://github.com/metacran/crandb)
  - [`dockerode`](https://www.npmjs.com/package/dockerode)
  - [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser)
+ - [`npm/registry`](https://github.com/npm/registry)
  - [`pypa`](https://warehouse.pypa.io)
  - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
  - and of course, [Docker](https://www.docker.com/)
