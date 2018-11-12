@@ -69,8 +69,6 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 If the folder does not contain a `DESCRIPTION` file then Dockter will scan all the R files (files with the extension `.R` or `.Rmd`) in the folder for package import or usage statements, like `library(package)` and `package::function()`, and create a `.DESCRIPTION` file for you.
 
-Dockter checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages (e.g. `libxml-dev`) and installs those too. No more trial and error of build, fail, add dependency, repeat... cycles!
-
 #### Python
 
 If the folder contains a [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [#4](https://github.com/stencila/dockter/issues/4) [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
@@ -92,7 +90,37 @@ If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_
 If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockter/issues/9) Dockter will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add the necesary Jupyter kernels to the built Docker image.
 
 
-### Quicker re-installation of language packages
+### Automatically determines system requirements
+
+One of the headaches researchers face when hand writing Dockerfiles is figuring out which system dependencies your project needs. Often this involves a lot of trial and error. 
+
+Dockter automatically checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages and installs those into the image. For example, let's say you have a project with an R script that requires the `rgdal` package for geospatial analyses,
+
+```R
+library(rgdal)
+```
+
+When you run `dockter compile` in this project, Dockter will generate a Dockerfile with the following section which installs R, plus the three system dependencies required `gdal-bin`, `libgdal-dev`, and `libproj-dev`:
+
+```Dockerfile
+# This section installs system packages required for your project
+# If you need extra system packages add them here.
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      gdal-bin \
+      libgdal-dev \
+      libproj-dev \
+      r-base \
+ && apt-get autoremove -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+```
+
+For R, Dockter does this by querying the https://sysreqs.r-hub.io/ database. For Python, Dockter includes a mapping of system requirements of packages that users can [contribute to](CONTRIBUTING.md#python-system-dependencies).
+
+No more trial and error of build, fail, add dependency, repeat... cycles!
+
+### Faster re-installation of language packages
 
 If you have built a Docker image before, you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
 
@@ -101,8 +129,6 @@ The reason this happens is that, due to Docker's layered filesystem, when you up
 Dockter takes a different approach. It leaves the installation of language packages to the language package managers: Python's [`pip`](https://pypi.org/project/pip/) , Node.js's `npm`, and R's `install.packages`. These package managers are good at the job they were designed for - to check which packages need to be updated and to only update them. The result is much faster rebuilds, especially for R packages, which often involve compilation.
 
 Dockter does this by looking for a special `# dockter` comment in a `Dockerfile`. Instead of throwing away layers, it executes all instructions after this comment in the same layer - thus reusing packages that were previously installed.
-
-#### An example
 
 Here's a simple motivating [example](fixtures/tests/py-pandas). It's a Python project with a `requirements.txt` file which specifies that the project depends upon `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
 
@@ -431,7 +457,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) (OK, so this isn't asked *that* frequentl
 
 ## Acknowledgments
 
-Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
+Dockter was inspired by, and combines ideas from, several similar tools including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker), [`source-to-image`](https://github.com/openshift/source-to-image) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
 
  - [CodeMeta](https://codemeta.github.io/)
  - [`crandb`](https://github.com/metacran/crandb)
