@@ -369,7 +369,7 @@ docker run --rm --volume $(pwd):/work --workdir=/work --user=$(id -u):$(id -g) <
 
 ### Docter who?
 
-Dockter compiles a meta-data tree of all the packages that your project relies on. Use the `who` 🦄 [#54](https://github.com/stencila/dockter/issues/54) command to get a list of the authors of those packages:
+Dockter compiles a meta-data tree of all the packages that your project relies on. Use the `who` 🦄 [#55](https://github.com/stencila/dockter/issues/55) command to get a list of the authors of those packages:
 
 ```bash
 > dockter who
