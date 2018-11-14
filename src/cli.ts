@@ -10,7 +10,9 @@ const VERSION = require('../package').version
 
 import DockerCompiler from './DockerCompiler'
 import { ApplicationError } from './errors'
-const compiler = new DockerCompiler()
+import CachingUrlFetcher from './CachingUrlFetcher'
+
+const compiler = new DockerCompiler(new CachingUrlFetcher())
 
 yargonaut
   .style('blue')

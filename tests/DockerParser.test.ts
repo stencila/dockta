@@ -1,13 +1,16 @@
 import DockerParser from '../src/DockerParser'
-import {Person, SoftwareEnvironment} from '@stencila/schema'
-import fixture from './fixture'
+import { Person, SoftwareEnvironment } from '@stencila/schema'
+import { fixture } from './test-functions'
+import MockUrlFetcher from './MockUrlFetcher'
+
+const urlFetcher = new MockUrlFetcher()
 
 /**
  * When passed Dockerfile strings, parse should extract LABEL
  * and MAINTAINER instructions.
  */
 test('parse:strings', async () => {
-  const parser = new DockerParser('')
+  const parser = new DockerParser(urlFetcher, '')
   let environ
 
   environ = await parser.parse('FROM ubuntu') as SoftwareEnvironment
@@ -59,7 +62,7 @@ test('parse:strings', async () => {
  * When applied to an empty folder, parse should return null.
  */
 test('parse:empty', async () => {
-  const parser = new DockerParser(fixture('empty'))
+  const parser = new DockerParser(urlFetcher, fixture('empty'))
   expect(await parser.parse()).toBeNull()
 })
 
@@ -67,7 +70,7 @@ test('parse:empty', async () => {
  * When applied to a folder without a Dockerfile, parse should return null.
  */
 test('parse:r-date', async () => {
-  const parser = new DockerParser(fixture('r-date'))
+  const parser = new DockerParser(urlFetcher, fixture('r-date'))
   expect(await parser.parse()).toBeNull()
 })
 
@@ -76,7 +79,7 @@ test('parse:r-date', async () => {
  * `SoftwareEnvironment` based upon it.
  */
 test('parse:dockerfile-date', async () => {
-  const parser = new DockerParser(fixture('dockerfile-date'))
+  const parser = new DockerParser(urlFetcher, fixture('dockerfile-date'))
   const environ = await parser.parse() as SoftwareEnvironment
   expect(environ.description && environ.description.substring(0, 23)).toEqual('Prints the current date')
   expect(environ.authors && environ.authors[0].name).toEqual('Nokome Bentley')

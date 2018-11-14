@@ -1,6 +1,7 @@
 import { SoftwarePackage } from '@stencila/schema'
 
 import PackageGenerator from './PackageGenerator'
+import IUrlFetcher from './IUrlFetcher'
 
 const PACKAGE_JSON_GENERATED = '.package.json'
 const PACKAGE_JSON = 'package.json'
@@ -19,8 +20,8 @@ export default class JavascriptGenerator extends PackageGenerator {
 
   // Methods that override those in `Generator`
 
-  constructor (pkg: SoftwarePackage, folder?: string, nodeMajorVersion: number = 10) {
-    super(pkg, folder)
+  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string, nodeMajorVersion: number = 10) {
+    super(urlFetcher, pkg, folder)
 
     this.nodeMajorVersion = nodeMajorVersion
   }

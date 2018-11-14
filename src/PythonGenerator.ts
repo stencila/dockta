@@ -1,10 +1,10 @@
 /* tslint:disable: completed-docs */
-
-import { SoftwarePackage, SoftwareEnvironment } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
 import path from 'path'
 
 import PackageGenerator from './PackageGenerator'
 import PythonSystemPackageLookup from './PythonSystemPackageLookup'
+import IUrlFetcher from './IUrlFetcher'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
@@ -17,8 +17,8 @@ export default class PythonGenerator extends PackageGenerator {
 
   // Methods that override those in `Generator`
 
-  constructor (pkg: SoftwarePackage, folder?: string, pythonMajorVersion: number = 3) {
-    super(pkg, folder)
+  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string, pythonMajorVersion: number = 3) {
+    super(urlFetcher, pkg, folder)
 
     this.pythonMajorVersion = pythonMajorVersion
     this.systemPackageLookup = PythonSystemPackageLookup.fromFile(path.join(__dirname, 'PythonSystemDependencies.json'))
@@ -64,7 +64,7 @@ export default class PythonGenerator extends PackageGenerator {
     }
 
     return this.filterPackages('Python').map(
-      requirement => `${requirement.name}${requirement.version}`
+        requirement => `${requirement.name}${requirement.version}`
     ).join('\n')
   }
 

@@ -1,7 +1,7 @@
 import Docker from 'dockerode'
 
 import DockerBuilder from '../src/DockerBuilder'
-import fixture from './fixture'
+import { fixture } from './test-functions'
 
 // This is intended to be the only test file where we do any actual Docker image builds
 // Increase timeout (in milliseconds) to allow for Docker builds

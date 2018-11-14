@@ -1,5 +1,5 @@
 import PythonSystemPackageLookup from '../src/PythonSystemPackageLookup'
-import fixture from './fixture'
+import { fixture } from './test-functions'
 
 const packageLookup = PythonSystemPackageLookup.fromFile(fixture('py-system-package-lookup.json'))
 

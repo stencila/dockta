@@ -8,11 +8,17 @@ import parsers from './parsers'
 import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
 import DockerExecutor from './DockerExecutor'
+import IUrlFetcher from './IUrlFetcher'
 
 /**
  * Compiles a project into a Dockerfile, or Docker image
  */
 export default class DockerCompiler {
+  private readonly urlFetcher: IUrlFetcher
+
+  constructor (urlFetcher: IUrlFetcher) {
+    this.urlFetcher = urlFetcher
+  }
 
   /**
    * Compile a project
@@ -36,7 +42,7 @@ export default class DockerCompiler {
     if (fs.existsSync(path.join(folder, 'Dockerfile'))) {
       // Dockerfile found so use that
       dockerfile = 'Dockerfile'
-      environ = await new DockerParser(folder).parse()
+      environ = await new DockerParser(this.urlFetcher, folder).parse()
     } else {
       if (fs.existsSync(path.join(folder, 'environ.jsonld'))) {
         // Read existing environment from file
@@ -49,7 +55,7 @@ export default class DockerCompiler {
         environ = new SoftwareEnvironment()
         environ.name = path.basename(folder)
         for (let ParserClass of parsers) {
-          const parser = new ParserClass(folder)
+          const parser = new ParserClass(this.urlFetcher, folder)
           const pkg = await parser.parse()
           if (pkg) environ.softwareRequirements.push(pkg)
         }
@@ -61,7 +67,7 @@ export default class DockerCompiler {
 
       // Generate Dockerfile
       dockerfile = '.Dockerfile'
-      new DockerGenerator(environ, folder).generate(comments, stencila)
+      new DockerGenerator(this.urlFetcher, environ, folder).generate(comments, stencila)
     }
 
     if (build) {

@@ -1,16 +1,19 @@
-import fixture from './fixture'
+import { fixture } from './test-functions'
 import RParser from '../src/RParser'
-import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
+import MockUrlFetcher from './MockUrlFetcher'
 
 // Increase timeout (in milliseconds) to allow for HTTP requests
 // to get package meta data
 jest.setTimeout(30 * 60 * 1000)
 
+const urlFetcher = new MockUrlFetcher()
+
 /**
  * When applied to an empty folder, parse should return null.
  */
 test('parse:empty', async () => {
-  const parser = new RParser(fixture('empty'))
+  const parser = new RParser(urlFetcher, fixture('empty'))
   expect(await parser.parse()).toBeNull()
 })
 
@@ -18,7 +21,7 @@ test('parse:empty', async () => {
  * When applied to a folder with no R code, parse should return null.
  */
 test('parse:non-r', async () => {
-  const parser = new RParser(fixture('py-source'))
+  const parser = new RParser(urlFetcher, fixture('py-source'))
   expect(await parser.parse()).toBeNull()
 })
 
@@ -27,7 +30,7 @@ test('parse:non-r', async () => {
  * with `name`, `softwareRequirements` etc populated correctly from the `DESCRIPTION`.
  */
 test('parse:r-source', async () => {
-  const parser = new RParser(fixture('r-source'))
+  const parser = new RParser(urlFetcher, fixture('r-source'))
   const environ = await parser.parse() as SoftwarePackage
   expect(environ.name).toEqual('rsource')
 
@@ -42,7 +45,7 @@ test('parse:r-source', async () => {
  * return a `SoftwareEnvironment` with packages listed.
  */
 test('parse:r-requirements', async () => {
-  const parser = new RParser(fixture('r-requirements'))
+  const parser = new RParser(urlFetcher, fixture('r-requirements'))
   const environ = await parser.parse() as SoftwarePackage
 
   expect(environ.name).toEqual('rrequirements')
@@ -57,7 +60,7 @@ test('parse:r-requirements', async () => {
  * generate the requirements (i.e. R sources aren't parsed for requirements).
  */
 test('parse:r-mixed', async () => {
-  const parser = new RParser(fixture('r-mixed'))
+  const parser = new RParser(urlFetcher, fixture('r-mixed'))
   const environ = await parser.parse() as SoftwarePackage
 
   const reqs = environ.softwareRequirements

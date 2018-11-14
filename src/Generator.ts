@@ -88,7 +88,7 @@ RUN apt-get update \\
     if (comments) {
       dockerfile += `
 # It's good practice to run Docker images as a non-root user.
-# This section creates a new user and it's home directory as the default working directory.`
+# This section creates a new user and its home directory as the default working directory.`
     }
     dockerfile += `
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser

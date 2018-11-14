@@ -2,6 +2,7 @@ import { SoftwareEnvironment } from '@stencila/schema'
 
 import Generator from './Generator'
 import generators from './generators'
+import IUrlFetcher from './IUrlFetcher'
 
 const PREFERRED_UBUNTU_VERSION = '18.04'
 
@@ -60,8 +61,8 @@ export default class DockerGenerator extends Generator {
    */
   protected generators: Array<Generator>
 
-  constructor (environ: SoftwareEnvironment, folder?: string) {
-    super(folder)
+  constructor (urlFetcher: IUrlFetcher, environ: SoftwareEnvironment, folder?: string) {
+    super(urlFetcher, folder)
     this.environ = environ
 
     // Each of the environment's `softwareRequirements` is
@@ -71,7 +72,7 @@ export default class DockerGenerator extends Generator {
     for (let pkg of this.environ.softwareRequirements) {
       for (let GeneratorClass of generators) {
         // @ts-ignore
-        const generator = new GeneratorClass(pkg, folder)
+        const generator = new GeneratorClass(urlFetcher, pkg, folder)
         if (generator.applies()) {
           this.generators.push(generator)
           break

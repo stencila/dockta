@@ -1,30 +1,20 @@
-import fixture from './fixture'
+import { fixture } from './test-functions'
 import JavascriptParser from '../src/JavascriptParser'
 import { Person, SoftwarePackage } from '@stencila/schema'
-import fs from 'fs'
-import { REQUEST_CACHE_DIR } from '../src/Doer'
+
+import MockUrlFetcher from './MockUrlFetcher'
+
+const urlFetcher = new MockUrlFetcher()
 
 // Increase timeout (in milliseconds) to allow for HTTP requests
 // to get package meta data
 jest.setTimeout(30 * 60 * 1000)
 describe('JavascriptParser', () => {
-  beforeEach(() => {
-    if (fs.existsSync(REQUEST_CACHE_DIR)) {
-      for (let item of fs.readdirSync(REQUEST_CACHE_DIR)) {
-        try {
-          fs.unlinkSync(REQUEST_CACHE_DIR + '/' + item)
-        } catch (e) {
-          // Cleanups might execute in parallel in multiple test runs so don't worry if remove fails
-        }
-      }
-    }
-  })
-
   /**
    * When applied to an empty folder, parse should return null.
    */
   test('parse:empty', async () => {
-    const parser = new JavascriptParser(fixture('empty'))
+    const parser = new JavascriptParser(urlFetcher, fixture('empty'))
     expect(await parser.parse()).toBeNull()
   })
 
@@ -32,7 +22,7 @@ describe('JavascriptParser', () => {
    * When applied to a folder with no JS code, parse should return null.
    */
   test('parse:non-js', async () => {
-    const parser = new JavascriptParser(fixture('r-date'))
+    const parser = new JavascriptParser(urlFetcher, fixture('r-date'))
     expect(await parser.parse()).toBeNull()
   })
 
@@ -42,7 +32,7 @@ describe('JavascriptParser', () => {
    * populated correctly.
    */
   test('parse:js-requirements', async () => {
-    const parser = new JavascriptParser(fixture('js-requirements'))
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements'))
     const pkg = await parser.parse() as SoftwarePackage
 
     expect(pkg.name).toEqual('js-package')
@@ -57,6 +47,7 @@ describe('JavascriptParser', () => {
       ['array-swap', '0.0.2'],
       ['a-package-that-is-not-on-npm', 'org/repo']
     ]
+
     for (let index in expecteds) {
       let { name, version } = pkg.softwareRequirements[index]
       expect(name).toEqual(expecteds[index][0])
@@ -70,7 +61,7 @@ describe('JavascriptParser', () => {
    * populated correctly.
    */
   test('parse:js-sources', async () => {
-    const parser = new JavascriptParser(fixture('js-sources'))
+    const parser = new JavascriptParser(urlFetcher, fixture('js-sources'))
     const pkg = await parser.parse() as SoftwarePackage
 
     expect(pkg.name).toEqual('js-sources')
@@ -84,7 +75,7 @@ describe('JavascriptParser', () => {
    * `SoftwarePackage` with `name`, `softwareRequirements` etc populated from the `package.json` in that directory.
    */
   test('parse:js-mixed', async () => {
-    const parser = new JavascriptParser(fixture('js-mixed'))
+    const parser = new JavascriptParser(urlFetcher, fixture('js-mixed'))
     const pkg = await parser.parse() as SoftwarePackage
 
     expect(pkg.name).toEqual('js-mixed')

@@ -1,8 +1,11 @@
 import { Router, Request, Response, json } from 'express'
+
 const router = Router()
 
 import DockerCompiler from './DockerCompiler'
-const compiler = new DockerCompiler()
+import CachingUrlFetcher from './CachingUrlFetcher'
+
+const compiler = new DockerCompiler(new CachingUrlFetcher())
 
 router.use(json())
 

@@ -1,8 +1,11 @@
 import fs from 'fs'
 
 import DockerCompiler from '../src/DockerCompiler'
-import fixture from './fixture'
+import { fixture } from './test-functions'
 import { SoftwareEnvironment, Person } from '@stencila/schema'
+import MockUrlFetcher from './MockUrlFetcher'
+
+const urlFetcher = new MockUrlFetcher()
 
 jest.setTimeout(30 * 60 * 1000)
 
@@ -14,7 +17,7 @@ jest.setTimeout(30 * 60 * 1000)
  */
 
 test('compile:empty', async () => {
-  const compiler = new DockerCompiler()
+  const compiler = new DockerCompiler(urlFetcher)
   let environ = await compiler.compile('file://' + fixture('empty'), false)
 
   let expected = new SoftwareEnvironment()
@@ -23,15 +26,15 @@ test('compile:empty', async () => {
 })
 
 test('compile:dockerfile-date', async () => {
-  const compiler = new DockerCompiler()
+  const compiler = new DockerCompiler(urlFetcher)
   let environ = await compiler.compile('file://' + fixture('dockerfile-date'), false)
 
   expect(environ && environ.description && environ.description.substring(0, 23)).toEqual('Prints the current date')
   expect(environ && environ.authors && (environ.authors[0] as Person).name).toEqual('Nokome Bentley')
 })
 
-test.skip('compile:multi-lang', async () => {
-  const compiler = new DockerCompiler()
+test('compile:multi-lang', async () => {
+  const compiler = new DockerCompiler(urlFetcher)
   let environ = await compiler.compile('file://' + fixture('multi-lang'), false, false)
 
   // Remove the date from the MRAN line to allow for changing date of test v expected

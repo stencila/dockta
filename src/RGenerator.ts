@@ -1,6 +1,7 @@
 import { SoftwarePackage } from '@stencila/schema'
 
 import PackageGenerator from './PackageGenerator'
+import IUrlFetcher from './IUrlFetcher'
 
 /**
  * A Dockerfile generator for R packages
@@ -12,8 +13,8 @@ export default class RGenerator extends PackageGenerator {
    */
   date: string
 
-  constructor (pkg: SoftwarePackage, folder?: string) {
-    super(pkg, folder)
+  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string) {
+    super(urlFetcher, pkg, folder)
 
     // Default to yesterday's date (to ensure MRAN is available for the date)
     // Set here as it is required in two methods below

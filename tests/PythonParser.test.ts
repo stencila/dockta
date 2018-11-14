@@ -1,14 +1,18 @@
-import fixture from './fixture'
+import { fixture } from './test-functions'
 
 import PythonParser, { RequirementType } from '../src/PythonParser'
 import { ComputerLanguage, OperatingSystem, Person, SoftwareApplication, SoftwarePackage } from '@stencila/schema'
+
+import MockUrlFetcher from './MockUrlFetcher'
+
+const urlFetcher = new MockUrlFetcher()
 
 describe('PythonParser', () => {
   /**
    * When applied to an empty folder, parse should return null.
    */
   test('parse:empty', async () => {
-    const parser = new PythonParser(fixture('empty'))
+    const parser = new PythonParser(urlFetcher, fixture('empty'))
     expect(await parser.parse()).toBeNull()
   })
 
@@ -16,7 +20,7 @@ describe('PythonParser', () => {
    * When applied to a folder with no Python code, parse should return null.
    */
   test('parse:non-py', async () => {
-    const parser = new PythonParser(fixture('r-date'))
+    const parser = new PythonParser(urlFetcher, fixture('r-date'))
     expect(await parser.parse()).toBeNull()
   })
 
@@ -25,7 +29,7 @@ describe('PythonParser', () => {
    * bases requirements
    */
   test('parse:py-requirements', async () => {
-    const parser = new PythonParser(fixture('py-requirements'))
+    const parser = new PythonParser(urlFetcher, fixture('py-requirements'))
 
     const requirementsContent = await parser.parseRequirementsFile('requirements.txt')
 
@@ -88,8 +92,8 @@ describe('PythonParser', () => {
    * When applied to a folder with a requirements file,
    * parse should return the SoftwareEnvironment.
    */
-  test.skip('parse:py-requirements', async () => {
-    const parser = new PythonParser(fixture('py-requirements'))
+  test('parse:py-requirements', async () => {
+    const parser = new PythonParser(urlFetcher, fixture('py-mixed'))
 
     const arrowPackage = new SoftwareApplication()
     arrowPackage.name = 'arrow'
@@ -109,8 +113,9 @@ describe('PythonParser', () => {
     arrowPackage.description = 'This is the long description that will be used in priority over description'
 
     const environ = new SoftwarePackage()
-    environ.name = 'py-requirements'
+    environ.name = 'py-mixed'
     environ.softwareRequirements = [arrowPackage]
+    environ.runtimePlatform = 'Python'
 
     expect(await parser.parse()).toEqual(environ)
   })
@@ -120,7 +125,7 @@ describe('PythonParser', () => {
    * the imports that are required by parsing the source files directly.
    */
   test('parse:py-source', async () => {
-    const parser = new PythonParser(fixture('py-source'))
+    const parser = new PythonParser(urlFetcher, fixture('py-source'))
     const environ = await parser.parse()
     expect(environ).not.toBeNull()
     const requirementNames = environ!.softwareRequirements.map(requirement => requirement.name)
@@ -134,14 +139,12 @@ describe('PythonParser', () => {
    * requirements from the `requirements.txt` and should not parse the source code.
    */
   test('parse:py-mixed', async () => {
-    const parser = new PythonParser(fixture('py-mixed'))
+    const parser = new PythonParser(urlFetcher, fixture('py-mixed'))
     const environ = await parser.parse()
     expect(environ).not.toBeNull()
 
-    expect(environ!.softwareRequirements.length).toEqual(2)
-    expect(environ!.softwareRequirements[0].name).toEqual('Django')
-    expect(environ!.softwareRequirements[0].version).toEqual('==2.1')
-    expect(environ!.softwareRequirements[1].name).toEqual('arrow')
-    expect(environ!.softwareRequirements[1].version).toEqual('==0.12.1')
+    expect(environ!.softwareRequirements.length).toEqual(1)
+    expect(environ!.softwareRequirements[0].name).toEqual('arrow')
+    expect(environ!.softwareRequirements[0].version).toEqual('==0.12.1')
   })
 })
