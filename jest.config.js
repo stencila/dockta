@@ -5,6 +5,7 @@ module.exports = {
     "**/tests/**/*.test.ts"
   ],
   coveragePathIgnorePatterns: [
-    "tests/fixture.ts"
+    "tests/MockUrlFetcher.ts",
+    "tests/test-functions.ts"
   ]
 };
