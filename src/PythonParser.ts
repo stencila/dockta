@@ -1,5 +1,3 @@
-/* tslint:disable: completed-docs */
-
 import { dirname, basename } from 'path'
 import {
   ComputerLanguage,
@@ -18,10 +16,16 @@ const REQUIREMENTS_EDITABLE_SOURCE_REGEX = /^\s*-e\s*([^\s]+)\s*/
 const REQUIREMENTS_INCLUDE_PATH_REGEX = /^\s*-r\s+([^\s]+)\s*/
 const REQUIREMENTS_STANDARD_REGEX = /^\s*([^\s]+)/
 
+/**
+ * Return true if the passed in line is a requirements.txt comment (starts with "#" which might be preceded by spaces).
+ */
 function lineIsComment (line: string): boolean {
   return REQUIREMENTS_COMMENT_REGEX.exec(line) !== null
 }
 
+/**
+ * Execute the given `regex` against the line and return the first match. If there is no match, return `null`.
+ */
 function applyRegex (line: string, regex: RegExp): string | null {
   const result = regex.exec(line)
 
@@ -31,22 +35,38 @@ function applyRegex (line: string, regex: RegExp): string | null {
   return result[1]
 }
 
+/**
+ * Execute the `REQUIREMENTS_EDITABLE_SOURCE_REGEX` against a line and return the first result (or null if no match).
+ * This is used to find a requirements.txt line of a URL source (e.g. including a package from github).
+ */
 function extractEditableSource (line: string): string | null {
   return applyRegex(line, REQUIREMENTS_EDITABLE_SOURCE_REGEX)
 }
 
+/**
+ * Execute the `REQUIREMENTS_INCLUDE_PATH_REGEX` against a line and return the first result (or null if no match).
+ * This is used to find a requirements.txt line that includes another requirements file.
+ */
 function extractIncludedRequirementsPath (line: string): string | null {
   return applyRegex(line, REQUIREMENTS_INCLUDE_PATH_REGEX)
 }
 
+/**
+ * Execute the `REQUIREMENTS_STANDARD_REGEX` against a line and return the first result (or null if no match).
+ * This is used to find "standard" requirements.txt lines.
+ */
 function extractStandardRequirements (line: string): string | null {
   return applyRegex(line, REQUIREMENTS_STANDARD_REGEX)
 }
 
+/**
+ * Split a requirement line into name and then version. For example "package==1.0.1" => ["package", "==1.0.1"]
+ * The version specifier can be `==`, `<=`, `>=`, `~=`, `<` or `>`.
+ */
 function splitStandardRequirementVersion (requirement: string): [string, string | null] {
   let firstSplitterIndex = -1
 
-  for (let splitter of ['<=', '>=', '==', '~=', '<', '>']) {
+  for (let splitter of ['==', '<=', '>=', '~=', '<', '>']) {
     let splitterIndex = requirement.indexOf(splitter)
     if (splitterIndex > -1 && (firstSplitterIndex === -1 || splitterIndex < firstSplitterIndex)) {
       firstSplitterIndex = splitterIndex
@@ -60,6 +80,10 @@ function splitStandardRequirementVersion (requirement: string): [string, string 
   return [requirement, null]
 }
 
+/**
+ * Convert a list of classifiers to a Map between main classification and sub classification(s).
+ * e.g: ['A :: B', 'A :: C', 'D :: E'] => {'A': ['B', 'C'], 'D': ['E']}
+ */
 function buildClassifierMap (classifiers: Array<string>): Map<string, Array<string>> {
   const classifierMap = new Map<string, Array<string>>()
 
@@ -146,6 +170,10 @@ interface PythonRequirement {
   version?: string | null
 }
 
+/**
+ * Parser to be used on a directory with Python source code and (optionally) a `requirements.txt` file.
+ * If no `requirements.txt` file exists then the Parser will attempt to read requirements from the Python source code.
+ */
 export default class PythonParser extends Parser {
 
   async parse (): Promise<SoftwarePackage | null> {
@@ -184,6 +212,9 @@ export default class PythonParser extends Parser {
     return pkg
   }
 
+  /**
+   * Convert a `PythonRequirement` into a `SoftwareApplication` by augmenting with metadata from PyPI
+   */
   private async createApplication (requirement: PythonRequirement): Promise<SoftwareApplication> {
     const softwareApplication = new SoftwareApplication()
     softwareApplication.name = requirement.value
@@ -239,6 +270,9 @@ export default class PythonParser extends Parser {
     return softwareApplication
   }
 
+  /**
+   * Parse a `requirements.txt` file at `path` and return a list of `PythonRequirement`s
+   */
   async parseRequirementsFile (path: string): Promise<Array<PythonRequirement>> {
     const requirementsContent = this.read(path)
 
@@ -275,6 +309,9 @@ export default class PythonParser extends Parser {
     return requirements
   }
 
+  /**
+   * Parse Python source files are find any non-system imports, return this as an array of `PythonRequirement`s.
+   */
   generateRequirementsFromSource (): Array<PythonRequirement> {
     const nonSystemImports = this.findImports().filter(pythonImport => !pythonSystemModules.includes(pythonImport))
 
@@ -285,6 +322,9 @@ export default class PythonParser extends Parser {
     })
   }
 
+  /**
+   * Parse Python source files are find all imports (including system imports).
+   */
   findImports (): Array<string> {
     const files = this.glob(['**/*.py'])
 
@@ -300,9 +340,12 @@ export default class PythonParser extends Parser {
     return imports
   }
 
+  /**
+   * Parse Python a single Python source file for imports.
+   */
   readImportsInFile (path: string): Array<string> {
     const fileContent = this.read(path)
-    const importRegex = /^from ([\w_]+)|^import ([\w_]+)/gm
+    const importRegex = /^\s*from ([\w_]+)|^\s*import ([\w_]+)/gm
     const imports: Array<string> = []
     const fileDirectory = dirname(path)
     while (true) {

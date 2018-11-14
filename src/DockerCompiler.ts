@@ -14,6 +14,10 @@ import IUrlFetcher from './IUrlFetcher'
  * Compiles a project into a Dockerfile, or Docker image
  */
 export default class DockerCompiler {
+
+  /**
+   * The instance of IUrlFetcher to fetch URLs
+   */
   private readonly urlFetcher: IUrlFetcher
 
   constructor (urlFetcher: IUrlFetcher) {

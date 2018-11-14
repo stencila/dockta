@@ -3,7 +3,6 @@ import fs from 'fs'
 import { fixture } from './test-functions'
 
 export default class MockUrlFetcher extends CachingUrlFetcher {
-
   async fetchUrl (url: string, options: any = { json: true }): Promise<any> {
     if (url.indexOf('sysreqs.r-hub.io/pkg') !== -1) {
       return this.getRSysReqs(url)
