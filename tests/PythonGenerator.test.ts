@@ -65,8 +65,6 @@ CMD python3 cmd.py
 
   expectedFixture(fixture('py-generator-generated'), '.requirements.txt')
 
-  expect(fs.existsSync(fixture('py-date/.requirements.txt'))).toBe(false)
-
   cleanup(['py-generator-generated/.Dockerfile', 'py-generator-generated/.requirements.txt'])
 })
 
