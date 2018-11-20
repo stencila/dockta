@@ -58,6 +58,59 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
       }]
     }
 
+    if (url === 'https://sysreqs.r-hub.io/pkg/gsl') {
+      return [
+        {
+          "libgsl": {
+            "sysreqs": [
+              "/Gnu Scientific Library/i",
+              "/\\bgsl\\b/"
+            ],
+            "platforms": {
+              "DEB": [
+                {
+                  "distribution": "Ubuntu",
+                  "releases": [
+                    "precise",
+                    "trusty",
+                    "vivid",
+                    "wily"
+                  ],
+                  "runtime": "libgsl0ldbl",
+                  "buildtime": "libgsl0-dev"
+                },
+                {
+                  "distribution": "Ubuntu",
+                  "runtime": "libgsl2",
+                  "buildtime": "libgsl-dev"
+                },
+                {
+                  "distribution": "Debian",
+                  "releases": [
+                    "squeeze",
+                    "wheezy",
+                    "jessie"
+                  ],
+                  "runtime": "libgsl0ldbl",
+                  "buildtime": "libgsl0-dev"
+                },
+                {
+                  "distribution": "Debian",
+                  "runtime": "libgsl2",
+                  "buildtime": "libgsl-dev"
+                }
+              ],
+              "OSX/brew": "gsl",
+              "RPM": {
+                "runtime": "gsl",
+                "buildtime": "gsl-devel"
+              }
+            }
+          }
+        }
+      ]      
+    }
+
     return []
   }
 
@@ -119,6 +172,31 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
         }
       }
     }
+
+    if (url === 'http://crandb.r-pkg.org/gsl') {
+      return {
+        "Author": "Robin K. S. Hankin; qrng functions by Duncan Murdoch and\nmultimin by Andrew Clausen", 
+        "Date": "2016-12-14", 
+        "Date/Publication": "2017-01-05 11:13:10", 
+        "Depends": {
+            "R": ">= 2.10.0"
+        }, 
+        "Description": "\nAn R wrapper for the special functions and quasi random number\ngenerators of the Gnu Scientific Library\n(http://www.gnu.org/software/gsl/).  See gsl-package.Rd for details of\noverall package organization, and Misc.Rd for some functions that are\nwidely used in the package, and some tips on installation.", 
+        "License": "GPL (>= 2)", 
+        "Maintainer": "Robin K. S. Hankin <hankin.robin@gmail.com>", 
+        "NeedsCompilation": "yes", 
+        "Package": "gsl", 
+        "Packaged": "2017-01-05 07:48:21 UTC; rksh", 
+        "Repository": "CRAN", 
+        "SystemRequirements": "Gnu Scientific Library version >= 1.12", 
+        "Title": "Wrapper for the Gnu Scientific Library", 
+        "Version": "1.9-10.3", 
+        "crandb_file_date": "2017-01-05 10:14:53", 
+        "date": "2017-01-05T10:13:10+00:00", 
+        "releases": []
+      }
+    }
+  
 
     return {}
   }

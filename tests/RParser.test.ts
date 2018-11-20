@@ -26,8 +26,8 @@ test('parse:non-r', async () => {
 })
 
 /**
- * When applied to a folder with a `DESCRIPTION` file and no R source files, parse should return a `SoftwareEnvironment`
- * with `name`, `softwareRequirements` etc populated correctly from the `DESCRIPTION`.
+ * When applied to a folder with only R source files, parse should return a `SoftwareEnvironment`
+ * with `name`, `softwareRequirements` etc populated correctly.
  */
 test('parse:r-source', async () => {
   const parser = new RParser(urlFetcher, fixture('r-source'))
@@ -40,9 +40,8 @@ test('parse:r-source', async () => {
 })
 
 /**
- * When applied to a folder with no DESCRIPTION file but with .R files,
- * parse should generate a `.DESCRIPTION` file and
- * return a `SoftwareEnvironment` with packages listed.
+ * When applied to a folder with a DESCRIPTION file,
+ * parse should return a `SoftwareEnvironment` with the packages listed.
  */
 test('parse:r-requirements', async () => {
   const parser = new RParser(urlFetcher, fixture('r-requirements'))
@@ -66,4 +65,22 @@ test('parse:r-mixed', async () => {
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
   expect(reqs.map(req => req.name)).toEqual(['car', 'coin', 'ggplot2', 'httr', 'lsmeans'])
+})
+
+/**
+ * When applied to the `r-gsl` fixture, handles the sysreqs (which has an 
+ * array of Debian packages) correctly.
+ */
+test('parse:r-gsl', async () => {
+  const parser = new RParser(urlFetcher, fixture('r-gsl'))
+  const environ = await parser.parse() as SoftwarePackage
+
+  const reqs = environ.softwareRequirements
+  expect(reqs).not.toBeNull()
+  expect(reqs.map(req => req.name)).toEqual(['gsl'])
+
+  const gsl = reqs.filter(req => req.name === 'gsl')[0]
+  const gslReqs = gsl.softwareRequirements
+  expect(gslReqs[0].name).toEqual('libgsl-dev')
+  expect(gslReqs[1].name).toEqual('libgsl2')
 })
