@@ -1,8 +1,5 @@
 FROM ubuntu:18.04
 
-ENV TZ="Etc/UTC" \
-    R_LIBS_USER="~/R"
-
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
       apt-transport-https \
@@ -14,6 +11,8 @@ RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
 RUN apt-add-repository "deb https://deb.nodesource.com/node_10.x bionic main" \
  && apt-add-repository "deb https://mran.microsoft.com/snapshot/2018-11-04/bin/linux/ubuntu bionic-cran35/"
+
+ENV TZ="Etc/UTC"
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -29,7 +28,6 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
-USER dockteruser
 WORKDIR /home/dockteruser
 
 # dockter
@@ -40,10 +38,12 @@ COPY .DESCRIPTION DESCRIPTION
 
 RUN npm install package.json \
  && pip3 install --user --requirement requirements.txt \
- && mkdir -p ~/R && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
+ && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
 COPY script.py script.py
 COPY script.R script.R
+
+USER dockteruser
 
 CMD python3 script.py \
  && Rscript script.R

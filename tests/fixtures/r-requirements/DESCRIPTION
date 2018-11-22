@@ -1,0 +1,8 @@
+Package: rrequirements
+Description:
+  A test project with just a DESCRIPTION and no source.
+Version: 1.0.0
+Date: 2017-10-19
+Imports:
+  packageone,
+  packagetwo

@@ -1,11 +1,12 @@
 // @ts-ignore
+import builtins from 'builtin-modules'
+// @ts-ignore
 import detective from 'detective'
 import path from 'path'
 import semver from 'semver'
 
 import Parser from './Parser'
-import { SoftwarePackage, Person } from '@stencila/schema'
-import { version } from 'punycode'
+import { Person, SoftwarePackage } from '@stencila/schema'
 
 /**
  * Dockter `Parser` class for Node.js.
@@ -31,8 +32,10 @@ export default class JavascriptParser extends Parser {
           const code = this.read(file)
           const requires = detective(code)
           for (let require of requires) {
-            // @ts-ignore
-            data.dependencies[require] = 'latest'
+            if (!builtins.includes(require)) {
+              // @ts-ignore
+              data.dependencies[require] = 'latest'
+            }
           }
         }
         return this.createPackage(data)
@@ -101,7 +104,7 @@ export default class JavascriptParser extends Parser {
             // If we can't determine a minimum version from the versionRange
             // (e.g. because it's a github url) then try to get latest
             let version = 'latest'
-            if (versionRange !== 'latest' || versionRange !== '*') {
+            if (versionRange !== 'latest' && versionRange !== '*') {
               const range = semver.validRange(versionRange as string)
               if (range) {
                 const match = range.match(/(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/)

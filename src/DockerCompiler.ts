@@ -8,11 +8,24 @@ import parsers from './parsers'
 import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
 import DockerExecutor from './DockerExecutor'
+import IUrlFetcher from './IUrlFetcher'
 
+/**
+ * Compiles a project into a Dockerfile, or Docker image
+ */
 export default class DockerCompiler {
 
   /**
-   * Compile a folder into a Docker image
+   * The instance of IUrlFetcher to fetch URLs
+   */
+  private readonly urlFetcher: IUrlFetcher
+
+  constructor (urlFetcher: IUrlFetcher) {
+    this.urlFetcher = urlFetcher
+  }
+
+  /**
+   * Compile a project
    *
    * @param source The folder, Dockerfile or `SoftwareEnvironment` to compile
    * @param build Should the Docker image be built?
@@ -33,7 +46,7 @@ export default class DockerCompiler {
     if (fs.existsSync(path.join(folder, 'Dockerfile'))) {
       // Dockerfile found so use that
       dockerfile = 'Dockerfile'
-      environ = await new DockerParser(folder).parse()
+      environ = await new DockerParser(this.urlFetcher, folder).parse()
     } else {
       if (fs.existsSync(path.join(folder, 'environ.jsonld'))) {
         // Read existing environment from file
@@ -46,7 +59,7 @@ export default class DockerCompiler {
         environ = new SoftwareEnvironment()
         environ.name = path.basename(folder)
         for (let ParserClass of parsers) {
-          const parser = new ParserClass(folder)
+          const parser = new ParserClass(this.urlFetcher, folder)
           const pkg = await parser.parse()
           if (pkg) environ.softwareRequirements.push(pkg)
         }
@@ -58,7 +71,7 @@ export default class DockerCompiler {
 
       // Generate Dockerfile
       dockerfile = '.Dockerfile'
-      new DockerGenerator(environ, folder).generate(comments, stencila)
+      new DockerGenerator(this.urlFetcher, environ, folder).generate(comments, stencila)
     }
 
     if (build) {
@@ -72,7 +85,19 @@ export default class DockerCompiler {
     return environ
   }
 
-  async execute (source: string): Promise<string> {
+  /**
+   * Execute the project by compiling, building and running a Docker container for it
+   *
+   * @param source The project to execute
+   */
+  async execute (source: string) {
+    let folder
+    if (source.substring(0, 7) === 'file://') {
+      folder = source.substring(7)
+    } else {
+      folder = source
+    }
+
     // Compile the environment first
     let environ = await this.compile(source)
     if (!environ) throw new Error('Environment not created')
@@ -80,8 +105,6 @@ export default class DockerCompiler {
 
     // Execute the environment's image (which is built in compile())
     const executor = new DockerExecutor()
-    const result = await executor.execute(environ.name)
-
-    return result
+    return executor.execute(environ.name, folder)
   }
 }

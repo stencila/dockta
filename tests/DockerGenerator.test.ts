@@ -1,7 +1,9 @@
 import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 
-import fixture from './fixture'
 import DockerGenerator from '../src/DockerGenerator'
+import MockUrlFetcher from './MockUrlFetcher'
+
+const urlFetcher = new MockUrlFetcher()
 
 /**
  * When applied to an empty environment, generate should return
@@ -9,7 +11,7 @@ import DockerGenerator from '../src/DockerGenerator'
  */
 test('generate:empty', async () => {
   const environ = new SoftwareEnvironment()
-  const generator = new DockerGenerator(environ)
+  const generator = new DockerGenerator(urlFetcher, environ)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
 
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
@@ -36,11 +38,12 @@ test('generate:packages', async () => {
   const pkg2 = new SoftwarePackage()
   pkg2.name = 'bokeh'
   pkg2.runtimePlatform = 'Python'
+  pkg2.softwareRequirements = []
 
   const environ = new SoftwareEnvironment()
   environ.datePublished = '2017-01-01'
   environ.softwareRequirements = [pkg1, pkg2]
-  
-  const generator = new DockerGenerator(environ)
+
+  const generator = new DockerGenerator(urlFetcher, environ)
   expect(generator.aptPackages('18.04')).toEqual(['libxml2-dev', 'python3', 'python3-pip', 'r-base'])
 })

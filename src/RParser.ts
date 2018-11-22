@@ -175,6 +175,7 @@ export default class RParser extends Parser {
     // Required system dependencies are obtained from https://sysreqs.r-hub.io and
     // added as `softwareRequirements` with "deb" as `runtimePlatform`
     const sysreqs = await this.fetch(`https://sysreqs.r-hub.io/pkg/${name}`)
+
     for (let sysreq of sysreqs) {
       const keys = Object.keys(sysreq)
       if (keys.length > 1) throw new Error(`Expected on one key for each sysreq but got: ${keys.join(',')}`)

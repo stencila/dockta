@@ -88,7 +88,7 @@ RUN apt-get update \\
     if (comments) {
       dockerfile += `
 # It's good practice to run Docker images as a non-root user.
-# This section creates a new user and it's home directory as the default working directory.`
+# This section creates a new user and its home directory as the default working directory.`
     }
     dockerfile += `
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
@@ -142,18 +142,31 @@ WORKDIR /home/dockteruser
 
   // Methods that are overridden in derived classes
 
+  /**
+   * Does this generator apply to the package?
+   */
   applies (): boolean {
     return false
   }
 
+  /**
+   * Name of the base image
+   */
   baseName (): string {
     return 'ubuntu'
   }
 
+  /**
+   * Version of the base image
+   */
   baseVersion (): string {
     return '18.04'
   }
 
+  /**
+   * Get the version name for a base image
+   * @param baseIdentifier The base image name e.g. `ubuntu:18.04`
+   */
   baseVersionName (baseIdentifier: string): string {
     let [name, version] = baseIdentifier.split(':')
     const lookup: { [key: string]: string } = {
@@ -164,18 +177,27 @@ WORKDIR /home/dockteruser
     return lookup[version]
   }
 
+  /**
+   * Generate a base image identifier
+   */
   baseIdentifier (): string {
     const joiner = this.baseVersion() === '' ? '' : ':'
 
     return `${this.baseName()}${joiner}${this.baseVersion()}`
   }
 
+  /**
+   * A list of environment variables to set in the image
+   * as `name`, `value` pairs
+   *
+   * @param sysVersion The Ubuntu system version being used
+   */
   envVars (sysVersion: string): Array<[string, string]> {
     return []
   }
 
   /**
-   * The Bash command to run to install apt keys
+   * A Bash command to run to install required apt keys
    *
    * @param sysVersion The Ubuntu system version being used
    */
@@ -183,16 +205,26 @@ WORKDIR /home/dockteruser
     return
   }
 
+  /**
+   * A list of any required apt repositories
+   *
+   * @param sysVersion The Ubuntu system version being used
+   */
   aptRepos (sysVersion: string): Array<string> {
     return []
   }
 
+  /**
+   * A list of any required apt packages
+   *
+   * @param sysVersion The Ubuntu system version being used
+   */
   aptPackages (sysVersion: string): Array<string> {
     return []
   }
 
   /**
-   * The Bash command to run to install Stencila execution host package/s
+   * A Bash command to run to install Stencila execution host package/s
    *
    * @param sysVersion The Ubuntu system version being used
    */

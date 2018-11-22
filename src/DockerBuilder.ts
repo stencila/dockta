@@ -21,17 +21,19 @@ interface DockerMessage {
 /**
  * Builds Docker images from Dockerfiles
  *
- * The Dockerfile may be handwritten, or generated
- * from requirements files or source code.
+ * Detect's the special `# dockter` comment and,
+ *  - sends the instructions prior to the comment to Docker to be built as normal and
+ *  - applies all following instructions into a single layer
  */
 export default class DockerBuilder {
 
-  private docker: Docker
-
-  constructor () {
-    this.docker = new Docker()
-  }
-
+  /**
+   * Build a Docker image for a project
+   *
+   * @param dir The project directory
+   * @param name The name to tag the image with
+   * @param dockerfile The name of the Dockerfile within `dir` to use for the build
+   */
   async build (dir: string, name?: string, dockerfile: string = 'Dockerfile') {
     if (!name) {
       const hash = crypto.createHash('md5').update(dir).digest('hex')
@@ -42,14 +44,18 @@ export default class DockerBuilder {
     let instructions = parser.parse(content, { includeComments: true })
 
     // Collect all instructions prior to any `# dockter` comment into a
-    // new Dockerfile and store remaining instructions for special handling
+    // new Dockerfile and store remaining instructions for special handling.
+    // Keep track of `WORKDIR` and `USER` instructions for consistent handling of those
     let workdir = '/'
+    let user = 'root'
     let dockterize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
       if (instruction.name === 'WORKDIR') {
         workdir = path.join(workdir, instruction.args as string)
+      } else if (instruction.name === 'USER') {
+        user = instruction.args as string
       } else if (instruction.name === 'COMMENT') {
         const arg = instruction.args as string
         if (arg.match(/^# *dockter/)) {
@@ -87,8 +93,10 @@ export default class DockerBuilder {
     // above tar stream generation
     // targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
 
+    const docker = new Docker()
+
     const messages: Array<any> = []
-    const stream = await this.docker.buildImage(targz, {
+    const stream = await docker.buildImage(targz, {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
       t: name + ':system'
@@ -147,7 +155,7 @@ export default class DockerBuilder {
     if (errors.length) throw new Error(`There was an error when building the image: ${errors.map(error => error.message).join(',')}`)
 
     // Get information on the current
-    const image = this.docker.getImage(name + ':latest')
+    const image = docker.getImage(name + ':latest')
     let appLayer
     let lastSystemLayer
     try {
@@ -169,7 +177,7 @@ export default class DockerBuilder {
     }
 
     // Create a container from the layer and start it up
-    let container = await this.docker.createContainer({
+    let container = await docker.createContainer({
       Image: layer,
       Tty: true,
       Cmd: ['/bin/bash']
@@ -179,7 +187,6 @@ export default class DockerBuilder {
     // Handle the remaining instructions
     let count = 1
     let changes = ''
-    let user
     for (let instruction of instructions) {
       const step = `Dockter ${count}/${instructions.length} :`
       switch (instruction.name) {
@@ -218,6 +225,7 @@ export default class DockerBuilder {
             Cmd: ['bash', '-c', `${script}`],
             AttachStdout: true,
             AttachStderr: true,
+            User: user,
             Tty: true
           })
           await exec.start()

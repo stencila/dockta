@@ -1,7 +1,5 @@
 # Dockter : a Docker image builder for researchers
 
-> ✨ Help us [choose a better name](https://github.com/stencila/dockter/issues/37) for this project! ✨
-
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
 [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
@@ -26,8 +24,8 @@ Dockter makes it easier for researchers to create Docker images for their resear
     + [Node.js](#nodejs)
     + [JATS](#jats)
     + [Jupyter](#jupyter)
-  * [Quicker re-installation of language packages](#quicker-re-installation-of-language-packages)
-    + [An example](#an-example)
+  * [Automatically determines system requirements](#automatically-determines-system-requirements)
+  * [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
   * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
   * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
 - [Install](#install)
@@ -40,6 +38,8 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Compile a project](#compile-a-project)
   * [Build a Docker image](#build-a-docker-image)
   * [Execute a Docker image](#execute-a-docker-image)
+  * [Docter who?](#docter-who)
+- [Roadmap](#roadmap)
 - [Contribute](#contribute)
 - [See also](#see-also)
 - [FAQ](#faq)
@@ -69,8 +69,6 @@ The `Package` and `Version` fields are required in a `DESCRIPTION` file. The `Da
 
 If the folder does not contain a `DESCRIPTION` file then Dockter will scan all the R files (files with the extension `.R` or `.Rmd`) in the folder for package import or usage statements, like `library(package)` and `package::function()`, and create a `.DESCRIPTION` file for you.
 
-Dockter checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages (e.g. `libxml-dev`) and installs those too. No more trial and error of build, fail, add dependency, repeat... cycles!
-
 #### Python
 
 If the folder contains a [`requirements.txt`](https://pip.readthedocs.io/en/1.1/requirements.html) file, or a 🦄 [#4](https://github.com/stencila/dockter/issues/4) [`Pipfile`](https://github.com/pypa/pipfile), Dockter will copy it into the Docker image and use `pip` to install the specified packages.
@@ -92,7 +90,37 @@ If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_
 If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockter/issues/9) Dockter will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also  🦄 [#10](https://github.com/stencila/dockter/issues/10) add the necesary Jupyter kernels to the built Docker image.
 
 
-### Quicker re-installation of language packages
+### Automatically determines system requirements
+
+One of the headaches researchers face when hand writing Dockerfiles is figuring out which system dependencies your project needs. Often this involves a lot of trial and error. 
+
+Dockter automatically checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages and installs those into the image. For example, let's say you have a project with an R script that requires the `rgdal` package for geospatial analyses,
+
+```R
+library(rgdal)
+```
+
+When you run `dockter compile` in this project, Dockter will generate a Dockerfile with the following section which installs R, plus the three system dependencies required `gdal-bin`, `libgdal-dev`, and `libproj-dev`:
+
+```Dockerfile
+# This section installs system packages required for your project
+# If you need extra system packages add them here.
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      gdal-bin \
+      libgdal-dev \
+      libproj-dev \
+      r-base \
+ && apt-get autoremove -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+```
+
+For R, Dockter does this by querying the https://sysreqs.r-hub.io/ database. For Python, Dockter includes a mapping of system requirements of packages that users can [contribute to](CONTRIBUTING.md#python-system-dependencies).
+
+No more trial and error of build, fail, add dependency, repeat... cycles!
+
+### Faster re-installation of language packages
 
 If you have built a Docker image before, you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
 
@@ -101,8 +129,6 @@ The reason this happens is that, due to Docker's layered filesystem, when you up
 Dockter takes a different approach. It leaves the installation of language packages to the language package managers: Python's [`pip`](https://pypi.org/project/pip/) , Node.js's `npm`, and R's `install.packages`. These package managers are good at the job they were designed for - to check which packages need to be updated and to only update them. The result is much faster rebuilds, especially for R packages, which often involve compilation.
 
 Dockter does this by looking for a special `# dockter` comment in a `Dockerfile`. Instead of throwing away layers, it executes all instructions after this comment in the same layer - thus reusing packages that were previously installed.
-
-#### An example
 
 Here's a simple motivating [example](fixtures/tests/py-pandas). It's a Python project with a `requirements.txt` file which specifies that the project depends upon `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
 
@@ -217,7 +243,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 - *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
-- *Image build*: Dockter manage builds use a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
+- *Image building*: Dockter manages incremental builds using a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
 
 ## Install
@@ -328,12 +354,41 @@ If you want to build your image with bare Docker rename `.Dockerfile` to `Docker
 
 ### Execute a Docker image
 
-You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your image in one step:
+You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your image in one:
 
 ```bash
 > dockter execute
 2018-10-23 00:58:39
 ```
+
+Dockter's `execute` also mounts the folder into the container and sets the users and group ids. This allows you to read and write files into the project folder from within the container. It's equivaluent to running Docker with these arguments:
+
+```bash
+docker run --rm --volume $(pwd):/work --workdir=/work --user=$(id -u):$(id -g) <image>
+```
+
+### Docter who?
+
+Dockter compiles a meta-data tree of all the packages that your project relies on. Use the `who` 🦄 [#55](https://github.com/stencila/dockter/issues/55) command to get a list of the authors of those packages:
+
+```bash
+> dockter who
+Roger Bivand (rgdal, sp), Tim Keitt (rgdal), Barry Rowlingson (rgdal), Edzer Pebesma (sp)
+```
+
+Use the  `depth` option to restrict the listing to a particular depth in the dependency tree. For example, to list the authors of the packages that your project directly relies upon use:
+
+
+```bash
+> dockter who --depth=1
+```
+
+## Roadmap
+
+Dockter is in initial development and mostly intended as a proof of concept of building reproducible computing environments from shared, cross-language schemas for decribing software packages, such as [CodeMeta](https://codemeta.github.io/). Our plan is to extend this approach, from the current target of building Docker images, to the building of Nix environments.
+
+- Dec 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
+- Jan 2018: feactor out `Parser` and compilation code into a separate repo to be used by Docker and it's sister project targettting Nix
 
 ## Contribute
 
@@ -360,11 +415,15 @@ Dockter is similar to `repo2docker`, `containerit`, and `reprozip` in that it is
 
 - by default, but optionally, installs Stencila packages so that Stencila client interfaces can execute code in the container.
 
+The approach taken in Dockter to building Docker images is a mix of Dockerfile generation, as in `repo2docker`, and code injection and incremental builds as in `source-to-image`.
+
 `reprozip` and its extension `reprounzip-docker` may be a better choice if you want to share your existing local environment as a Docker image with someone else.
 
-`containerit` might suit you better if you only need support for R and don't want managed packaged installation
+`containerit` might suit you better if you only need support for R and don't want managed packaged installation.
 
-`repo2docker` is likely to be better choice if you want to run Jupyter notebooks or RStudio in your container and don't need source code scanning to detect your requirements 
+`repo2docker` is probably a better choice if you want to run Jupyter notebooks or RStudio in your container and don't need source code scanning to detect your requirements.
+
+`source-to-image` might suit you better if your focus is on web development (e.g. Ruby, Node.js) and want a more stable, feature complete implementation of incremental builds.
 
 If you don't want to build a Docker image and just want a tool that helps determining the package dependencies of your source code check out:
 
@@ -381,11 +440,15 @@ Having an intermediate representation of the software environment allows this da
 
 *Why is Dockter a Node.js package?*
 
-We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments.
+We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments. We already had familiarity with using `dockerode` the Node.js package that we use to talk to Docker for incremental builds and container execution.
 
 *Why is Dockter implemented in Typescript?*
 
-We chose Typescript because it's type-checking and type-annotations reduce the number of runtime errors and improves developer experience.
+Typescript's type-checking and type-annotations can reduce the number of runtime errors and improves developer experience. For this partiular project, we wanted to use the Typescript type defintions for `SoftwarePackage`, `CreativeWork`, `Person` etc that are defined in [stencila/schema](https://github.com/stencila/schema).
+
+*Why didn't you use, and contribute to, an existing project rather than creating a new tool*
+
+When existing projects don't take the approach or provide the features you want, it's often a difficult decision to make whether to invest the time to understand and refactor an existing code base or to start fresh. In this case, we chose to start fresh for the reasons and differences outlined above. We felt it would take too much refactoring of existing projects to shoehorn in the approach we wanted to take and we wanted to be able to resuse much of this code in another sister project targetting Nix environments.
 
 *I'd love to help out! Where do I start?*
 
@@ -394,11 +457,13 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) (OK, so this isn't asked *that* frequentl
 
 ## Acknowledgments
 
-Dockter was inspired by similar tools for researchers including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
+Dockter was inspired by, and combines ideas from, several similar tools including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker), [`source-to-image`](https://github.com/openshift/source-to-image) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
 
+ - [CodeMeta](https://codemeta.github.io/)
  - [`crandb`](https://github.com/metacran/crandb)
  - [`dockerode`](https://www.npmjs.com/package/dockerode)
  - [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser)
+ - [`npm/registry`](https://github.com/npm/registry)
  - [`pypa`](https://warehouse.pypa.io)
  - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
  - and of course, [Docker](https://www.docker.com/)

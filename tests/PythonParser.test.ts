@@ -1,36 +1,26 @@
-import fixture from './fixture'
-import fs from 'fs'
+import { fixture } from './test-functions'
 
 import PythonParser, { RequirementType } from '../src/PythonParser'
 import { ComputerLanguage, OperatingSystem, Person, SoftwareApplication, SoftwarePackage } from '@stencila/schema'
-import { REQUEST_CACHE_DIR } from '../src/Doer'
+
+import MockUrlFetcher from './MockUrlFetcher'
+
+const urlFetcher = new MockUrlFetcher()
 
 describe('PythonParser', () => {
-  beforeEach(() => {
-    if (fs.existsSync(REQUEST_CACHE_DIR)) {
-      for (let item of fs.readdirSync(REQUEST_CACHE_DIR)) {
-        try {
-          fs.unlinkSync(REQUEST_CACHE_DIR + '/' + item)
-        } catch (e) {
-          // Cleanups might execute in parallel in multiple test runs so don't worry if remove fails
-        }
-      }
-    }
-  })
-
   /**
    * When applied to an empty folder, parse should return null.
    */
   test('parse:empty', async () => {
-    const parser = new PythonParser(fixture('empty'))
+    const parser = new PythonParser(urlFetcher, fixture('empty'))
     expect(await parser.parse()).toBeNull()
   })
 
   /**
    * When applied to a folder with no Python code, parse should return null.
    */
-  test('parse:r-date', async () => {
-    const parser = new PythonParser(fixture('r-date'))
+  test('parse:non-py', async () => {
+    const parser = new PythonParser(urlFetcher, fixture('r-date'))
     expect(await parser.parse()).toBeNull()
   })
 
@@ -38,8 +28,8 @@ describe('PythonParser', () => {
    * requirements.txt parsing should work with all features, skipping comment lines, recursive parsing, and allowing URL
    * bases requirements
    */
-  test('parse:example-requirements', async () => {
-    const parser = new PythonParser(fixture('py-requirements-example'))
+  test('parse:py-requirements', async () => {
+    const parser = new PythonParser(urlFetcher, fixture('py-requirements'))
 
     const requirementsContent = await parser.parseRequirementsFile('requirements.txt')
 
@@ -102,8 +92,8 @@ describe('PythonParser', () => {
    * When applied to a folder with a requirements file,
    * parse should return the SoftwareEnvironment.
    */
-  test.skip('parse:py-pandas', async () => {
-    const parser = new PythonParser(fixture('py-date'))
+  test('parse:py-requirements', async () => {
+    const parser = new PythonParser(urlFetcher, fixture('py-mixed'))
 
     const arrowPackage = new SoftwareApplication()
     arrowPackage.name = 'arrow'
@@ -123,8 +113,9 @@ describe('PythonParser', () => {
     arrowPackage.description = 'This is the long description that will be used in priority over description'
 
     const environ = new SoftwarePackage()
-    environ.name = 'py-date'
+    environ.name = 'py-mixed'
     environ.softwareRequirements = [arrowPackage]
+    environ.runtimePlatform = 'Python'
 
     expect(await parser.parse()).toEqual(environ)
   })
@@ -133,13 +124,27 @@ describe('PythonParser', () => {
    * The parser should be able to go through a directory of Python files without a requirements.txt file and understand
    * the imports that are required by parsing the source files directly.
    */
-  test('parse:py-generated-requirements', async () => {
-    const parser = new PythonParser(fixture('py-generated-requirements'))
-    let environ = await parser.parse()
+  test('parse:py-source', async () => {
+    const parser = new PythonParser(urlFetcher, fixture('py-source'))
+    const environ = await parser.parse()
     expect(environ).not.toBeNull()
-    let requirementNames = environ!.softwareRequirements.map(requirement => requirement.name)
+    const requirementNames = environ!.softwareRequirements.map(requirement => requirement.name)
     expect(requirementNames.length).toEqual(2)
     expect(requirementNames).toContain('django')
     expect(requirementNames).toContain('requests')
+  })
+
+  /**
+   * If a directory has both a `requirements.txt` file and Python source files, the `PythonParser` should only read
+   * requirements from the `requirements.txt` and should not parse the source code.
+   */
+  test('parse:py-mixed', async () => {
+    const parser = new PythonParser(urlFetcher, fixture('py-mixed'))
+    const environ = await parser.parse()
+    expect(environ).not.toBeNull()
+
+    expect(environ!.softwareRequirements.length).toEqual(1)
+    expect(environ!.softwareRequirements[0].name).toEqual('arrow')
+    expect(environ!.softwareRequirements[0].version).toEqual('==0.12.1')
   })
 })

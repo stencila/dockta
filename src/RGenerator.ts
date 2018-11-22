@@ -1,16 +1,20 @@
 import { SoftwarePackage } from '@stencila/schema'
 
 import PackageGenerator from './PackageGenerator'
+import IUrlFetcher from './IUrlFetcher'
 
 /**
  * A Dockerfile generator for R packages
  */
 export default class RGenerator extends PackageGenerator {
 
+  /**
+   * Date used to pin the CRAN mirror used
+   */
   date: string
 
-  constructor (pkg: SoftwarePackage, folder?: string) {
-    super(pkg, folder)
+  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string) {
+    super(urlFetcher, pkg, folder)
 
     // Default to yesterday's date (to ensure MRAN is available for the date)
     // Set here as it is required in two methods below
@@ -24,10 +28,6 @@ export default class RGenerator extends PackageGenerator {
 
   applies (): boolean {
     return this.package.runtimePlatform === 'R'
-  }
-
-  baseVersion (): string {
-    return '18.04'
   }
 
   envVars (sysVersion: string): Array<[string, string]> {
@@ -58,7 +58,9 @@ export default class RGenerator extends PackageGenerator {
       'r-base'
     ]
 
-    // Recurse through `softwareRequirements` and find any deb packages
+    /**
+     * Recurse through `softwareRequirements` and find any deb packages
+     */
     function find (pkg: any) {
       if (pkg.runtimePlatform !== 'R' || !pkg.softwareRequirements) return
       for (let subpkg of pkg.softwareRequirements) {

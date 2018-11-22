@@ -1,8 +1,9 @@
-import { SoftwarePackage, SoftwareEnvironment } from '@stencila/schema'
+import { SoftwarePackage } from '@stencila/schema'
 import path from 'path'
 
 import PackageGenerator from './PackageGenerator'
 import PythonSystemPackageLookup from './PythonSystemPackageLookup'
+import IUrlFetcher from './IUrlFetcher'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
@@ -10,13 +11,20 @@ const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
  * A Dockerfile generator for Python packages
  */
 export default class PythonGenerator extends PackageGenerator {
+  /**
+   * The Python Major version, i.e. 2 or 3
+   */
   private readonly pythonMajorVersion: number
+
+  /**
+   * An instance of `PythonSystemPackageLookup` with which to look up system dependencies of Python packages
+   */
   private readonly systemPackageLookup: PythonSystemPackageLookup
 
   // Methods that override those in `Generator`
 
-  constructor (pkg: SoftwarePackage, folder?: string, pythonMajorVersion: number = 3) {
-    super(pkg, folder)
+  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string, pythonMajorVersion: number = 3) {
+    super(urlFetcher, pkg, folder)
 
     this.pythonMajorVersion = pythonMajorVersion
     this.systemPackageLookup = PythonSystemPackageLookup.fromFile(path.join(__dirname, 'PythonSystemDependencies.json'))
@@ -30,10 +38,16 @@ export default class PythonGenerator extends PackageGenerator {
     return this.pythonMajorVersion === 2 ? '' : `${this.pythonMajorVersion}`
   }
 
+  /**
+   * Check if this Generator's package applies (if it is Python).
+   */
   applies (): boolean {
     return this.package.runtimePlatform === 'Python'
   }
 
+  /**
+   * Generate a list of system (apt) packages by looking up with `this.systemPackageLookup`.
+   */
   aptPackages (sysVersion: string): Array<string> {
     let aptRequirements: Array<string> = []
 
@@ -56,20 +70,30 @@ export default class PythonGenerator extends PackageGenerator {
     )
   }
 
+  /**
+   * Build the contents of a `requirements.txt` file by joining the Python package name to its version specifier.
+   */
   generateRequirementsContent (): string {
     if (!this.package.softwareRequirements) {
       return ''
     }
 
     return this.filterPackages('Python').map(
-      requirement => `${requirement.name}${requirement.version}`
+        requirement => `${requirement.name}${requirement.version}`
     ).join('\n')
   }
 
+  /**
+   * Get the pip command to install the Stencila package
+   */
   stencilaInstall (sysVersion: string): string | undefined {
     return `pip${this.pythonVersionSuffix()} install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip`
   }
 
+  /**
+   * Write out the generated requirements content to `GENERATED_REQUIREMENTS_FILE` or none exists, just instruct the
+   * copy of a `requirements.txt` file as part of the Dockerfile. If that does not exist, then no COPY should be done.
+   */
   installFiles (sysVersion: string): Array<[string, string]> {
     let requirementsContent = this.generateRequirementsContent()
 
@@ -85,6 +109,9 @@ export default class PythonGenerator extends PackageGenerator {
     return []
   }
 
+  /**
+   * Generate the right pip command to install the requirements, appends the correct Python major version to `pip`.
+   */
   installCommand (sysVersion: string): string | undefined {
     return `pip${this.pythonVersionSuffix()} install --user --requirement requirements.txt`
   }
