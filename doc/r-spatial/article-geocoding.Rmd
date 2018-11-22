@@ -14,6 +14,9 @@ Dockter can help with that by running through this RMarkdown file and checking f
 
 
 ```{r  echo = T, results = 'hide'}}
+library("sp")
+library("rgdal")
+library("RColorBrewer")
 libs <- c("ggmap", "readr", "sp", "rgdal", "dplyr", "XML", "hexbin", "classInt", "RColorBrewer")
 lapply(libs, require, character.only=T, quietly = T)
 ```
@@ -24,19 +27,7 @@ The package `rgdal` [requires two libraries to be installed within the system](h
 
 # Getting the data
 
-
-```{r}
-setwd(".")
-```
-
-Shapefile of Philadelphia Census Tracts: Philly3.zip (new attributes added)
-Table with Lat/Long for Philadelphia Homicides: PhillyHomicides.csv
-
-
-```{r}
-#download.file("",temp)
-```
-
+The data file is a Shapefile of Philadelphia Census Tracts: *Philly3.shp` (new attributes added)
 
 
 ```{r}

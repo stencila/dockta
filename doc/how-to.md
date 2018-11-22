@@ -42,6 +42,9 @@ The software environment file is a file in `JSON` or `yaml` format with comprehe
 Dockter parses the folder with the R project for `R` and `Rmd` files and extracts the relevant information.
 
  * For each R package installed or loaded, the meta data is retrieved from [CRAN](http://crandb.r-pkg.org).
+    - The packages must be installed and loaded using the standard R command syntax: `install.packages()` and `library()`. If the R source code
+    includes a non-standard syntax, for example to load a number of packages in one go using `lapply()`, Dockter will not be able to recognize it and
+    the information about the required packages will not be recorded.
  * System dependencies for each package are obtained from [R-Hub](https://sysreqs.r-hub.io/pkg/xml2).
  * Meta data about the authors, title, abstract and so on.
 
