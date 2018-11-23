@@ -1,7 +1,7 @@
 import { fixture } from './test-functions'
 
 import PythonParser, { RequirementType } from '../src/PythonParser'
-import { ComputerLanguage, OperatingSystem, Person, SoftwareApplication, SoftwarePackage } from '@stencila/schema'
+import { ComputerLanguage, OperatingSystem, Person, SoftwarePackage } from '@stencila/schema'
 
 import MockUrlFetcher from './MockUrlFetcher'
 
@@ -95,7 +95,7 @@ describe('PythonParser', () => {
   test('parse:py-requirements', async () => {
     const parser = new PythonParser(urlFetcher, fixture('py-mixed'))
 
-    const arrowPackage = new SoftwareApplication()
+    const arrowPackage = new SoftwarePackage()
     arrowPackage.name = 'arrow'
     arrowPackage.version = '==0.12.1'
     arrowPackage.runtimePlatform = 'Python'
