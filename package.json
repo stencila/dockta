@@ -74,7 +74,7 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
-    "@stencila/schema": "^0.2.4",
+    "@stencila/schema": "^0.3.0",
     "builtin-modules": "^3.0.0",
     "detective": "^5.1.0",
     "docker-file-parser": "^1.0.4",
