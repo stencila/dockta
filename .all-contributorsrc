@@ -50,6 +50,18 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "giorgiosironi",
+      "name": "Giorgio Sironi",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/160299?v=4",
+      "profile": "http://giorgiosironi.com",
+      "contributions": [
+        "review",
+        "bug",
+        "ideas",
+        "question"
+      ]
     }
   ]
 }
