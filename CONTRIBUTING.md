@@ -114,6 +114,21 @@ npm run docs # or, make docs
 open docs/index.html
 ```
 
+### Contributors list
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Please add contribuors, including yourself, using,
+
+```bash
+# Add new contributor <username>, who made a contribution of type <contribution>
+npm run contributors:add <username> <contribution>
+# Example:
+npm run contributors:add octocat code,doc
+# Regenerate the readme table
+npm run contributors:generate
+```
+
+See the list of contribution codes [here](https://www.npmjs.com/package/all-contributors-cli#addupdate-contributors).
+
 ### Commit messages
 
 Please use [conventional changelog](https://github.com/conventional-changelog/conventional-changelog) style commit messages e.g. `docs(readme): fixed spelling mistake`. See [the specifications](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) for full details. This help with automated semantic versioning. 

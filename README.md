@@ -1,5 +1,6 @@
 # Dockter : a Docker image builder for researchers
 
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
 [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
@@ -390,9 +391,15 @@ Dockter is in initial development and mostly intended as a proof of concept of b
 - Dec 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
 - Jan 2018: feactor out `Parser` and compilation code into a separate repo to be used by Docker and it's sister project targettting Nix
 
-## Contribute
+## Contributors
 
-We 💕 contributions! All contributions: ideas 💡, bug reports 🐛, documentation 🗎, code 💾. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
+We 💕 contributions! All contributions: ideas 🤔, examples 💡, bug reports 🐛, documentation 📖, code 💻, questions 💬. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Thanks 🙏 to these wonderful ✨ people who have contributed so far 💖!
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars3.githubusercontent.com/u/426784?v=4" width="100px;"/><br /><sub><b>Remi Rampin</b></sub>](https://remirampin.com/)<br />[🐛](https://github.com/stencila/dockter/issues?q=author%3Aremram44 "Bug reports") [💻](https://github.com/stencila/dockter/commits?author=remram44 "Code") [🤔](#ideas-remram44 "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/292725?v=4" width="100px;"/><br /><sub><b>Ben</b></sub>](http://bbit.co.nz)<br />[💻](https://github.com/stencila/dockter/commits?author=beneboy "Code") [🤔](#ideas-beneboy "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/2358535?v=4" width="100px;"/><br /><sub><b>Aleksandra Pawlik</b></sub>](http://stenci.la)<br />[💻](https://github.com/stencila/dockter/commits?author=apawlik "Code") [💡](#example-apawlik "Examples") [🐛](https://github.com/stencila/dockter/issues?q=author%3Aapawlik "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1152336?v=4" width="100px;"/><br /><sub><b>Nokome Bentley</b></sub>](https://github.com/nokome)<br />[💻](https://github.com/stencila/dockter/commits?author=nokome "Code") [⚠️](https://github.com/stencila/dockter/commits?author=nokome "Tests") |
+| :---: | :---: | :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## See also
 
@@ -467,3 +474,15 @@ Dockter was inspired by, and combines ideas from, several similar tools includin
  - [`pypa`](https://warehouse.pypa.io)
  - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
  - and of course, [Docker](https://www.docker.com/)
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars3.githubusercontent.com/u/426784?v=4" width="100px;"/><br /><sub><b>Remi Rampin</b></sub>](https://remirampin.com/)<br />[🐛](https://github.com/stencila/dockter/issues?q=author%3Aremram44 "Bug reports") [💻](https://github.com/stencila/dockter/commits?author=remram44 "Code") [🤔](#ideas-remram44 "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/292725?v=4" width="100px;"/><br /><sub><b>Ben</b></sub>](http://bbit.co.nz)<br />[💻](https://github.com/stencila/dockter/commits?author=beneboy "Code") [🤔](#ideas-beneboy "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/2358535?v=4" width="100px;"/><br /><sub><b>Aleksandra Pawlik</b></sub>](http://stenci.la)<br />[💻](https://github.com/stencila/dockter/commits?author=apawlik "Code") [💡](#example-apawlik "Examples") [🐛](https://github.com/stencila/dockter/issues?q=author%3Aapawlik "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1152336?v=4" width="100px;"/><br /><sub><b>Nokome Bentley</b></sub>](https://github.com/nokome)<br />[💻](https://github.com/stencila/dockter/commits?author=nokome "Code") [⚠️](https://github.com/stencila/dockter/commits?author=nokome "Tests") |
+| :---: | :---: | :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
