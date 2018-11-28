@@ -1,0 +1,17 @@
+{
+  "name": "js-package-repo-string",
+  "version": "1.0.0",
+  "description": "A test Node.js package",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)",
+  "license": "ISC",
+  "dependencies": {
+    "is-array": "1.0.1",
+    "mkdirp": "^0.5.1",
+    "rimraf": "~2.6.2",
+    "array-swap": "0.0.2-0.0.4",
+    "a-package-that-is-not-on-npm": "org/repo"
+  },
+  "repository": "https://website.com/users/project/"
+}

@@ -90,7 +90,17 @@ export default class JavascriptParser extends Parser {
 
     if (data.repository) {
       if (typeof data.repository === 'string') {
-        pkg.codeRepository = data.repository
+        if (data.repository.match(/github:/)) {
+          pkg.codeRepository = data.repository.replace(/github:/, 'https://github.com') + '/'
+        } else if (data.repository.match(/gitlab:/)) {
+          pkg.codeRepository = data.repository.replace(/gitlab:/, 'https://gitlab.com') + '/'
+        } else if (data.repository.match(/bitbucket:/)) {
+          pkg.codeRepository = data.repository.replace(/bitbucket:/, 'https://bitbucket.com') + '/'
+        } else if (data.repository.match(/^[^\/]*\/[^\/]*$/)) {
+          pkg.codeRepository = data.repository.replace(/^([^\/]*)\/([^\/]*)$/, 'https://www.npmjs.com/package/$1/$2') + '/'
+        } else {
+          pkg.codeRepository = data.repository
+        }
       } else {
         pkg.codeRepository = data.repository.url
       }
