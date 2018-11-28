@@ -1,5 +1,7 @@
 /build
 /coverage
+/demo-magic.sh
+/demo.cast
 /dist
 /docs
 /node_modules
