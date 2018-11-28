@@ -1,6 +1,6 @@
 # Dockter : a Docker image builder for researchers
 
-[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg)](#contributors)
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
 [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
@@ -18,7 +18,6 @@ Dockter makes it easier for researchers to create Docker images for their resear
 
 <!-- toc -->
 
-- [Demo](#demo)
 - [Features](#features)
   * [Builds a Docker image for your project sources](#builds-a-docker-image-for-your-project-sources)
     + [R](#r)
@@ -30,6 +29,7 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
   * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
   * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
+- [Demo](#demo)
 - [Install](#install)
   * [CLI](#cli)
     + [Windows](#windows)
@@ -48,10 +48,6 @@ Dockter makes it easier for researchers to create Docker images for their resear
 - [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
-
-## Demo
-
-[![Demo](https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt.svg)](https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt)
 
 ## Features
 
@@ -250,6 +246,11 @@ Dockter is designed to make it easier to get started creating Docker images for 
 - *Dockerfile generation*: Dockter aims to generate readable Dockerfiles that conform to best practices. They include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockter generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
 - *Image building*: Dockter manages incremental builds using a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
+
+
+## Demo
+
+<a href="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt.svg" /></a>
 
 
 ## Install
