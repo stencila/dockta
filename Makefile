@@ -31,6 +31,12 @@ commit:
 
 demo: demo-magic.sh
 	asciinema rec -c "./demo.sh -n" --overwrite demo.cast
-	
+
+demo-play:
+	asciinema play demo.cast
+
+demo-upload:
+	asciinema upload demo.cast
+
 demo-magic.sh:
 	curl https://raw.githubusercontent.com/nokome/demo-magic/master/demo-magic.sh > demo-magic.sh

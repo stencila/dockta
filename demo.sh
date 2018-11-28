@@ -12,14 +12,15 @@ DEMO_CMD_COLOR=$GREEN
 
 # Run the demo!
 
-p "# First we'll change into one of the example projects"
-pe "cd tests/fixtures/r-rgdal"
+p "# First we'll change into one of the R example projects"
+pe "cd tests/fixtures/r-spatial"
 
 p "# And take a look at the files in it"
 pe "ls"
 sleep 1
 
-p "# The 'main' file is what Dockter will execute within a container"
+p "# The 'main.R' file is what Dockter will execute within a container"
+p "# It reads in some spatial data and plots it"
 pe "cat main.R"
 sleep 1
 
@@ -49,13 +50,19 @@ sleep 3
 
 p "# Let's check that it's built by listing the Docker images on this machine"
 pe "docker images | head -n 5"
+p "# Note that the image r-spatial was just created"
 sleep 2
 
-p "# Now lets execute this project"
+p "# Now we can execute this project"
 pe "dockter execute \$PWD"
 sleep 2
 
-p "# The end (thanks for watching!)"
+p "# That started a container using the new image, mounted the project directory into the container and ran main.R"
+p "# The project folder now has a new file in it, homicide.png, created by R from within the container"
+pe "ls"
+sleep 2
+
+p "# Check out the docs for more things you can do with Dockter. Thanks for watching!"
 sleep 2
 
 exit

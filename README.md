@@ -18,6 +18,7 @@ Dockter makes it easier for researchers to create Docker images for their resear
 
 <!-- toc -->
 
+- [Demo](#demo)
 - [Features](#features)
   * [Builds a Docker image for your project sources](#builds-a-docker-image-for-your-project-sources)
     + [R](#r)
@@ -41,12 +42,16 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Execute a Docker image](#execute-a-docker-image)
   * [Docter who?](#docter-who)
 - [Roadmap](#roadmap)
-- [Contribute](#contribute)
+- [Contributors](#contributors)
 - [See also](#see-also)
 - [FAQ](#faq)
 - [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
+
+## Demo
+
+[![Demo](https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt.svg)](https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt)
 
 ## Features
 
@@ -476,15 +481,3 @@ Dockter was inspired by, and combines ideas from, several similar tools includin
  - [`pypa`](https://warehouse.pypa.io)
  - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
  - and of course, [Docker](https://www.docker.com/)
-
-## Contributors
-
-Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
-| [<img src="https://avatars3.githubusercontent.com/u/426784?v=4" width="100px;"/><br /><sub><b>Remi Rampin</b></sub>](https://remirampin.com/)<br />[🐛](https://github.com/stencila/dockter/issues?q=author%3Aremram44 "Bug reports") [💻](https://github.com/stencila/dockter/commits?author=remram44 "Code") [🤔](#ideas-remram44 "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/292725?v=4" width="100px;"/><br /><sub><b>Ben</b></sub>](http://bbit.co.nz)<br />[💻](https://github.com/stencila/dockter/commits?author=beneboy "Code") [🤔](#ideas-beneboy "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/2358535?v=4" width="100px;"/><br /><sub><b>Aleksandra Pawlik</b></sub>](http://stenci.la)<br />[💻](https://github.com/stencila/dockter/commits?author=apawlik "Code") [💡](#example-apawlik "Examples") [🐛](https://github.com/stencila/dockter/issues?q=author%3Aapawlik "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1152336?v=4" width="100px;"/><br /><sub><b>Nokome Bentley</b></sub>](https://github.com/nokome)<br />[💻](https://github.com/stencila/dockter/commits?author=nokome "Code") [⚠️](https://github.com/stencila/dockter/commits?author=nokome "Tests") |
-| :---: | :---: | :---: | :---: |
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
