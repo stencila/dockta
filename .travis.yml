@@ -19,6 +19,11 @@ addons:
 before_install:
   - openssl aes-256-cbc -K $encrypted_1d93d61b46d3_key -iv $encrypted_1d93d61b46d3_iv -in win-cert.p12.enc -out win-cert.p12 -d
 
+# Use npm install if this is a Greenkeeper branch
+# See https://github.com/greenkeeperio/greenkeeper-lockfile/issues/156#issuecomment-397719017
+install: 
+  - case $TRAVIS_BRANCH in greenkeeper*) npm i;; *) npm ci;; esac;
+
 # Do linting, coverage, and build docs (to upload to Github pages)
 script:
   - make lint
