@@ -62,6 +62,17 @@
         "ideas",
         "question"
       ]
+    },
+    {
+      "login": "bmpvieira",
+      "name": "Bruno Vieira",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/263386?v=4",
+      "profile": "http://bmpvieira.com",
+      "contributions": [
+        "code",
+        "ideas",
+        "test"
+      ]
     }
   ]
 }
