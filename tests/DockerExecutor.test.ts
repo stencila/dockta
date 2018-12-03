@@ -12,35 +12,43 @@ jest.setTimeout(30 * 60 * 1000)
  */
 
 test('execute:stdout', async () => {
- 
-  await docker.buildImage({
+
+  let build = await docker.buildImage({
     context: fixture('dockerfile-execute-stdout'),
     src: ['Dockerfile']
   }, {t: 'dockerfile-execute-stdout'})
 
+  let built = await docker.modem.followProgress(build, onFinished)
 
-  let output = await executor.execute('dockerfile-execute-stdout', __dirname)
-  expect(output).toEqual('hello')
+  async function onFinished () {
+    let output = await executor.execute('dockerfile-execute-stdout', __dirname)
+    expect(output).toEqual('hello')
+  }
 
 })
 
 test('execute:stderr', async () => {
- 
-  await docker.buildImage({
+
+  let build = await docker.buildImage({
     context: fixture('dockerfile-execute-stderr'),
     src: ['Dockerfile']
   }, {t: 'dockerfile-execute-stderr'})
 
-  let outputError = ''
+  let built = await docker.modem.followProgress(build, onFinished)
 
-  const spy = jest.spyOn(console,'error')
-  .mockImplementation((data:string) => {
-    outputError += data
-  })
+  async function onFinished () {
+    let outputError = ''
 
-  await executor.execute('dockerfile-execute-stderr', __dirname)
-  
-  expect(outputError.trim()).toBe('epicfail')
+    const spy = jest.spyOn(console,'error')
+    .mockImplementation((data:string) => {
+      outputError += data
+    })
 
-  spy.mockRestore()
+    await executor.execute('dockerfile-execute-stderr', __dirname)
+
+    expect(outputError.trim()).toBe('epicfail')
+
+    spy.mockRestore()
+  }
+
 })
