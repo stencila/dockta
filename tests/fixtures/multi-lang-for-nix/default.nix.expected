@@ -1,0 +1,14 @@
+# To stop Dockter generating this file and start editing it yourself,
+# rename it to "default.nix".
+with import <nixpkgs> {};
+
+stdenv.mkDerivation rec {
+  name = "multi-lang-for-nix";
+  buildInputs = [
+    which
+    nodePackages.dat
+    pythonPackages.numpy pythonPackages.pillow
+    R
+    rPackages.babynames
+  ];
+}
