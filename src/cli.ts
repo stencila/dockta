@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 import os from 'os'
+import fs from 'fs'
+import path from 'path'
+import { spawnSync } from 'child_process'
 // @ts-ignore
 import yargonaut from 'yargonaut'
 import yargs from 'yargs'
@@ -8,11 +11,15 @@ import yaml from 'js-yaml'
 
 const VERSION = require('../package').version
 
+import Docker from 'dockerode'
 import DockerCompiler from './DockerCompiler'
+import NixGenerator from './NixGenerator'
 import { ApplicationError } from './errors'
 import CachingUrlFetcher from './CachingUrlFetcher'
 
 const compiler = new DockerCompiler(new CachingUrlFetcher())
+const generator = new NixGenerator(new CachingUrlFetcher(), undefined)
+const docker = new Docker()
 
 yargonaut
   .style('blue')
@@ -48,7 +55,27 @@ yargs
       describe: 'The path to the project folder'
     })
   }, async (args: any) => {
-    await compiler.compile('file://' + args.folder, false).catch(error)
+    let environ = await compiler.compile('file://' + path.resolve(args.folder), false).catch(error)
+    if (args.nix) {
+      // Generate .default.nix file
+      generator.generate(environ, args.folder)
+
+      // Figure out if a custom default.nix file is present
+      let defaultNix = path.join(args.folder, 'default.nix')
+      let dockterNix = path.join(args.folder, '.default.nix')
+      let nixfile = fs.existsSync(defaultNix) ? defaultNix : dockterNix
+
+      // Generate .nixDockerfile
+      let dockerfile = path.join(args.folder, '.nixDockerfile')
+
+      fs.writeFileSync(dockerfile, `FROM nixos/nix
+
+# Copy over the Nix derivation
+COPY ${path.basename(nixfile)} default.nix
+# Run nix-shell
+CMD nix-shell --pure`
+      )
+    }
   })
 
   // Build command
@@ -60,7 +87,28 @@ yargs
       describe: 'The path to the project folder'
     })
   }, async (args: any) => {
-    await compiler.compile('file://' + args.folder, true).catch(error)
+    if (args.nix) {
+      let name = path.basename(args.folder).toLocaleLowerCase().replace(' ', '-')
+
+      // Figure out if a custom default.nix file is present
+      let defaultNix = path.join(args.folder, 'default.nix')
+      let dockterNix = path.join(args.folder, '.default.nix')
+      let nixfile = fs.existsSync(defaultNix) ? defaultNix : dockterNix
+
+      // Start building the image
+      let build = await docker.buildImage({
+        context: args.folder,
+        src: ['.nixDockerfile', path.basename(nixfile)]
+      }, { t: name, dockerfile: '.nixDockerfile' })
+
+      // Wait for image to finish building
+      docker.modem.followProgress(build, (err: any, res: any) => {
+        if (err) throw err
+        output(res)
+      })
+    } else {
+      await compiler.compile('file://' + args.folder, true).catch(error)
+    }
   })
 
   // Execute command
@@ -72,8 +120,31 @@ yargs
       describe: 'The path to the project folder'
     })
   }, async (args: any) => {
-    const node = await compiler.execute('file://' + args.folder).catch(error)
-    output(node, args.format)
+    if (args.nix) {
+      // Create shared /nix/store Docker volume if needed
+      let volumes: any = await docker.listVolumes()
+      let nixStoreVolume = volumes.Volumes.find((vol: any) => (vol.Name === 'nix-store'))
+      if (!nixStoreVolume) { await docker.createVolume({ name: 'nix-store' }) }
+
+      let name = path.basename(args.folder).toLocaleLowerCase().replace(' ', '-')
+      spawnSync(
+        'docker', `run -it --rm -v nix-store:/nix ${name} /root/.nix-profile/bin/nix-shell`.split(' '),
+        {
+          shell: true,
+          cwd: process.cwd(),
+          stdio: 'inherit'
+        }
+      )
+    } else {
+      const node = await compiler.execute('file://' + args.folder).catch(error)
+      output(node, args.format)
+    }
+  })
+
+  .option('n', {
+    alias: 'nix',
+    default: false,
+    describe: 'Enable Nix support'
   })
 
   .parse()
