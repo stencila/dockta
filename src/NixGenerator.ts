@@ -1,4 +1,3 @@
-import path from 'path'
 import Doer from './Doer'
 
 const VERSION = require('../package').version
@@ -13,7 +12,9 @@ export default class NixGenerator extends Doer {
    *
    * @param environ `SoftwareEnvironment` instance
    */
-  generate (environ: any): string {
+  generate (environ: any, folder: string): string {
+    this.folder = folder
+
     let comments = true
 
     let nixfile = ''
