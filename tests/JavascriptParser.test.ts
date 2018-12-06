@@ -56,6 +56,48 @@ describe('JavascriptParser', () => {
   })
 
   /**
+   * When applied to a folder with a `package.json` file with `author` as a
+   * string instead of an object, parse should return `authors` populated correctly.
+   */
+  test('parse:js-requirements', async () => {
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-author-string'))
+    const pkg = await parser.parse() as SoftwarePackage
+
+    expect(pkg.authors).toEqual([Person.fromText('Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)')])
+  })
+
+  /**
+   * When applied to a folder with a `package.json` file with `repository` as a
+   * shortcut string (https://docs.npmjs.com/files/package.json) instead of an object,
+   * parse should return `codeRepository` populated correctly.
+   */
+  test('parse:js-requirements-github-shortcut', async () => {
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-github-shortcut'))
+    const pkg = await parser.parse() as SoftwarePackage
+    expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockter/')
+  })
+  test('parse:js-requirements-gitlab-shortcut', async () => {
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-gitlab-shortcut'))
+    const pkg = await parser.parse() as SoftwarePackage
+    expect(pkg.codeRepository).toEqual('https://gitlab.com/stencila/dockter/')
+  })
+  test('parse:js-requirements-bitbucket-shortcut', async () => {
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-bitbucket-shortcut'))
+    const pkg = await parser.parse() as SoftwarePackage
+    expect(pkg.codeRepository).toEqual('https://bitbucket.com/stencila/dockter/')
+  })
+  test('parse:js-requirements-npm-shortcut', async () => {
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-npm-shortcut'))
+    const pkg = await parser.parse() as SoftwarePackage
+    expect(pkg.codeRepository).toEqual('https://www.npmjs.com/package/@stencila/dockter/')
+  })
+  test('parse:js-requirements-repo-string', async () => {
+    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-repo-string'))
+    const pkg = await parser.parse() as SoftwarePackage
+    expect(pkg.codeRepository).toEqual('https://website.com/users/project/')
+  })
+
+  /**
    * When applied to a folder with a `*.js` files, parse should return
    * a `SoftwarePackage` with `name`, `softwareRequirements` etc
    * populated correctly.

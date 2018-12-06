@@ -2,7 +2,6 @@ import { dirname, basename } from 'path'
 import {
   ComputerLanguage,
   Person,
-  SoftwareApplication,
   SoftwarePackage,
   SoftwareSourceCode
 } from '@stencila/schema'
@@ -201,7 +200,7 @@ export default class PythonParser extends Parser {
 
     for (let rawRequirement of requirements) {
       if (rawRequirement.type === RequirementType.Named) {
-        pkg.softwareRequirements.push(await this.createApplication(rawRequirement))
+        pkg.softwareRequirements.push(await this.createPackage(rawRequirement))
       } else if (rawRequirement.type === RequirementType.URL) {
         let sourceRequirement = new SoftwareSourceCode()
         sourceRequirement.runtimePlatform = 'Python'
@@ -213,27 +212,27 @@ export default class PythonParser extends Parser {
   }
 
   /**
-   * Convert a `PythonRequirement` into a `SoftwareApplication` by augmenting with metadata from PyPI
+   * Convert a `PythonRequirement` into a `SoftwarePackage` by augmenting with metadata from PyPI
    */
-  private async createApplication (requirement: PythonRequirement): Promise<SoftwareApplication> {
-    const softwareApplication = new SoftwareApplication()
-    softwareApplication.name = requirement.value
-    softwareApplication.runtimePlatform = 'Python'
-    softwareApplication.programmingLanguages = [ComputerLanguage.py]
+  private async createPackage (requirement: PythonRequirement): Promise<SoftwarePackage> {
+    const softwarePackage = new SoftwarePackage()
+    softwarePackage.name = requirement.value
+    softwarePackage.runtimePlatform = 'Python'
+    softwarePackage.programmingLanguages = [ComputerLanguage.py]
 
     if (requirement.version) {
-      softwareApplication.version = requirement.version
+      softwarePackage.version = requirement.version
     }
 
-    const pyPiMetadata = await this.fetch(`https://pypi.org/pypi/${softwareApplication.name}/json`)
+    const pyPiMetadata = await this.fetch(`https://pypi.org/pypi/${softwarePackage.name}/json`)
 
     if (pyPiMetadata.info) {
       if (pyPiMetadata.info.author) {
-        softwareApplication.authors.push(Person.fromText(`${pyPiMetadata.info.author} <${pyPiMetadata.info.author_email}>`))
+        softwarePackage.authors.push(Person.fromText(`${pyPiMetadata.info.author} <${pyPiMetadata.info.author_email}>`))
       }
 
       if (pyPiMetadata.info.project_url) {
-        softwareApplication.codeRepository = pyPiMetadata.info.project_url
+        softwarePackage.codeRepository = pyPiMetadata.info.project_url
       }
 
       if (pyPiMetadata.info.classifiers) {
@@ -242,8 +241,8 @@ export default class PythonParser extends Parser {
         if (classifiers.has('Topic')) {
           let [topics, subTopics] = parseTopics(classifiers.get('Topic')!)
 
-          if (topics.length) softwareApplication.applicationCategories = topics
-          if (subTopics.length) softwareApplication.applicationSubCategories = subTopics
+          if (topics.length) softwarePackage.applicationCategories = topics
+          if (subTopics.length) softwarePackage.applicationSubCategories = subTopics
         }
 
         if (classifiers.has('Operating System')) {
@@ -254,20 +253,20 @@ export default class PythonParser extends Parser {
               if (!operatingSystems.includes(operatingSystem)) operatingSystems.push(operatingSystem)
             }
           }
-          softwareApplication.operatingSystems = operatingSystems
+          softwarePackage.operatingSystems = operatingSystems
         }
       }
-      if (pyPiMetadata.info.keywords) softwareApplication.keywords = pyPiMetadata.info.keywords
+      if (pyPiMetadata.info.keywords) softwarePackage.keywords = pyPiMetadata.info.keywords
 
-      if (pyPiMetadata.info.license) softwareApplication.license = pyPiMetadata.info.license
+      if (pyPiMetadata.info.license) softwarePackage.license = pyPiMetadata.info.license
 
       if (pyPiMetadata.info.long_description) {
-        softwareApplication.description = pyPiMetadata.info.long_description
+        softwarePackage.description = pyPiMetadata.info.long_description
       } else if (pyPiMetadata.info.description) {
-        softwareApplication.description = pyPiMetadata.info.description
+        softwarePackage.description = pyPiMetadata.info.description
       }
     }
-    return softwareApplication
+    return softwarePackage
   }
 
   /**

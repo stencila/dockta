@@ -1,5 +1,6 @@
 # Dockter : a Docker image builder for researchers
 
+[![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
 [![Code coverage](https://codecov.io/gh/stencila/dockter/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockter)
 [![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockter.svg)](https://greenkeeper.io/)
@@ -28,6 +29,7 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
   * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
   * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
+- [Demo](#demo)
 - [Install](#install)
   * [CLI](#cli)
     + [Windows](#windows)
@@ -40,7 +42,7 @@ Dockter makes it easier for researchers to create Docker images for their resear
   * [Execute a Docker image](#execute-a-docker-image)
   * [Docter who?](#docter-who)
 - [Roadmap](#roadmap)
-- [Contribute](#contribute)
+- [Contributors](#contributors)
 - [See also](#see-also)
 - [FAQ](#faq)
 - [Acknowledgments](#acknowledgments)
@@ -246,6 +248,11 @@ Dockter is designed to make it easier to get started creating Docker images for 
 - *Image building*: Dockter manages incremental builds using a special comment in the `Dockerfile`, so you can stop using Dockter altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
 
+## Demo
+
+<a href="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt.svg" /></a>
+
+
 ## Install
 
 Dockter is available as pre-compiled, standalone command line tool (CLI), or as a Node.js package. In both cases, if you want to use Dockter to build Docker images, you will need to [install Docker](https://docs.docker.com/install/) if you don't already have it.
@@ -390,9 +397,17 @@ Dockter is in initial development and mostly intended as a proof of concept of b
 - Dec 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
 - Jan 2018: feactor out `Parser` and compilation code into a separate repo to be used by Docker and it's sister project targettting Nix
 
-## Contribute
+## Contributors
 
-We 💕 contributions! All contributions: ideas 💡, bug reports 🐛, documentation 🗎, code 💾. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
+We 💕 contributions! All contributions: ideas 🤔, examples 💡, bug reports 🐛, documentation 📖, code 💻, questions 💬. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Thanks 🙏 to these wonderful ✨ people who have contributed so far 💖!
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars3.githubusercontent.com/u/426784?v=4" width="100px;"/><br /><sub><b>Remi Rampin</b></sub>](https://remirampin.com/)<br />[🐛](https://github.com/stencila/dockter/issues?q=author%3Aremram44 "Bug reports") [💻](https://github.com/stencila/dockter/commits?author=remram44 "Code") [🤔](#ideas-remram44 "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/292725?v=4" width="100px;"/><br /><sub><b>Ben</b></sub>](http://bbit.co.nz)<br />[💻](https://github.com/stencila/dockter/commits?author=beneboy "Code") [🤔](#ideas-beneboy "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/2358535?v=4" width="100px;"/><br /><sub><b>Aleksandra Pawlik</b></sub>](http://stenci.la)<br />[💻](https://github.com/stencila/dockter/commits?author=apawlik "Code") [💡](#example-apawlik "Examples") [🐛](https://github.com/stencila/dockter/issues?q=author%3Aapawlik "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1152336?v=4" width="100px;"/><br /><sub><b>Nokome Bentley</b></sub>](https://github.com/nokome)<br />[💻](https://github.com/stencila/dockter/commits?author=nokome "Code") [⚠️](https://github.com/stencila/dockter/commits?author=nokome "Tests") | [<img src="https://avatars3.githubusercontent.com/u/160299?v=4" width="100px;"/><br /><sub><b>Giorgio Sironi</b></sub>](http://giorgiosironi.com)<br />[👀](#review-giorgiosironi "Reviewed Pull Requests") [🐛](https://github.com/stencila/dockter/issues?q=author%3Agiorgiosironi "Bug reports") [🤔](#ideas-giorgiosironi "Ideas, Planning, & Feedback") [💬](#question-giorgiosironi "Answering Questions") | [<img src="https://avatars3.githubusercontent.com/u/263386?v=4" width="100px;"/><br /><sub><b>Bruno Vieira</b></sub>](http://bmpvieira.com)<br />[💻](https://github.com/stencila/dockter/commits?author=bmpvieira "Code") [🤔](#ideas-bmpvieira "Ideas, Planning, & Feedback") [⚠️](https://github.com/stencila/dockter/commits?author=bmpvieira "Tests") |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## See also
 
