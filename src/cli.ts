@@ -42,11 +42,7 @@ yargs
   // Compile command
   // @ts-ignore
   .command('compile [folder]', 'Compile a project to a software environment', yargs => {
-    yargs.positional('folder', {
-      type: 'string',
-      default: '.',
-      describe: 'The path to the project folder'
-    })
+    projectArg(yargs)
   }, async (args: any) => {
     await compiler.compile('file://' + args.folder, false).catch(error)
   })
@@ -54,11 +50,7 @@ yargs
   // Build command
   // @ts-ignore
   .command('build [folder]', 'Build a Docker image for project', yargs => {
-    yargs.positional('folder', {
-      type: 'string',
-      default: '.',
-      describe: 'The path to the project folder'
-    })
+    projectArg(yargs)
   }, async (args: any) => {
     await compiler.compile('file://' + args.folder, true).catch(error)
   })
@@ -66,17 +58,51 @@ yargs
   // Execute command
   // @ts-ignore
   .command('execute [folder]', 'Execute a project', yargs => {
-    yargs.positional('folder', {
-      type: 'string',
-      default: '.',
-      describe: 'The path to the project folder'
-    })
+    projectArg(yargs)
   }, async (args: any) => {
     const node = await compiler.execute('file://' + args.folder).catch(error)
     output(node, args.format)
   })
 
+  // Who command
+  // @ts-ignore
+  .command('who [folder]', 'List the people your project depends upon', yargs => {
+    projectArg(yargs)
+  }, async (args: any) => {
+    const people = await compiler.who('file://' + args.folder).catch(error)
+    if (!people) {
+      console.log('Nobody (?)')
+    } else {
+      // Sort by number of packages descending and then alphabetically ascending
+      let sorted = Object.entries(people).sort(([aName,aPkgs], [bName, bPkgs]) => {
+        if (aPkgs.length > bPkgs.length) return -1
+        if (aPkgs.length < bPkgs.length) return 1
+        if (aName < bName) return -1
+        if (aName > bName) return 1
+        return 0
+      })
+      // Output in a CLI friendly way
+      const output = sorted.map(([name, packages]) => {
+        return `${name} (${packages.join(', ')})`
+      }).join(', ')
+      console.log(output)
+    }
+  })
+
   .parse()
+
+/**
+ * Specify the <project> argument settings
+ *
+ * @param yargs The yargs object
+ */
+function projectArg (yargs: yargs.Argv) {
+  yargs.positional('folder', {
+    type: 'string',
+    default: '.',
+    describe: 'The path to the project folder'
+  })
+}
 
 /**
  * Print output to stdout
