@@ -68,8 +68,13 @@ yargs
   // @ts-ignore
   .command('who [folder]', 'List the people your project depends upon', yargs => {
     projectArg(yargs)
+    yargs.option('depth',{
+      type: 'integer',
+      default: 100,
+      describe: 'The maximum dependency recursion depth'
+    })
   }, async (args: any) => {
-    const people = await compiler.who('file://' + args.folder).catch(error)
+    const people = await compiler.who('file://' + args.folder, args.depth).catch(error)
     if (!people) {
       console.log('Nobody (?)')
     } else {
