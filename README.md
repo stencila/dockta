@@ -250,7 +250,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 ## Demo
 
-<a href="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt.svg" /></a>
+<a href="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk.svg" /></a>
 
 
 ## Install
@@ -394,8 +394,8 @@ Use the  `depth` option to restrict the listing to a particular depth in the dep
 
 Dockter is in initial development and mostly intended as a proof of concept of building reproducible computing environments from shared, cross-language schemas for decribing software packages, such as [CodeMeta](https://codemeta.github.io/). Our plan is to extend this approach, from the current target of building Docker images, to the building of Nix environments.
 
-- Dec 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
-- Jan 2018: feactor out `Parser` and compilation code into a separate repo to be used by Docker and it's sister project targettting Nix
+- Dec 2018: generation of Nix environments and containers
+- Jan 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
 
 ## Contributors
 
