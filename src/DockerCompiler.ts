@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { SoftwareEnvironment } from '@stencila/schema'
+import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 
 import DockerParser from './DockerParser'
 import parsers from './parsers'
@@ -106,5 +106,46 @@ export default class DockerCompiler {
     // Execute the environment's image (which is built in compile())
     const executor = new DockerExecutor()
     return executor.execute(environ.name, folder)
+  }
+
+  /**
+   * Find out who contributed to the packages that your project
+   * depends upon.
+   *
+   * @param folder The project to examine
+   * @param maxDepth The maximum dependency recursion depth
+   */
+  async who (folder: string, maxDepth: number = 100): Promise<object> {
+    let environ = await this.compile(folder, false)
+    if (!environ) throw new Error('Environment not created')
+
+    const people: {[key: string]: Array<string>} = {}
+
+    /**
+     * Get the people for a software package
+     *
+     * @param pkg The package
+     * @param depth The current recursion depth
+     */
+    function get (pkg: SoftwarePackage | SoftwareEnvironment, depth: number = 0) {
+      let all = pkg.authors.concat(pkg.contributors).concat(pkg.creators)
+      for (let person of all) {
+        const name = person.name
+        if (people[name]) {
+          if (!people[name].includes(pkg.name)) people[name].push(pkg.name)
+        } else {
+          people[name] = [pkg.name]
+        }
+      }
+      // Keep going deeper, if we haven't yet reached the maximum depth
+      if (depth < maxDepth) {
+        for (let req of pkg.softwareRequirements) {
+          get(req, depth + 1)
+        }
+      }
+    }
+    get(environ)
+
+    return people
   }
 }
