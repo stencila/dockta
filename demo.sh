@@ -10,6 +10,9 @@ clear
 DEMO_PROMPT=$BLUE"$ "
 DEMO_CMD_COLOR=$GREEN
 
+# Do some clean up first
+rm tests/fixtures/r-spatial/*.png
+
 # Run the demo!
 
 p "# First we'll change into one of the R example projects"
@@ -58,11 +61,20 @@ pe "dockter execute \$PWD"
 sleep 2
 
 p "# That started a container using the new image, mounted the project directory into the container and ran main.R"
-p "# The project folder now has a new file in it, homicide.png, created by R from within the container"
+p "# The project folder now has a new file in it, plot.png, created by R from within the container"
 pe "ls"
 sleep 2
 
-p "# Check out the docs for more things you can do with Dockter. Thanks for watching!"
+p "# Now we've executed the project and created a reproducible figure. Give credit where credit is due!"
+p "# The who command lists all the contributors of all the packages that your project depends upon"
+pe "dockter who"
+
+p "# Check out the docs (https://github.com/stencila/dockter#readme) for more things you can do with Dockter."
+p "# Thanks for watching!"
+sleep 2
+
+p "# This demo was created using"
+pe "dockter --version"
 sleep 2
 
 exit

@@ -250,7 +250,7 @@ Dockter is designed to make it easier to get started creating Docker images for 
 
 ## Demo
 
-<a href="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/EiHfaNeQKtjbucz3HRdM5Ertt.svg" /></a>
+<a href="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk.svg" /></a>
 
 
 ## Install
@@ -268,7 +268,7 @@ To install the latest release of the `dockter` command line tool, download `dock
 To install the latest release of the `dockter` command line tool to `/usr/local/bin` just,
 
 ```bash
-curl -L https://unpkg.com/@stencila/dockter/install-latest-macos.sh | bash
+curl -L https://raw.githubusercontent.com/stencila/dockter/master/install.sh | bash
 ```
 
 Or, if you'd prefer to do things manually, download `dockter-macos-x64.tar.gz` for the [latest release](https://github.com/stencila/dockter/releases/) and then,
@@ -283,7 +283,7 @@ sudo mv -f dockter /usr/local/bin
 To install the latest release of the `dockter` command line tool to `~/.local/bin/` just,
 
 ```bash
-curl -L https://unpkg.com/@stencila/dockter/install-latest-linux.sh | bash
+curl -L https://raw.githubusercontent.com/stencila/dockter/master/install.sh | bash
 ```
 
 Or, if you'd prefer to do things manually, or place Dockter elewhere, download `dockter-linux-x64.tar.gz` for the [latest release](https://github.com/stencila/dockter/releases/) and then,
@@ -376,7 +376,7 @@ docker run --rm --volume $(pwd):/work --workdir=/work --user=$(id -u):$(id -g) <
 
 ### Docter who?
 
-Dockter compiles a meta-data tree of all the packages that your project relies on. Use the `who` 🦄 [#55](https://github.com/stencila/dockter/issues/55) command to get a list of the authors of those packages:
+Dockter compiles a meta-data tree of all the packages that your project relies on. Use the `who` command to get a list of the authors of those packages:
 
 ```bash
 > dockter who
@@ -394,8 +394,8 @@ Use the  `depth` option to restrict the listing to a particular depth in the dep
 
 Dockter is in initial development and mostly intended as a proof of concept of building reproducible computing environments from shared, cross-language schemas for decribing software packages, such as [CodeMeta](https://codemeta.github.io/). Our plan is to extend this approach, from the current target of building Docker images, to the building of Nix environments.
 
-- Dec 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
-- Jan 2018: feactor out `Parser` and compilation code into a separate repo to be used by Docker and it's sister project targettting Nix
+- Dec 2018: generation of Nix environments and containers
+- Jan 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
 
 ## Contributors
 

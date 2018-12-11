@@ -43,3 +43,10 @@ test('compile:multi-lang', async () => {
   const expected = fs.readFileSync(fixture('multi-lang/Dockerfile.expected'), 'utf8').replace(aptAddMRAN, '$1/YYYY-MM-DD/$3')
   expect(actual).toEqual(expected)
 })
+
+test('who:r-gsl', async () => {
+  const compiler = new DockerCompiler(urlFetcher)
+  let people = await compiler.who('file://' + fixture('r-gsl'))
+
+  expect(people).toEqual({"Robin K.": ["gsl"]})
+})
