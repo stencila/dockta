@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import os from 'os'
+import path from 'path'
 // @ts-ignore
 import yargonaut from 'yargonaut'
 import yargs from 'yargs'
@@ -11,6 +12,7 @@ const VERSION = require('../package').version
 import DockerCompiler from './DockerCompiler'
 import { ApplicationError } from './errors'
 import CachingUrlFetcher from './CachingUrlFetcher'
+import nix from './cli-nix'
 
 const compiler = new DockerCompiler(new CachingUrlFetcher())
 
@@ -48,7 +50,10 @@ yargs
       describe: 'The path to the project folder'
     })
   }, async (args: any) => {
-    await compiler.compile('file://' + args.folder, false).catch(error)
+    let environ = await compiler.compile('file://' + path.resolve(args.folder), false).catch(error)
+    if (args.nix) {
+      nix.compile(environ, args.folder)
+    }
   })
 
   // Build command
@@ -60,7 +65,11 @@ yargs
       describe: 'The path to the project folder'
     })
   }, async (args: any) => {
-    await compiler.compile('file://' + args.folder, true).catch(error)
+    if (args.nix) {
+      await nix.build(args.folder)
+    } else {
+      await compiler.compile('file://' + args.folder, true).catch(error)
+    }
   })
 
   // Execute command
@@ -72,8 +81,18 @@ yargs
       describe: 'The path to the project folder'
     })
   }, async (args: any) => {
-    const node = await compiler.execute('file://' + args.folder).catch(error)
-    output(node, args.format)
+    if (args.nix) {
+      await nix.execute(args.folder)
+    } else {
+      const node = await compiler.execute('file://' + args.folder).catch(error)
+      output(node, args.format)
+    }
+  })
+
+  .option('n', {
+    alias: 'nix',
+    default: false,
+    describe: 'Enable Nix support'
   })
 
   .parse()
