@@ -37,6 +37,11 @@ yargs
   .version(VERSION)
   .describe('version', 'Show version')
 
+  // Nix global option
+  .option('nix', {
+    describe: 'Use NixOS base image'
+  })
+
   // Ensure at least one command
   .demandCommand(1, 'Please provide a command.')
   // Provide suggestions regarding similar commands if no matching command is found
