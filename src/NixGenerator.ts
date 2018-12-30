@@ -59,7 +59,7 @@ stdenv.mkDerivation rec {
     nixfile = nixfile.trim()
     nixfile += `
   ];
-}`
+}\n`
 
     // Write `.default.nix` for use by Nix
     this.write('.default.nix', nixfile)

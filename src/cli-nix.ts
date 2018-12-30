@@ -27,10 +27,10 @@ function compile (environ: void | SoftwareEnvironment | null, folder: any) {
 
   fs.writeFileSync(dockerfile, `FROM nixos/nix
 
-  # Copy over the Nix derivation
-  COPY ${path.basename(nixfile)} default.nix
-  # Run nix-shell
-  CMD nix-shell --pure`
+# Copy over the Nix derivation
+COPY ${path.basename(nixfile)} default.nix
+# Run nix-shell
+CMD nix-shell --pure\n`
   )
 }
 
