@@ -24,7 +24,7 @@ export default class CachingUrlFetcher implements IUrlFetcher {
     } catch (error) {
       if (error.statusCode === 404) {
         value = null
-      } else if (['ENOTFOUND', 'EAI_AGAIN', 'DEPTH_ZERO_SELF_SIGNED_CERT'].includes(error.code)) {
+      } else if (['ENOTFOUND', 'ECONNRESET', 'EAI_AGAIN', 'DEPTH_ZERO_SELF_SIGNED_CERT'].includes(error.code)) {
         // These are usually connection errors
         throw new NetworkError(`There was a problem fetching ${url} (${error.code}). Are you connected to the internet?`)
       } else {
