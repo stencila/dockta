@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import os from 'os'
+import path from 'path'
 // @ts-ignore
 import yargonaut from 'yargonaut'
 import yargs from 'yargs'
@@ -8,11 +9,16 @@ import yaml from 'js-yaml'
 
 const VERSION = require('../package').version
 
+import Docker from 'dockerode'
 import DockerCompiler from './DockerCompiler'
+import NixGenerator from './NixGenerator'
 import { ApplicationError } from './errors'
 import CachingUrlFetcher from './CachingUrlFetcher'
+import nix from './cli-nix'
 
 const compiler = new DockerCompiler(new CachingUrlFetcher())
+const generator = new NixGenerator(new CachingUrlFetcher(), undefined)
+const docker = new Docker()
 
 yargonaut
   .style('blue')
@@ -31,6 +37,11 @@ yargs
   .version(VERSION)
   .describe('version', 'Show version')
 
+  // Nix global option
+  .option('nix', {
+    describe: 'Use NixOS base image'
+  })
+
   // Ensure at least one command
   .demandCommand(1, 'Please provide a command.')
   // Provide suggestions regarding similar commands if no matching command is found
@@ -44,7 +55,10 @@ yargs
   .command('compile [folder]', 'Compile a project to a software environment', yargs => {
     projectArg(yargs)
   }, async (args: any) => {
-    await compiler.compile('file://' + args.folder, false).catch(error)
+    let environ = await compiler.compile('file://' + path.resolve(args.folder), false).catch(error)
+    if (args.nix) {
+      nix.compile(environ, args.folder)
+    }
   })
 
   // Build command
@@ -52,7 +66,11 @@ yargs
   .command('build [folder]', 'Build a Docker image for project', yargs => {
     projectArg(yargs)
   }, async (args: any) => {
-    await compiler.compile('file://' + args.folder, true).catch(error)
+    if (args.nix) {
+      await nix.build(args.folder)
+    } else {
+      await compiler.compile('file://' + args.folder, true).catch(error)
+    }
   })
 
   // Execute command
@@ -60,8 +78,18 @@ yargs
   .command('execute [folder]', 'Execute a project', yargs => {
     projectArg(yargs)
   }, async (args: any) => {
-    const node = await compiler.execute('file://' + args.folder).catch(error)
-    output(node, args.format)
+    if (args.nix) {
+      await nix.execute(args.folder)
+    } else {
+      const node = await compiler.execute('file://' + args.folder).catch(error)
+      output(node, args.format)
+    }
+  })
+
+  .option('n', {
+    alias: 'nix',
+    default: false,
+    describe: 'Enable Nix support'
   })
 
   // Who command

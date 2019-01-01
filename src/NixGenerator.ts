@@ -1,4 +1,3 @@
-import path from 'path'
 import Doer from './Doer'
 
 const VERSION = require('../package').version
@@ -13,7 +12,9 @@ export default class NixGenerator extends Doer {
    *
    * @param environ `SoftwareEnvironment` instance
    */
-  generate (environ: any): string {
+  generate (environ: any, folder: string): string {
+    this.folder = folder
+
     let comments = true
 
     let nixfile = ''
@@ -26,20 +27,27 @@ export default class NixGenerator extends Doer {
 # rename it to "default.nix".\n`
     }
 
-    nixfile += `with import <nixpkgs> {};
+    nixfile += `with import (builtins.fetchTarball {
+  name = "stencila-18.12";
+  url = https://github.com/stencila/nixpkgs/archive/18.12.tar.gz;
+  sha256 = "0kygd44qc2d41dh6pccjiisdvxgpnj9njmhalr0mhrh971xxgnkz";
+}) {};
 
 stdenv.mkDerivation rec {
   name = "${environ.name}";
   buildInputs = [
-    which
+    bashInteractive coreutils utillinux findutils gnugrep which openssl cacert
 `
 
     for (let softwareRequirement of environ.softwareRequirements) {
 
       let platform = softwareRequirement.runtimePlatform
       if (platform === 'R') { nixfile += `    R\n` }
+      if (platform === 'Node.js') { nixfile += `    nodejs\n` }
+      if (platform === 'Python') { nixfile += `    python37\n` }
 
       let language = platform.toLowerCase().replace(/\.[^/.]+$/, '')
+      if (language === 'python') { language = 'python37' }
 
       let pkgs = softwareRequirement.softwareRequirements.map(
         (x: any) => `${language}Packages.${x.name.toLowerCase()}`
@@ -51,7 +59,7 @@ stdenv.mkDerivation rec {
     nixfile = nixfile.trim()
     nixfile += `
   ];
-}`
+}\n`
 
     // Write `.default.nix` for use by Nix
     this.write('.default.nix', nixfile)

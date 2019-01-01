@@ -19,8 +19,8 @@ test('generate:packages', async () => {
   const compiler = new DockerCompiler(urlFetcher)
   let environ = await compiler.compile('file://' + fixture('multi-lang-for-nix'), false, false)
 
-  const generator = new NixGenerator(urlFetcher, fixture('multi-lang-for-nix'))
-  let nixfile = generator.generate(environ).split('\n').slice(1).join('\n')
+  const generator = new NixGenerator(urlFetcher, undefined)
+  let nixfile = generator.generate(environ, fixture('multi-lang-for-nix')).split('\n').slice(1).join('\n')
 
   expect(nixfile).toEqual(expectedNixfile)
 })

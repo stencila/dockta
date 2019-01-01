@@ -1,13 +1,19 @@
 # To stop Dockter generating this file and start editing it yourself,
 # rename it to "default.nix".
-with import <nixpkgs> {};
+with import (builtins.fetchTarball {
+  name = "stencila-18.12";
+  url = https://github.com/stencila/nixpkgs/archive/18.12.tar.gz;
+  sha256 = "0kygd44qc2d41dh6pccjiisdvxgpnj9njmhalr0mhrh971xxgnkz";
+}) {};
 
 stdenv.mkDerivation rec {
   name = "multi-lang-for-nix";
   buildInputs = [
-    which
+    bashInteractive coreutils utillinux findutils gnugrep which openssl cacert
+    nodejs
     nodePackages.dat
-    pythonPackages.numpy pythonPackages.pillow
+    python37
+    python37Packages.numpy python37Packages.pillow
     R
     rPackages.babynames
   ];
