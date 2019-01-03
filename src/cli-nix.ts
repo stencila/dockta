@@ -61,15 +61,19 @@ async function build (folder: any) {
 /**
  * Executes nix-shell inside a Docker image from nixDockerfile with a Docker data volume for /nix store
  */
-async function execute (folder: any) {
+async function execute (folder: any, command: string = '') {
   // Create shared /nix/store Docker volume if needed
   let volumes: any = await docker.listVolumes()
   let nixStoreVolume = volumes.Volumes.find((vol: any) => (vol.Name === 'nix-store'))
   if (!nixStoreVolume) { await docker.createVolume({ name: 'nix-store' }) }
 
   let name = path.basename(folder).toLocaleLowerCase().replace(' ', '-')
+  let args = `run -it --rm -v /tmp:/tmp -v nix-store:/nix ${name}`
+  // If there is a user specified command then run that within the Nix shell, otherwise
+  // will run the CMD from the Dockerfile
+  if (command) args += ` /root/.nix-profile/bin/nix-shell --pure --run "${command.replace('"', '\\"')}"`
   spawnSync(
-    'docker', `run -it --rm -v /tmp:/tmp -v nix-store:/nix ${name} /root/.nix-profile/bin/nix-shell`.split(' '),
+    'docker', args.split(' '),
     {
       shell: true,
       cwd: process.cwd(),

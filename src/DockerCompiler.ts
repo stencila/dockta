@@ -90,7 +90,7 @@ export default class DockerCompiler {
    *
    * @param source The project to execute
    */
-  async execute (source: string) {
+  async execute (source: string, command: string = '') {
     let folder
     if (source.substring(0, 7) === 'file://') {
       folder = source.substring(7)
@@ -105,7 +105,7 @@ export default class DockerCompiler {
 
     // Execute the environment's image (which is built in compile())
     const executor = new DockerExecutor()
-    return executor.execute(environ.name, folder)
+    return executor.execute(environ.name, folder, command)
   }
 
   /**
