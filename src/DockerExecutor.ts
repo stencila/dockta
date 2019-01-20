@@ -33,7 +33,7 @@ export default class DockerExecutor {
    * @param name Name of the Docker image to use
    * @param folder Path of the project folder which will be mounted into the image
    */
-  async execute (name: string, folder: string) {
+  async execute (name: string, folder: string, command: string = '') {
     // Capture stdout so we can attempt to parse it
     // to JSON
     let out = ''
@@ -59,15 +59,20 @@ export default class DockerExecutor {
     // Run the container!
     // Options from https://docs.docker.com/engine/api/v1.37/#operation/ContainerCreate
     const docker = new Docker()
+    // If the user has specified a command thaen use  that, otherwise fallback to the
+    // CMD in the Dockerfile
+    let cmd
+    if (command) cmd = command.split(' ') 
     const container = await docker.run(name, [], [stdout, stderr], {
-      Tty: false,
+      Cmd: cmd,
       HostConfig: {
         Binds: [
           `${path.resolve(folder)}:/work`
         ]
       },
-      WorkingDir: '/work',
-      User: user
+      Tty: false,
+      User: user,
+      WorkingDir: '/work'
     })
     container.remove()
 

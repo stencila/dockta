@@ -1,6 +1,6 @@
 {
   "name": "@stencila/dockter",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "A Docker image builder for researchers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -73,7 +73,7 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-standard": "^8.0.1",
-    "typedoc": "^0.13.0",
+    "typedoc": "^0.14.0",
     "typescript": "^3.1.1"
   },
   "dependencies": {
@@ -83,7 +83,7 @@
     "docker-file-parser": "^1.0.4",
     "dockerode": "^2.5.7",
     "express": "^4.16.3",
-    "fast-glob": "^2.2.3",
+    "fast-glob": "^2.2.6",
     "got": "^9.2.2",
     "js-yaml": "^3.12.0",
     "ndjson": "^1.5.0",
