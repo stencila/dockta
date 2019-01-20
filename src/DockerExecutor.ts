@@ -1,8 +1,8 @@
-import Docker from 'dockerode'
 import os from 'os'
 import path from 'path'
 import stream from 'stream'
-import { resolve } from 'dns'
+
+import Docker from 'dockerode'
 
 /**
  * Executes a Docker environment.
@@ -62,7 +62,7 @@ export default class DockerExecutor {
     // If the user has specified a command thaen use  that, otherwise fallback to the
     // CMD in the Dockerfile
     let cmd
-    if (command) cmd = command.split(' ') 
+    if (command) cmd = command.split(' ')
     const container = await docker.run(name, [], [stdout, stderr], {
       Cmd: cmd,
       HostConfig: {
