@@ -1,4 +1,4 @@
-# Dockter : a Docker image builder for researchers
+# Dockter: a Docker image builder for researchers
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
@@ -12,14 +12,12 @@ Docker is a useful tool for creating reproducible computing environments. But cr
 
 Dockter makes it easier for researchers to create Docker images for their research projects. Dockter generates a `Dockerfile` and builds a image, for _your_ project, based on _your_ source code.
 
-> 🦄 Dockter is in early development. Features that are not yet implemented are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevant issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
-
 <!-- Automatically generated TOC. Don't edit, `make docs` instead>
 
 <!-- toc -->
 
 - [Features](#features)
-  * [Builds a Docker image for your project sources](#builds-a-docker-image-for-your-project-sources)
+  * [Builds a Docker image based on your source code](#builds-a-docker-image-based-on-your-source-code)
     + [R](#r)
     + [Python](#python)
     + [Node.js](#nodejs)
@@ -51,9 +49,11 @@ Dockter makes it easier for researchers to create Docker images for their resear
 
 ## Features
 
-### Builds a Docker image for your project sources
+> 🦄 Features that are planned, but not yet implemented, are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 [#2](https://github.com/stencila/dockter/issues/2), indicating the relevant issue where you can help make the feature a reality. It's [readme driven development](http://tom.preston-werner.com/2010/08/23/readme-driven-development.html) with calls to action to chase after mythical vaporware creatures! So hip.
 
-Dockter scans your project folder and builds a Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder and generate one for you. Dockter currently handles R, Python and Node.js source code. A project can have a mix of these languages.
+### Builds a Docker image based on your source code
+
+Dockter scans your project and builds a custom Docker image for it. If the the folder already has a `Dockerfile`, Dockter will build the image from that. If not, Dockter will scan the source code files in the folder and generate one for you. Dockter currently handles R, Python and Node.js source code. A project can have a mix of these languages.
 
 #### R
 
@@ -102,7 +102,7 @@ Dockter automatically checks if any of your dependencies (or dependencies of dep
 library(rgdal)
 ```
 
-When you run `dockter compile` in this project, Dockter will generate a Dockerfile with the following section which installs R, plus the three system dependencies required `gdal-bin`, `libgdal-dev`, and `libproj-dev`:
+When you run `dockter compile` in this project, Dockter will generate a `Dockerfile` with the following section which installs R, plus the three system dependencies required `gdal-bin`, `libgdal-dev`, and `libproj-dev`:
 
 ```Dockerfile
 # This section installs system packages required for your project
@@ -130,7 +130,7 @@ The reason this happens is that, due to Docker's layered filesystem, when you up
 
 Dockter takes a different approach. It leaves the installation of language packages to the language package managers: Python's [`pip`](https://pypi.org/project/pip/) , Node.js's `npm`, and R's `install.packages`. These package managers are good at the job they were designed for - to check which packages need to be updated and to only update them. The result is much faster rebuilds, especially for R packages, which often involve compilation.
 
-Dockter does this by looking for a special `# dockter` comment in a `Dockerfile`. Instead of throwing away layers, it executes all instructions after this comment in the same layer - thus reusing packages that were previously installed.
+Dockter does this by looking for a special `# dockter` comment in a `Dockerfile`. Instead of throwing away subsequent image layers, it executes all instructions after this comment in the same layer - thus reusing packages that were previously installed.
 
 Here's a simple motivating [example](fixtures/tests/py-pandas). It's a Python project with a `requirements.txt` file which specifies that the project depends upon `pandas` which, to ensure reproducibility, is pinned to version `0.23.0`,
 
@@ -147,7 +147,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 ```
 
-You can build a Docker image for that project using Docker,
+You could build a Docker image for that project using Docker,
 
 ```bash
 docker build .
@@ -275,7 +275,7 @@ Or, if you'd prefer to do things manually, download `dockter-macos-x64.tar.gz` f
 
 ```bash
 tar xvf dockter-macos-x64.tar.gz
-sudo mv -f dockter /usr/local/bin
+sudo mv -f dockter /usr/local/bin # or wherever you like
 ```
 
 #### Linux
@@ -392,10 +392,8 @@ Use the  `depth` option to restrict the listing to a particular depth in the dep
 
 ## Roadmap
 
-Dockter is in initial development and mostly intended as a proof of concept of building reproducible computing environments from shared, cross-language schemas for decribing software packages, such as [CodeMeta](https://codemeta.github.io/). Our plan is to extend this approach, from the current target of building Docker images, to the building of Nix environments.
-
-- Dec 2018: generation of Nix environments and containers
-- Jan 2018: release of Dockter [1.0](https://github.com/stencila/dockter/milestone/2)
+- Feb 2019: release [v1.0](https://github.com/stencila/dockter/milestone/2)
+- Apr 2019: release [v1.1](https://github.com/stencila/dockter/milestone/3)
 
 ## Contributors
 
@@ -459,11 +457,11 @@ We've implemented this as a Node.js package for easier integration into Stencila
 
 *Why is Dockter implemented in Typescript?*
 
-Typescript's type-checking and type-annotations can reduce the number of runtime errors and improves developer experience. For this partiular project, we wanted to use the Typescript type defintions for `SoftwarePackage`, `CreativeWork`, `Person` etc that are defined in [stencila/schema](https://github.com/stencila/schema).
+Typescript's type-checking and type-annotations can reduce the number of runtime errors and improves developer experience. For this particular project, we wanted to use the Typescript type definitions for `SoftwarePackage`, `CreativeWork`, `Person` etc that are defined in [stencila/schema](https://github.com/stencila/schema).
 
 *Why didn't you use, and contribute to, an existing project rather than creating a new tool*
 
-When existing projects don't take the approach or provide the features you want, it's often a difficult decision to make whether to invest the time to understand and refactor an existing code base or to start fresh. In this case, we chose to start fresh for the reasons and differences outlined above. We felt it would take too much refactoring of existing projects to shoehorn in the approach we wanted to take and we wanted to be able to resuse much of this code in another sister project targetting Nix environments.
+When existing projects don't take the approach or provide the features you want, it's often a difficult decision to make whether to invest the time to understand and refactor an existing code base or to start fresh. In this case, we chose to start fresh for the reasons and differences outlined above. We felt it would take too much refactoring of existing projects to shoehorn in the approach we wanted to take. We also wanted to be able to reuse much of the code developed here in a sister project, [Nixster](https://github.com/stencila/nixster), which aims to make it easier for researchers to build Nix environments.
 
 *I'd love to help out! Where do I start?*
 
