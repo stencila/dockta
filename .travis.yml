@@ -3,7 +3,7 @@ language: node_js
 node_js:
   - 8
 
-# Require docker servie for building images during tests
+# Require docker service for building images during tests
 services:
   docker
 
@@ -36,7 +36,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 # Prevent Github Pages from using Jekyll
-# which causes docs files starting with undescores to be ignored
+# which causes docs files starting with underscores to be ignored
 before_deploy:
   - touch docs/.nojekyll
 
