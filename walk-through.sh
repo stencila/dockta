@@ -58,8 +58,40 @@ sleep 3
 
 p "# Let's check that it's built by listing the Docker images on this machine"
 pe "docker images | head -n 5"
-p "# Note that the image r-spatial was just created"
 sleep 2
+
+p "# Note that the image r-spatial was just created and it has two tags: 'latest' and 'system' "
+p "# These two tags are used by Dockter's incremental builds"
+
+p "# We can have a look into the layers of the Docker image that we just built"
+pe "docker history r-spatial"
+sleep 2
+p "# If you add, remove or update a package in your project, Dockter will do an \"intelligent\", incremental rebuild."
+p "# Let's see how incremental build works in practice"
+pe "echo \"library(forcats)\" >> main.R" 
+sleep 2
+
+pe "cat main.R"
+sleep 2
+
+p "# The R code now requires a new library to be available. Let's then recompile the project"
+pe "dockter compile"
+sleep 2
+
+p "# Let's check that Dockter has added that package to the files that it generates."
+pe "cat .DESCRIPTION"
+sleep 3
+
+pe "cat .Dockerfile"
+sleep 3
+
+p "# Let's then rebuild the image"
+pe "dockter build"
+sleep 2
+
+p "# The Docker history will show us how the images were updated"
+pe "docker history r-spatial"
+sleep 3
 
 p "# Now we can execute this project"
 pe "dockter execute"
@@ -74,17 +106,36 @@ p "# Now we've executed the project and created a reproducible figure. Give cred
 p "# The who command lists all the contributors of all the packages that your project depends upon"
 pe "dockter who"
 
-p "# If you add, remove or update a package in your project, Dockter will do an \"intelligent\", incremental rebuild."
 p "# Let's try this on another example using some Python code"
-pe "cd ../py-incremental"
+pe "cd ../py-weather"
+pe "ls"
 sleep 2
 
-p "# This project already has a handwritten `requirements.txt` file listing the packages it needs"
-p "# Dockter will use it within the Dockerfile that it generates"
+p "# Let's see what we mean by \"east to pick up, easy to throw away\". As it is now, the project does not have a requirements.txt file. "
+p "# Dockter will create it for us"
+pe "dockter compile"
+sleep 2
+
+pe "ls"
+sleep 2
+
+p "# The packages required for the project should now be in the file"
+pe "cat .requirements.txt"
+sleep 2
+
+p "# If we want to now be in charge, we need to rename the requirements.txt file"
+pe "mv .requirements.txt requirements.txt"
+sleep 2
+
+p "# Let's add anoter Python package to `requirements.txt`"
+pe "echo \"dateutil==2.5.7\" >> requirements.txt" 
+sleep 2
+
+p "# The arrow package should now be added to the list in the requirements.txt file"
 pe "cat requirements.txt"
 sleep 2
 
-p "# Let's build the image for the project"
+p "# Let's build the image for the project. Dockter will pick up the new package from the requirements.txt file."
 pe "dockter build"
 sleep 2
 
@@ -92,21 +143,6 @@ p "# Now we should see the image on the list"
 pe "docker images"
 sleep 2
 
-p "# Let's add anoter Python package to `requirements.txt`"
-pe "echo \"arrow==0.12.1\" >> requirements.txt" 
-sleep 2
-
-p "# The arrow package should now be added to the list in the requirements.txt file"
-pe "cat requirements.txt"
-sleep 2
-
-p "# Let's see what happens when Dockter will rebuild the image"
-pe "dockter build"
-sleep 2
-
-p "# Now we can check the history for this particular image that we just rebuilt"
-pe "docker history py-incremental"
-sleep 2
 
 p "# Check out the docs (https://github.com/stencila/dockter#readme) for more things you can do with Dockter."
 p "# Thanks for watching!"
