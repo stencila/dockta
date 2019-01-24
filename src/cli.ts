@@ -9,16 +9,12 @@ import yaml from 'js-yaml'
 
 const VERSION = require('../package').version
 
-import Docker from 'dockerode'
 import DockerCompiler from './DockerCompiler'
-import NixGenerator from './NixGenerator'
 import { ApplicationError } from './errors'
 import CachingUrlFetcher from './CachingUrlFetcher'
 import nix from './cli-nix'
 
 const compiler = new DockerCompiler(new CachingUrlFetcher())
-const generator = new NixGenerator(new CachingUrlFetcher(), undefined)
-const docker = new Docker()
 
 yargonaut
   .style('blue')
@@ -55,9 +51,10 @@ yargs
   .command('compile [folder]', 'Compile a project to a software environment', yargs => {
     folderArg(yargs)
   }, async (args: any) => {
-    let environ = await compiler.compile('file://' + path.resolve(args.folder), false).catch(error)
+    const folder = path.resolve(args.folder)
+    let environ = await compiler.compile('file://' + folder, false).catch(error)
     if (args.nix) {
-      nix.compile(environ, args.folder)
+      nix.compile(environ, folder)
     }
   })
 
@@ -66,10 +63,11 @@ yargs
   .command('build [folder]', 'Build a Docker image for project', yargs => {
     folderArg(yargs)
   }, async (args: any) => {
+    const folder = path.resolve(args.folder)
     if (args.nix) {
-      await nix.build(args.folder)
+      await nix.build(folder)
     } else {
-      await compiler.compile('file://' + args.folder, true).catch(error)
+      await compiler.compile('file://' + folder, true).catch(error)
     }
   })
 
@@ -83,10 +81,11 @@ yargs
       describe: 'The command to execute'
     })
   }, async (args: any) => {
+    const folder = path.resolve(args.folder)
     if (args.nix) {
-      await nix.execute(args.folder, args.command)
+      await nix.execute(folder, args.command)
     } else {
-      const node = await compiler.execute('file://' + args.folder, args.command).catch(error)
+      const node = await compiler.execute('file://' + folder, args.command).catch(error)
       output(node, args.format)
     }
   })
@@ -95,13 +94,15 @@ yargs
   // @ts-ignore
   .command('who [folder]', 'List the people your project depends upon', yargs => {
     folderArg(yargs)
-    yargs.option('depth',{
+    yargs.option('depth', {
+      alias: 'd',
       type: 'integer',
       default: 100,
       describe: 'The maximum dependency recursion depth'
     })
   }, async (args: any) => {
-    const people = await compiler.who('file://' + args.folder, args.depth).catch(error)
+    const folder = path.resolve(args.folder)
+    const people = await compiler.who('file://' + folder, args.depth).catch(error)
     if (!people) {
       console.log('Nobody (?)')
     } else {
@@ -124,7 +125,7 @@ yargs
   .parse()
 
 /**
- * Specify the <project> argument settings
+ * Specify the [folder] argument settings
  *
  * @param yargs The yargs object
  */

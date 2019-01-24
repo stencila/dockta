@@ -11,7 +11,7 @@ DEMO_PROMPT=$BLUE"$ "
 DEMO_CMD_COLOR=$GREEN
 
 # Do some clean up first
-rm tests/fixtures/r-spatial/*.png
+rm -f tests/fixtures/r-spatial/*.png
 
 # Run the demo!
 
@@ -48,7 +48,7 @@ pe "cat .Dockerfile"
 sleep 3
 
 p "# Okay, so let's build this thing!"
-pe "dockter build \$PWD"
+pe "dockter build"
 sleep 3
 
 p "# Let's check that it's built by listing the Docker images on this machine"
@@ -57,7 +57,7 @@ p "# Note that the image r-spatial was just created"
 sleep 2
 
 p "# Now we can execute this project"
-pe "dockter execute \$PWD"
+pe "dockter execute"
 sleep 2
 
 p "# That started a container using the new image, mounted the project directory into the container and ran main.R"
