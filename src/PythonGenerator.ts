@@ -113,7 +113,7 @@ export default class PythonGenerator extends PackageGenerator {
    * Generate the right pip command to install the requirements, appends the correct Python major version to `pip`.
    */
   installCommand (sysVersion: string): string | undefined {
-    return `pip${this.pythonVersionSuffix()} install --user --requirement requirements.txt`
+    return `pip${this.pythonVersionSuffix()} install --requirement requirements.txt`
   }
 
   /**
