@@ -54,7 +54,7 @@ WORKDIR /home/dockteruser
 
 COPY .requirements.txt requirements.txt
 
-RUN pip3 install --user --requirement requirements.txt
+RUN pip3 install --requirement requirements.txt
 
 COPY cmd.py cmd.py
 
@@ -96,7 +96,7 @@ WORKDIR /home/dockteruser
 
 COPY requirements.txt requirements.txt
 
-RUN pip install --user --requirement requirements.txt
+RUN pip install --requirement requirements.txt
 
 COPY cmd.py cmd.py
 
@@ -145,7 +145,7 @@ WORKDIR /home/dockteruser
 
 COPY .requirements.txt requirements.txt
 
-RUN pip install --user --requirement requirements.txt
+RUN pip install --requirement requirements.txt
 
 COPY cmd.py cmd.py
 

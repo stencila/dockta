@@ -37,7 +37,7 @@ COPY .requirements.txt requirements.txt
 COPY .DESCRIPTION DESCRIPTION
 
 RUN npm install package.json \
- && pip3 install --user --requirement requirements.txt \
+ && pip3 install --requirement requirements.txt \
  && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
 COPY script.py script.py
