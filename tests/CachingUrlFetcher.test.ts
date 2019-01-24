@@ -5,6 +5,8 @@ import { NetworkError } from '../src/errors'
 
 const fetcher = new CachingUrlFetcher()
 
+jest.setTimeout(30 * 60 * 1000)
+
 test('fetch:npm', async () => {
   let result = await fetcher.fetchUrl('https://registry.npmjs.org/@stencila/dockter')
   expect(result.name).toBe('@stencila/dockter')
