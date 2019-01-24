@@ -128,7 +128,7 @@ pe "mv .requirements.txt requirements.txt"
 sleep 2
 
 p "# Let's add anoter Python package to `requirements.txt`"
-pe "echo \"arrow==0.12.1\" >> requirements.txt" 
+pe "echo \"dateutil==2.5.7\" >> requirements.txt" 
 sleep 2
 
 p "# The arrow package should now be added to the list in the requirements.txt file"
