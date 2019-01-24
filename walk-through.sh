@@ -116,7 +116,7 @@ p "# Dockter will create it for us"
 pe "dockter compile"
 sleep 2
 
-pe "ls"
+pe "ls -a"
 sleep 2
 
 p "# The packages required for the project should now be in the file"
@@ -128,10 +128,10 @@ pe "mv .requirements.txt requirements.txt"
 sleep 2
 
 p "# Let's add anoter Python package to `requirements.txt`"
-pe "echo \"dateutil==2.5.7\" >> requirements.txt" 
+pe "echo -e '\ndateutil==2.5.7' >> requirements.txt" 
 sleep 2
 
-p "# The arrow package should now be added to the list in the requirements.txt file"
+p "# The dateutil package should now be added to the list in the requirements.txt file"
 pe "cat requirements.txt"
 sleep 2
 
