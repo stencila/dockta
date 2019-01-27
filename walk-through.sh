@@ -127,8 +127,8 @@ p "# If we want to now be in charge, we need to rename the requirements.txt file
 pe "mv .requirements.txt requirements.txt"
 sleep 2
 
-p "# Let's add anoter Python package to `requirements.txt`"
-pe "echo -e '\ndateutil==2.5.7' >> requirements.txt" 
+p "# Let's add anoter Python package to requirements.txt"
+pe "echo -e '\npython-dateutil==2.7.5' >> requirements.txt" 
 sleep 2
 
 p "# The dateutil package should now be added to the list in the requirements.txt file"
