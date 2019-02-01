@@ -39,7 +39,7 @@
     "research",
     "reproducibility"
   ],
-  "author": "Contributors (https://github.com/stencila/dockter/contributors)",
+  "author": "Dockter contributors (https://github.com/stencila/dockter/contributors)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/stencila/dockter/issues"

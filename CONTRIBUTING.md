@@ -71,6 +71,12 @@ npm run cli -- compile tests/fixtures/dockerfile-date/Dockerfile
 
 This uses `ts-node` to compile and run Typescript on the fly so that you don't need to do a build step first.
 
+You might also want to create an alias for convieience during development:
+
+```bash
+alias dockter="npm run cli --"
+```
+
 
 ## Architecture
 

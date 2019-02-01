@@ -1,4 +1,4 @@
-# Dockter: a Docker image builder for researchers
+# Dockter: a container image builder for researchers
 
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
 [![Build status](https://travis-ci.org/stencila/dockter.svg?branch=master)](https://travis-ci.org/stencila/dockter)
