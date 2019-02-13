@@ -54,7 +54,7 @@
     "@types/dockerode": "^2.5.5",
     "@types/express": "^4.16.0",
     "@types/got": "^9.2.0",
-    "@types/jest": "^24.0.0",
+    "@types/jest": "^24.0.4",
     "@types/js-yaml": "^3.11.2",
     "@types/node-persist": "0.0.33",
     "@types/semver": "^5.5.0",
