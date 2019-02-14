@@ -44,7 +44,7 @@ demo-upload:
 
 # Download the `demo-magic.sh` script.
 demo-magic.sh:
-	curl https://raw.githubusercontent.com/nokome/demo-magic/master/demo-magic.sh > demo-magic.sh
+	curl https://raw.githubusercontent.com/paxtonhare/demo-magic/master/demo-magic.sh > demo-magic.sh
 
 # Create an animated GIF of the demo.
 # Note: this can be memory intensive for long demos; you probably only
