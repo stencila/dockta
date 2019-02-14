@@ -59,7 +59,7 @@
     "@types/node-persist": "0.0.33",
     "@types/semver": "^5.5.0",
     "@types/tar-fs": "^1.16.1",
-    "@types/tmp": "0.0.33",
+    "@types/tmp": "0.0.34",
     "@types/yargs": "^12.0.1",
     "all-contributors-cli": "^6.0.0",
     "commitizen": "^3.0.4",
