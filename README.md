@@ -359,6 +359,10 @@ rdate             latest              545aa877bd8d        About a minute ago   7
 
 If you want to build your image with bare Docker rename `.Dockerfile` to `Dockerfile` and run `docker build .` instead. This might be a good approach when you have finished the exploratory phase of your project (i.e. there is litte or no churn in your package dependencies) and want to create a more final image.
 
+> 🛈 Docker images can get very large (2-3 GB is not unusual for an image with R and/or Python and associated packages). 
+> You might want to occasionally do a clean up of 'dangling' images using `docker image prune` to save disk space.
+> See the Docker [documentation for more on cleaning up](https://docs.docker.com/config/pruning/) unused images and containers.
+
 ### Execute a Docker image
 
 You can use Docker to run the created image. Or use Dockter's `execute` command to compile, build and run your image in one:
