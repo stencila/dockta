@@ -122,6 +122,13 @@ export default class JavascriptParser extends Parser {
               }
             }
 
+            // For scoped packages (e.g. `@types/node`) replace any slashes in the package name
+            // and fetch the latest version (see https://github.com/stencila/dockter/issues/87).
+            if (name[0] === '@') {
+              name = name.replace('/', '%2f')
+              version = '*'
+            }
+
             // Fetch meta-data from NPM
             const data = await this.fetch(`https://registry.npmjs.org/${name}/${version}`, {
               json: true,
