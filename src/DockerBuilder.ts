@@ -1,21 +1,21 @@
 import crypto from 'crypto'
-import Docker from 'dockerode'
 import fs from 'fs'
-import parser from 'docker-file-parser'
 import path from 'path'
+
+import Docker from 'dockerode'
+// @ts-ignore
+import ndjson from 'ndjson'
+import parser from 'docker-file-parser'
 import tarFs from 'tar-fs'
 import zlib from 'zlib'
 
-const ndjson = require('ndjson')
-
-interface DockerMessageAux {
-  ID?: string
-}
-
+/* tslint:disable completed-docs */
 interface DockerMessage {
   error?: string
   stream?: string
-  aux?: DockerMessageAux
+  aux?: {
+    ID?: string
+  }
 }
 
 /**

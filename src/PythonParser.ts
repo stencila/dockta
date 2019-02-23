@@ -164,8 +164,19 @@ export enum RequirementType {
 }
 
 interface PythonRequirement {
-  value: string
+  /**
+   * Type of requirement specified (name or URL)
+   */
   type: RequirementType
+
+  /**
+   * Name or URL value of the requirement
+   */
+  value: string
+
+  /**
+   * Version of the requirement
+   */
   version?: string | null
 }
 
