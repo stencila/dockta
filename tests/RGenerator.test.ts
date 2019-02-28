@@ -123,11 +123,11 @@ COPY .DESCRIPTION DESCRIPTION
 
 RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
-COPY cmd.R cmd.R
+COPY main.R main.R
 COPY other.R other.R
 
 USER dockteruser
 
-CMD Rscript cmd.R
+CMD Rscript main.R
 `)
 })

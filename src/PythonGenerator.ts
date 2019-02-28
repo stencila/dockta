@@ -87,7 +87,8 @@ export default class PythonGenerator extends PackageGenerator {
    * Get the pip command to install the Stencila package
    */
   stencilaInstall (sysVersion: string): string | undefined {
-    return `pip${this.pythonVersionSuffix()} install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip`
+    return `pip${this.pythonVersionSuffix()} install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip \\
+ && python${this.pythonVersionSuffix()} -m stencila register`
   }
 
   /**
@@ -126,20 +127,8 @@ export default class PythonGenerator extends PackageGenerator {
     return pyFiles.map(file => [file, file]) as Array<[string, string]>
   }
 
-  /**
-   * The command to execute in a container created from the Docker image
-   *
-   * If there is a top-level `main.py` or `cmd.py` then that will be used,
-   * otherwise, the first `*.R` files by alphabetical order will be used.
-   */
   runCommand (): string | undefined {
-    const pyFiles = this.glob('**/*.py')
-    if (pyFiles.length === 0) return
-    let script
-    if (pyFiles.includes('main.py')) script = 'main.py'
-    else if (pyFiles.includes('cmd.py')) script = 'cmd.py'
-    else script = pyFiles[0]
-    return `python${this.pythonVersionSuffix()} ${script}`
+    if (this.exists('main.py')) return `python${this.pythonVersionSuffix()} main.py`
   }
 
 }

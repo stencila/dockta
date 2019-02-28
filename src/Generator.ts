@@ -263,7 +263,10 @@ WORKDIR /home/dockteruser
   }
 
   /**
-   * The default command to run containers created from this image
+   * The default command to run in containers created from this image
+   *
+   * Usually command will a file with a name `main` and the extension
+   * of the generator's language e.g. `.R` if it exists in the folder.
    *
    * @param sysVersion The Ubuntu system version being used
    */

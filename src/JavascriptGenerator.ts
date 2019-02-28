@@ -46,7 +46,8 @@ export default class JavascriptGenerator extends PackageGenerator {
   }
 
   stencilaInstall (sysVersion: string): string | undefined {
-    return 'npm install stencila-node@0.28.15'
+    return `npm install stencila-node@0.28.15 \\
+ && node -e "require('stencila-node').register()"`
   }
 
   installFiles (sysVersion: string): Array<[string, string]> {
@@ -68,5 +69,14 @@ export default class JavascriptGenerator extends PackageGenerator {
 
   installCommand (sysVersion: string): string | undefined {
     return 'npm install package.json'
+  }
+
+  projectFiles (): Array<[string, string]> {
+    const files = this.glob('**/*.js')
+    return files.map(file => [file, file]) as Array<[string, string]>
+  }
+
+  runCommand (): string | undefined {
+    if (this.exists('main.js')) return `node main.js`
   }
 }

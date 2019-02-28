@@ -45,7 +45,8 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip
+RUN pip3 install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip \\
+ && python3 -m stencila register
 
 RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
 WORKDIR /home/dockteruser
@@ -56,11 +57,11 @@ COPY .requirements.txt requirements.txt
 
 RUN pip3 install --requirement requirements.txt
 
-COPY cmd.py cmd.py
+COPY main.py main.py
 
 USER dockteruser
 
-CMD python3 cmd.py
+CMD python3 main.py
 `)
 
   expectedFixture(fixture('py-generator-generated'), '.requirements.txt')
@@ -98,11 +99,11 @@ COPY requirements.txt requirements.txt
 
 RUN pip install --requirement requirements.txt
 
-COPY cmd.py cmd.py
+COPY main.py main.py
 
 USER dockteruser
 
-CMD python cmd.py
+CMD python main.py
 `)
 
   // it should not generate a .requirements.txt
@@ -147,11 +148,11 @@ COPY .requirements.txt requirements.txt
 
 RUN pip install --requirement requirements.txt
 
-COPY cmd.py cmd.py
+COPY main.py main.py
 
 USER dockteruser
 
-CMD python cmd.py
+CMD python main.py
 `)
   cleanup(['py-generator-generated/.Dockerfile', 'py-generator-generated/.requirements.txt'])
 })

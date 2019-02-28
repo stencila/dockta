@@ -40,10 +40,8 @@ RUN npm install package.json \
  && pip3 install --requirement requirements.txt \
  && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
 
+COPY script.js script.js
 COPY script.py script.py
 COPY script.R script.R
 
 USER dockteruser
-
-CMD python3 script.py \
- && Rscript script.R
