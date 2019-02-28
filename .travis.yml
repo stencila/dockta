@@ -1,7 +1,7 @@
-# Use Node.js 8
+# Use Node.js
 language: node_js
 node_js:
-  - 8
+  - "10"
 
 # Require docker service for building images during tests
 services:
@@ -44,8 +44,7 @@ deploy:
   # Deploy a new version of NPM package and create a Github release
   - provider: script
     skip_cleanup: true
-    script:
-      - npm run semantic-release
+    script: npm run semantic-release
 
   # Deploy documentation to Github Pages
   # See https://docs.travis-ci.com/user/deployment/pages/
