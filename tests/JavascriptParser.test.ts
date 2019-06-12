@@ -38,7 +38,7 @@ describe('JavascriptParser', () => {
     expect(pkg.name).toEqual('js-package')
     expect(pkg.license).toEqual('ISC')
     expect(pkg.authors).toEqual([Person.fromText('Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)')])
-    expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockter/')
+    expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockta/')
     expect(pkg.softwareRequirements.length).toEqual(5)
     const expecteds = [
       ['is-array', '1.0.1'],
@@ -74,22 +74,22 @@ describe('JavascriptParser', () => {
   test('parse:js-requirements-github-shortcut', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-github-shortcut'))
     const pkg = await parser.parse() as SoftwarePackage
-    expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockter/')
+    expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockta/')
   })
   test('parse:js-requirements-gitlab-shortcut', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-gitlab-shortcut'))
     const pkg = await parser.parse() as SoftwarePackage
-    expect(pkg.codeRepository).toEqual('https://gitlab.com/stencila/dockter/')
+    expect(pkg.codeRepository).toEqual('https://gitlab.com/stencila/dockta/')
   })
   test('parse:js-requirements-bitbucket-shortcut', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-bitbucket-shortcut'))
     const pkg = await parser.parse() as SoftwarePackage
-    expect(pkg.codeRepository).toEqual('https://bitbucket.com/stencila/dockter/')
+    expect(pkg.codeRepository).toEqual('https://bitbucket.com/stencila/dockta/')
   })
   test('parse:js-requirements-npm-shortcut', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-npm-shortcut'))
     const pkg = await parser.parse() as SoftwarePackage
-    expect(pkg.codeRepository).toEqual('https://www.npmjs.com/package/@stencila/dockter/')
+    expect(pkg.codeRepository).toEqual('https://www.npmjs.com/package/@stencila/dockta/')
   })
   test('parse:js-requirements-repo-string', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-repo-string'))

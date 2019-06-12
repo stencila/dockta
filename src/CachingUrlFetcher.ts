@@ -4,11 +4,11 @@ import { NetworkError } from './errors'
 import persist from 'node-persist'
 import got from 'got'
 
-export const REQUEST_CACHE_DIR = '/tmp/dockter-request-cache'
+export const REQUEST_CACHE_DIR = '/tmp/dockta-request-cache'
 let REQUEST_CACHE_INITIALISED = false
 
 /**
- * The default URL fetcher that Dockter uses. Fetches using `got` and caches results using `persist`
+ * The default URL fetcher that Dockta uses. Fetches using `got` and caches results using `persist`
  */
 export default class CachingUrlFetcher implements IUrlFetcher {
   /**

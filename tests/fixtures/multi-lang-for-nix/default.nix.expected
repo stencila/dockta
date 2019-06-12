@@ -1,4 +1,4 @@
-# To stop Dockter generating this file and start editing it yourself,
+# To stop Dockta generating this file and start editing it yourself,
 # rename it to "default.nix".
 with import (builtins.fetchTarball {
   name = "stencila-18.12";

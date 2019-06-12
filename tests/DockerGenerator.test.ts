@@ -14,10 +14,10 @@ test('generate:empty', async () => {
   const generator = new DockerGenerator(urlFetcher, environ)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
 
-RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
-WORKDIR /home/dockteruser
+RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
+WORKDIR /home/docktauser
 
-USER dockteruser
+USER docktauser
 `)
 })
 

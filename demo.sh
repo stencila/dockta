@@ -22,16 +22,16 @@ p "# And take a look at the files in it"
 pe "ls"
 sleep 1
 
-p "# The 'main.R' file is what Dockter will execute within a container"
+p "# The 'main.R' file is what Dockta will execute within a container"
 p "# It reads in some spatial data and plots it"
 pe "cat main.R"
 sleep 1
 
 p "# Let's start by compiling this project"
-pe "dockter compile"
+pe "dockta compile"
 sleep 1
 
-p "# You'll see that Dockter has created several new files, prefixed with a dot"
+p "# You'll see that Dockta has created several new files, prefixed with a dot"
 pe "ls -a"
 sleep 2
 
@@ -48,7 +48,7 @@ pe "cat .Dockerfile"
 sleep 3
 
 p "# Okay, so let's build this thing!"
-pe "dockter build"
+pe "dockta build"
 sleep 3
 
 p "# Let's check that it's built by listing the Docker images on this machine"
@@ -57,7 +57,7 @@ p "# Note that the image r-spatial was just created"
 sleep 2
 
 p "# Now we can execute this project"
-pe "dockter execute"
+pe "dockta execute"
 sleep 2
 
 p "# That started a container using the new image, mounted the project directory into the container and ran main.R"
@@ -67,14 +67,14 @@ sleep 2
 
 p "# Now we've executed the project and created a reproducible figure. Give credit where credit is due!"
 p "# The who command lists all the contributors of all the packages that your project depends upon"
-pe "dockter who"
+pe "dockta who"
 
-p "# Check out the docs (https://github.com/stencila/dockter#readme) for more things you can do with Dockter."
+p "# Check out the docs (https://github.com/stencila/dockta#readme) for more things you can do with Dockta."
 p "# Thanks for watching!"
 sleep 2
 
 p "# This demo was created using"
-pe "dockter --version"
+pe "dockta --version"
 sleep 2
 
 exit

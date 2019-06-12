@@ -4,7 +4,7 @@ import Parser from './Parser'
 import { SoftwarePackage, Person } from '@stencila/schema'
 
 /**
- * Dockter `Parser` class for R requirements files and source code.
+ * Dockta `Parser` class for R requirements files and source code.
  *
  * For each package, meta-data is obtained from http://crandb.r-pkg.org and used to create a `SoftwarePackage` instance
  * using crosswalks from column "R Package Description" in https://github.com/codemeta/codemeta/blob/master/crosswalk.csv

@@ -32,10 +32,10 @@ pe "cat script.js"
 sleep 1
 
 p "# Let's start by compiling this project with Nix support"
-pe "dockter compile --nix"
+pe "dockta compile --nix"
 sleep 1
 
-p "# You'll see that Dockter has created several new files, prefixed with a dot"
+p "# You'll see that Dockta has created several new files, prefixed with a dot"
 pe "ls -a"
 sleep 2
 
@@ -60,7 +60,7 @@ pe "cat .nixDockerfile"
 sleep 3
 
 p "# Okay, so let's build this thing!"
-pe "dockter build \$PWD --nix"
+pe "dockta build \$PWD --nix"
 sleep 3
 
 p "# Let's check that it's built by listing the Docker images on this machine"
@@ -70,7 +70,7 @@ sleep 2
 
 p "# Now we can execute this project environment in a container running nix-shell"
 p "# This is going to take a while the first time since all dependencies need to be fetched (by Nix inside Docker)"
-pe "dockter execute \$PWD --nix"
+pe "dockta execute \$PWD --nix"
 sleep 2
 
 # Inside the container we can demo thar Dat, R, Python, are installed in Nix hashed folders
@@ -88,7 +88,7 @@ pe "docker volume list"
 sleep 2
 
 p "# If we execute this project again, it should be much faster to launch"
-pe "dockter execute \$PWD --nix"
+pe "dockta execute \$PWD --nix"
 sleep 2
 
 p "# Now let's switch to another project that only relies on Python"
@@ -96,7 +96,7 @@ pe "cd ../py-for-nix"
 sleep 1
 
 p "# Let's compile this new project"
-pe "dockter compile --nix"
+pe "dockta compile --nix"
 sleep 2
 
 p "# We can see that .default.nix has less dependencies"
@@ -104,7 +104,7 @@ pe "cat .default.nix"
 sleep 2
 
 p "# Let's build it!"
-pe "dockter build \$PWD --nix"
+pe "dockta build \$PWD --nix"
 sleep 2
 
 p "# Now, let's check our docker images again and see that we have a new image"
@@ -112,14 +112,14 @@ pe "docker images | head -n 5"
 sleep 2
 
 p "# Let's execute it! This should be fast since we already got Python in the shared Nix store"
-pe "dockter execute \$PWD --nix"
+pe "dockta execute \$PWD --nix"
 sleep 2
 
 # Show that Python is installed but not Dat or R
 # > which python
 # > which R
 
-p "# Check out the docs for more things you can do with Dockter. Thanks for watching!"
+p "# Check out the docs for more things you can do with Dockta. Thanks for watching!"
 sleep 2
 
 exit

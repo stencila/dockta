@@ -14,7 +14,7 @@ import time
 
 
 def main():
-    othersubmodule.docktertest.test_method()
+    othersubmodule.docktatest.test_method()
     dockerother.my_function()
     filemoduleone.function_one()
     function_two()

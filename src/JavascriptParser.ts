@@ -9,7 +9,7 @@ import Parser from './Parser'
 import { Person, SoftwarePackage } from '@stencila/schema'
 
 /**
- * Dockter `Parser` class for Node.js.
+ * Dockta `Parser` class for Node.js.
  */
 export default class JavascriptParser extends Parser {
 
@@ -123,7 +123,7 @@ export default class JavascriptParser extends Parser {
             }
 
             // For scoped packages (e.g. `@types/node`) replace any slashes in the package name
-            // and fetch the latest version (see https://github.com/stencila/dockter/issues/87).
+            // and fetch the latest version (see https://github.com/stencila/dockta/issues/87).
             if (name[0] === '@') {
               name = name.replace('/', '%2f')
               version = '*'

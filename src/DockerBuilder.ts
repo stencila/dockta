@@ -21,7 +21,7 @@ interface DockerMessage {
 /**
  * Builds Docker images from Dockerfiles
  *
- * Detect's the special `# dockter` comment and,
+ * Detect's the special `# dockta` comment and,
  *  - sends the instructions prior to the comment to Docker to be built as normal and
  *  - applies all following instructions into a single layer
  */
@@ -37,18 +37,18 @@ export default class DockerBuilder {
   async build (dir: string, name?: string, dockerfile: string = 'Dockerfile') {
     if (!name) {
       const hash = crypto.createHash('md5').update(dir).digest('hex')
-      name = 'dockter-' + hash
+      name = 'dockta-' + hash
     }
 
     const content = fs.readFileSync(path.join(dir, dockerfile), 'utf8')
     let instructions = parser.parse(content, { includeComments: true })
 
-    // Collect all instructions prior to any `# dockter` comment into a
+    // Collect all instructions prior to any `# dockta` comment into a
     // new Dockerfile and store remaining instructions for special handling.
     // Keep track of `WORKDIR` and `USER` instructions for consistent handling of those
     let workdir = '/'
     let user = 'root'
-    let dockterize = false
+    let docktarize = false
     let newContent = ''
     let index = 0
     for (let instruction of instructions) {
@@ -58,18 +58,18 @@ export default class DockerBuilder {
         user = instruction.args as string
       } else if (instruction.name === 'COMMENT') {
         const arg = instruction.args as string
-        if (arg.match(/^# *dockter/)) {
+        if (arg.match(/^# *dockt(a|er)/)) {
           instructions = instructions.slice(index + 1)
-          dockterize = true
+          docktarize = true
           break
         }
       }
       if (instruction.raw) newContent += instruction.raw + '\n'
       index += 1
     }
-    // If there was no # dockter comment then make sure there are no
+    // If there was no # dockta comment then make sure there are no
     // 'extra' instructions
-    if (!dockterize) instructions = []
+    if (!docktarize) instructions = []
 
     // Pack the directory and replace the Dockerfile with the new one
     const tar = tarFs.pack(dir, {
@@ -91,7 +91,7 @@ export default class DockerBuilder {
 
     // The following line can be useful in debugging the
     // above tar stream generation
-    // targz.pipe(fs.createWriteStream('/tmp/dockter-builder-debug-1.tar.gz'))
+    // targz.pipe(fs.createWriteStream('/tmp/dockta-builder-debug-1.tar.gz'))
 
     const docker = new Docker()
 
@@ -188,7 +188,7 @@ export default class DockerBuilder {
     let count = 1
     let changes = ''
     for (let instruction of instructions) {
-      const step = `Dockter ${count}/${instructions.length} :`
+      const step = `Dockta ${count}/${instructions.length} :`
       switch (instruction.name) {
         case 'USER':
           user = instruction.args as string
@@ -250,7 +250,7 @@ export default class DockerBuilder {
           break
 
         default:
-          throw new Error(`Dockter can not yet handle a ${instruction.name} instruction. Put it before the # dockter comment in your Dockerfile.`)
+          throw new Error(`Dockta can not yet handle a ${instruction.name} instruction. Put it before the # dockta comment in your Dockerfile.`)
       }
       count += 1
     }

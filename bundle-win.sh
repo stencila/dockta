@@ -8,10 +8,10 @@
 osslsigncode sign \
   -pkcs12 "win-cert.p12" \
   -pass "$WIN_CERT_PASSWORD" \
-  -n "Dockter" \
+  -n "Dockta" \
   -i "https://stenci.la" \
   -t "http://timestamp.comodoca.com/authenticode" \
-  -in "build/dockter-win.exe" \
-  -out "build/dockter.exe"
+  -in "build/dockta-win.exe" \
+  -out "build/dockta.exe"
 
-zip -j build/dockter-win-x64.zip build/dockter.exe
+zip -j build/dockta-win-x64.zip build/dockta.exe

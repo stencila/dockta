@@ -50,7 +50,7 @@ export default abstract class Doer {
     } catch (error) {
       if (error.code === 'EACCES') {
         throw new PermissionError(
-            `You do no have permission to access the whole of folder "${this.folder}". Are you sure you want Dockter to compile this folder?`
+            `You do no have permission to access the whole of folder "${this.folder}". Are you sure you want Dockta to compile this folder?`
         )
       } else throw error
     }

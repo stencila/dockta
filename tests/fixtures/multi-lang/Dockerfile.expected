@@ -27,10 +27,10 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash dockteruser
-WORKDIR /home/dockteruser
+RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
+WORKDIR /home/docktauser
 
-# dockter
+# dockta
 
 COPY .package.json package.json
 COPY .requirements.txt requirements.txt
@@ -38,10 +38,10 @@ COPY .DESCRIPTION DESCRIPTION
 
 RUN npm install package.json \
  && pip3 install --requirement requirements.txt \
- && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockter/src/install.R)"
+ && bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockta/src/install.R)"
 
 COPY script.js script.js
 COPY script.py script.py
 COPY script.R script.R
 
-USER dockteruser
+USER docktauser
