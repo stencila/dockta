@@ -31,7 +31,7 @@ test.skip('build:py-requests-dockta', async () => {
   const latestInfo = await latest.inspect()
   const system = docker.getImage('py-requests-dockta:system')
   const systemInfo = await system.inspect()
-  
+
   expect(history[0].Comment).toEqual('Updated application layer')
   expect(history[0].Size).toBeGreaterThan(0)
   // TODO : add more expectations!
@@ -44,7 +44,7 @@ test.skip('build:py-requests-dockta', async () => {
 test.skip('build:py-requests-no-dockta', async () => {
   const builder = new DockerBuilder()
   const docker = new Docker()
-  
+
   // Remove any existing images
   try {
     await docker.getImage('py-requests-no-dockta:latest').remove()
@@ -61,7 +61,7 @@ test.skip('build:py-requests-no-dockta', async () => {
   const latestInfo = await latest.inspect()
   const system = docker.getImage('py-requests-no-dockta:system')
   const systemInfo = await system.inspect()
-  
+
   expect(history[0].Comment).toEqual('No updates requested')
   expect(history[0].Size).toEqual(0)
   // TODO : add more expectations!
@@ -69,7 +69,7 @@ test.skip('build:py-requests-no-dockta', async () => {
 
 /**
  * Tests of build failures
- * 
+ *
  * Currently skipped because we are not handling messages right now
  */
 test.skip('build:py-requests-no-dockta', async () => {
