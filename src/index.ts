@@ -1,10 +1,10 @@
 import * as path from 'path'
 import nix from './cli-nix'
+import yaml from 'js-yaml'
 import DockerCompiler from './DockerCompiler'
 import CachingUrlFetcher from './CachingUrlFetcher'
 import { ApplicationError } from './errors'
 import * as logga from '@stencila/logga'
-import { output } from './output'
 
 const compiler = new DockerCompiler(new CachingUrlFetcher())
 
@@ -21,6 +21,20 @@ function loggingErrorHandler (error: Error) {
   } else {
     logger.error(error)
   }
+}
+
+/**
+ * Convert an object to a string (maybe to go to stdout or back over HTTP)
+ *
+ * @param object The object to print
+ * @param format The format use: `json` or `yaml`
+ */
+function stringifyNode (object: any, format: string): string {
+  if (!object) {
+    return ''
+  }
+
+  return format === 'yaml' ? yaml.safeDump(object, { lineWidth: 120 }) : JSON.stringify(object, null, '  ')
 }
 
 /**
@@ -61,15 +75,18 @@ export async function build (folder: string, useNix: boolean) {
  * @param command The command to execute
  * @param useNix Build the environment with nix
  * @param outputFormat The format to output as ('json' or 'yaml')
+ * @param outputFunction Optional callback to receive the output. If undefined, node output goes to stdout.
  */
-export async function execute (folder: string, command: string, useNix: boolean, outputFormat: string = 'json') {
+export async function execute (folder: string, command: string, useNix: boolean, outputFormat: string = 'json', outputFunction: Function = console.log) {
   const absoluteFolder = path.resolve(folder)
 
   if (useNix) {
     await nix.execute(absoluteFolder, command)
   } else {
     const node = await compiler.execute('file://' + absoluteFolder, command).catch(loggingErrorHandler)
-    output(node, outputFormat)
+    const nodeString = stringifyNode(node, outputFormat)
+
+    outputFunction(nodeString)
   }
 }
 
@@ -78,13 +95,14 @@ export async function execute (folder: string, command: string, useNix: boolean,
  *
  * @param folder Path of folder to examine
  * @param depth Maximum depth of dependencies to traverse to find people
+ * @param outputFunction Optional callback to receive the output. If undefined, utput goes to stdout.
  */
-export async function who (folder: string, depth: number = 100) {
+export async function who (folder: string, depth: number = 100, outputFunction: Function = console.log) {
   const absoluteFolder = path.resolve(folder)
   const people = await compiler.who('file://' + absoluteFolder, depth).catch(loggingErrorHandler)
 
   if (!people) {
-    console.log('Nobody (?)')
+    outputFunction('Nobody (?)')
   } else {
     // Sort by number of packages descending and then alphabetically ascending
     let sorted = Object.entries(people).sort(([aName, aPkgs], [bName, bPkgs]) => {
@@ -98,6 +116,6 @@ export async function who (folder: string, depth: number = 100) {
     const output = sorted.map(([name, packages]) => {
       return `${name} (${packages.join(', ')})`
     }).join(', ')
-    console.log(output)
+    outputFunction(output)
   }
 }
