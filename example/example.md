@@ -1,6 +1,6 @@
-## Using Dockter
+## Using Dockta
 
-This document will take you through using Dockter to make your work reproducible and easy to reuse.
+This document will take you through using Dockta to make your work reproducible and easy to reuse.
 
 #### Prerequisites
 
@@ -9,51 +9,51 @@ check out the [Katakoda set of Docker courses](https://www.katacoda.com/courses/
 
 #### Motivation
 
-We encourage you to have a look at the above courses but the idea behind Dockter is that you don't need to master Docker. Dockter does most of the things for you
+We encourage you to have a look at the above courses but the idea behind Dockta is that you don't need to master Docker. Dockta does most of the things for you
 in order to set up a reproducible research environment.
 
-Dockter is a tool to make it easier for researchers to create reproducible research environments. It generates a Docker image for a research project based on the source code in it. That means that you don’t need to learn a new file format (`Dockerfiles`) to create Docker images. Dockter makes it also easy to track dependencies and update the image when they change.
+Dockta is a tool to make it easier for researchers to create reproducible research environments. It generates a Docker image for a research project based on the source code in it. That means that you don’t need to learn a new file format (`Dockerfiles`) to create Docker images. Dockta makes it also easy to track dependencies and update the image when they change.
 
-In addition, Dockter manages the image building process to better fit your everyday workflow (determines package system dependencies, manages builds) and generates JSON-LD meta-data describing the image (from which citations etc can be generated).
+In addition, Dockta manages the image building process to better fit your everyday workflow (determines package system dependencies, manages builds) and generates JSON-LD meta-data describing the image (from which citations etc can be generated).
 
-You can manually edit the files which Dockter generates so that the containers build of it exactly suit your project. 
+You can manually edit the files which Dockta generates so that the containers build of it exactly suit your project. 
 
 #### 1. Install
 
-a) Download the latest stable binary package (ready to run) [for your operating system](https://github.com/stencila/dockter/releases):
+a) Download the latest stable binary package (ready to run) [for your operating system](https://github.com/stencila/dockta/releases):
 
-b) Copy the binary file into the folder where you would like Dockter to be (eg. `Applications` on your Mac OS, or `Program Files` on Windows). 
+b) Copy the binary file into the folder where you would like Dockta to be (eg. `Applications` on your Mac OS, or `Program Files` on Windows). 
 
-c) Once the file is downloaded, rename it to `dockter`  Dockter is a command line tool (at least for now) so you need to interact with it through the terminal (on Windows it will be Power Shell). 
+c) Once the file is downloaded, rename it to `dockta`.  Dockta is a command line tool (at least for now) so you need to interact with it through the terminal (on Windows it will be Power Shell). 
 
 **Basic use**
 
 ```
-  dockter compile [folder] [format]  Compile a project to a software environment
-  dockter build [folder]             Build a Docker image for project
-  dockter execute [folder] [format]  Execute a project
+  dockta compile [folder] [format]  Compile a project to a software environment
+  dockta build [folder]             Build a Docker image for project
+  dockta execute [folder] [format]  Execute a project
 ```
 
 
-#### 2. Dockter for R
+#### 2. Dockta for R
 
-Dockter can create a software environment file which reflects the requirements to run the project written in R.
+Dockta can create a software environment file which reflects the requirements to run the project written in R.
 The software environment file is a file in `JSON` or `yaml` format with comprehensive meta data about the project.
-Dockter parses the folder with the R project for `R` and `Rmd` files and extracts the relevant information.
+Dockta parses the folder with the R project for `R` and `Rmd` files and extracts the relevant information.
 
  * For each R package installed or loaded, the meta data is retrieved from [CRAN](http://crandb.r-pkg.org).
     - The packages must be installed and loaded using the standard R command syntax: `install.packages()` and `library()`. If the R source code
-    includes a non-standard syntax, for example to load a number of packages in one go using `lapply()`, Dockter will not be able to recognize it and
+    includes a non-standard syntax, for example to load a number of packages in one go using `lapply()`, Dockta will not be able to recognize it and
     the information about the required packages will not be recorded.
  * System dependencies for each package are obtained from [R-Hub](https://sysreqs.r-hub.io/pkg/xml2).
  * Meta data about the authors, title, abstract and so on.
 
 
-#### 3. Dockter for Python
+#### 3. Dockta for Python
 
-Dockter can create a software environment file which reflects the requirements to run the project written in Python.
+Dockta can create a software environment file which reflects the requirements to run the project written in Python.
 The software environment file is a file in `JSON` or `yaml` format with comprehensive meta data about the project.
-Dockter parses the folder with the Python project for `py` files and extracts the relevant information.
+Dockta parses the folder with the Python project for `py` files and extracts the relevant information.
 
 #### 4. Examples
 
@@ -73,10 +73,10 @@ would like to learn how to use R for their work through the above tutorials, the
 the environment. At the same time, the author of the tutorials would have to put a lot of extra time in learning and building up the infrastructure (such
 as VMs or containers) to recreate the whole environment.
 
-Here's where Dockter comes handy.
+Here's where Dockta comes handy.
 
 ```
-dockter compile r-spatial/
+dockta compile r-spatial/
 ```
 
 creates 3 files inside the project folder:

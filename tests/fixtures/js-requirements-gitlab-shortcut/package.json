@@ -13,5 +13,5 @@
     "array-swap": "0.0.2-0.0.4",
     "a-package-that-is-not-on-npm": "org/repo"
   },
-  "repository": "gitlab:/stencila/dockter"
+  "repository": "gitlab:/stencila/dockta"
 }

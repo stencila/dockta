@@ -22,7 +22,7 @@ yargonaut
   .errorsStyle('red')
 
 yargs
-  .scriptName('dockter')
+  .scriptName('dockta')
 
   // Help global option
   .alias('h', 'help')
@@ -157,7 +157,7 @@ function error (error: Error) {
     console.error(error.message)
   } else {
     console.error('Woops, sorry something went wrong :(')
-    console.error('Please help us fix this issue by posting this output to https://github.com/stencila/dockter/issues/new')
+    console.error('Please help us fix this issue by posting this output to https://github.com/stencila/dockta/issues/new')
     console.error(`  args: ${process.argv.slice(2).join(' ')}`)
     console.error(`  version: ${VERSION}`)
     console.error(`  platform: ${os.platform()}`)

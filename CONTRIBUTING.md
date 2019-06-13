@@ -1,6 +1,6 @@
 # Contributing
 
-🎉 Thanks for taking the time to contribute to Dockter! 🎉
+🎉 Thanks for taking the time to contribute to Dockta! 🎉
 
 
 # Table of Contents
@@ -28,7 +28,7 @@ Use your best judgment, and feel free to propose changes to this document in a p
 If you are comfortable with Git and GitHub, you can submit a pull request (PR). In Stencila we follow a commonly used workflow
 for [contributing to open source projects][how-contribute] (see also [GitHub instructions][github-flow]).
 
-If you have specific suggestions or have found a bug, please [create an issue](https://github.com/stencila/dockter/issues/new).
+If you have specific suggestions or have found a bug, please [create an issue](https://github.com/stencila/dockta/issues/new).
 
 If you don't want to use GitHub, please tell us what you think on [our chat](https://gitter.im/stencila/stencila) on Gitter or have your say on our
 our [Community Forum](https://community.stenci.la/).
@@ -51,15 +51,15 @@ on Twitter [@Stencila][stencila-twitter],
 
 ### Development environment
 
-Dockter is implemented as a `Node.js` package in order to make it easier to integrate with other Stencila components written also in this language.
-Therefore, in order to develop Dockter you need to have `Node.js` installed on your machine, along with `npm`. 
-The core of the source code of Dockter is written using [`TypeScript`](https://www.typescriptlang.org/) which is then compiled into JavaScript.   
+Dockta is implemented as a `Node.js` package in order to make it easier to integrate with other Stencila components written also in this language.
+Therefore, in order to develop Dockta you need to have `Node.js` installed on your machine, along with `npm`. 
+The core of the source code of Dockta is written using [`TypeScript`](https://www.typescriptlang.org/) which is then compiled into JavaScript.   
 
 To get started,
 
 ```bash
-git clone https://github.com/stencila/dockter
-cd dockter
+git clone https://github.com/stencila/dockta
+cd dockta
 npm install
 ```
 
@@ -74,13 +74,13 @@ This uses `ts-node` to compile and run Typescript on the fly so that you don't n
 You might also want to create an alias for convieience during development:
 
 ```bash
-alias dockter="npm run cli --"
+alias dockta="npm run cli --"
 ```
 
 
 ## Architecture
 
-Dockter implements a compiler design pattern. Source files are _parsed_ into a `SoftwareEnvironment` instance (the equivalent of an AST (Abstract Syntax Tree) in other programming language compilers) which is then used to generate a `Dockerfile` which is then built into a Docker image.
+Dockta implements a compiler design pattern. Source files are _parsed_ into a `SoftwareEnvironment` instance (the equivalent of an AST (Abstract Syntax Tree) in other programming language compilers) which is then used to generate a `Dockerfile` which is then built into a Docker image.
 
 The parser classes e.g. `PythonParser`, `RParser` scan for relevant source files and generate `SoftwareEnvironment` instances.
 The generator classes e.g. `PythonGenerator`, `RGenerator` generates a `Dockerfile` for a given `SoftwareEnvironment`.
@@ -146,7 +146,7 @@ npm run commit # or, make commit
 
 ### Continuous integration
 
-Linting, test coverage, binary builds, package builds, and documentation generation are done on [Travis CI](https://travis-ci.org/stencila/dockter). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management: minor version releases are done if any `feat(...)` commits are pushed, patch version releases are done if any `fix(...)` commits are pushed. Releases are made to [NPM](https://www.npmjs.com/package/@stencila/dockter) and [Github Releases](https://github.com/stencila/dockter/releases).
+Linting, test coverage, binary builds, package builds, and documentation generation are done on [Travis CI](https://travis-ci.org/stencila/dockta). [`semantic-release`](https://github.com/semantic-release/semantic-release) is enabled to automate version management: minor version releases are done if any `feat(...)` commits are pushed, patch version releases are done if any `fix(...)` commits are pushed. Releases are made to [NPM](https://www.npmjs.com/package/@stencila/dockta) and [Github Releases](https://github.com/stencila/dockta/releases).
 
 
 ### Python System Dependencies
@@ -177,7 +177,7 @@ A minimal example of how to integrate the router into your own Express server,
 
 ```js
 const app = require('express')()
-const { docker } = require('@stencila/dockter')
+const { docker } = require('@stencila/dockta')
 
 const app = express()
 app.use('/docker', docker)

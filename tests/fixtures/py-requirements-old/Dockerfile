@@ -8,7 +8,7 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-# dockter
+# dockta
 
 ADD requirements.txt .
 RUN pip3 install -r requirements.txt

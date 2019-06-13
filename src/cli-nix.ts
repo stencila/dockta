@@ -19,8 +19,8 @@ function compile (environ: void | SoftwareEnvironment | null, folder: any) {
 
   // Figure out if a custom default.nix file is present
   let defaultNix = path.join(folder, 'default.nix')
-  let dockterNix = path.join(folder, '.default.nix')
-  let nixfile = fs.existsSync(defaultNix) ? defaultNix : dockterNix
+  let docktaNix = path.join(folder, '.default.nix')
+  let nixfile = fs.existsSync(defaultNix) ? defaultNix : docktaNix
 
   // Generate .nixDockerfile
   let dockerfile = path.join(folder, '.nixDockerfile')
@@ -42,8 +42,8 @@ async function build (folder: any) {
 
   // Figure out if a custom default.nix file is present
   let defaultNix = path.join(folder, 'default.nix')
-  let dockterNix = path.join(folder, '.default.nix')
-  let nixfile = fs.existsSync(defaultNix) ? defaultNix : dockterNix
+  let docktaNix = path.join(folder, '.default.nix')
+  let nixfile = fs.existsSync(defaultNix) ? defaultNix : docktaNix
 
   // Start building the image
   let build = await docker.buildImage({

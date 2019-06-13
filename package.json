@@ -1,11 +1,11 @@
 {
-  "name": "@stencila/dockter",
+  "name": "@stencila/dockta",
   "version": "0.14.4",
   "description": "A Docker image builder for researchers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "dockter": "./dist/cli.js"
+    "dockta": "./dist/cli.js"
   },
   "scripts": {
     "lint": "tslint --project tsconfig.json --fix --format stylish ./src/**/*.ts",
@@ -17,8 +17,8 @@
     "build-dist": "tsc && cp ./src/*.json dist",
     "build-bins": "pkg --out-path=build .",
     "bundle": "npm run bundle-linux && npm run bundle-macos && npm run bundle-win",
-    "bundle-linux": "tar --transform 's|build/dockter-linux|dockter|' -czvf build/dockter-linux-x64.tar.gz build/dockter-linux",
-    "bundle-macos": "tar --transform 's|build/dockter-macos|dockter|' -czvf build/dockter-macos-x64.tar.gz build/dockter-macos",
+    "bundle-linux": "tar --transform 's|build/dockta-linux|dockta|' -czvf build/dockta-linux-x64.tar.gz build/dockta-linux",
+    "bundle-macos": "tar --transform 's|build/dockta-macos|dockta|' -czvf build/dockta-macos-x64.tar.gz build/dockta-macos",
     "bundle-win": "./bundle-win.sh",
     "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
@@ -30,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/stencila/dockter.git"
+    "url": "https://github.com/stencila/dockta.git"
   },
   "keywords": [
     "Docker",
@@ -39,12 +39,12 @@
     "research",
     "reproducibility"
   ],
-  "author": "Dockter contributors (https://github.com/stencila/dockter/contributors)",
+  "author": "Dockta contributors (https://github.com/stencila/dockta/contributors)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/stencila/dockter/issues"
+    "url": "https://github.com/stencila/dockta/issues"
   },
-  "homepage": "https://github.com/stencila/dockter#readme",
+  "homepage": "https://github.com/stencila/dockta#readme",
   "devDependencies": {
     "@semantic-release/commit-analyzer": "^6.1.0",
     "@semantic-release/git": "^7.0.8",
@@ -67,7 +67,7 @@
     "jest": "^24.1.0",
     "markdown-toc": "^1.2.0",
     "pkg": "^4.3.7",
-    "semantic-release": "^15.13.15",
+    "semantic-release": "^15.13.16",
     "semantic-release-cli": "^5.1.1",
     "ts-jest": "^24.0.0",
     "ts-node": "^8.0.2",
@@ -115,16 +115,16 @@
         {
           "assets": [
             {
-              "path": "build/dockter-linux-x64.tar.gz",
-              "label": "dockter-linux-x64.tar.gz"
+              "path": "build/dockta-linux-x64.tar.gz",
+              "label": "dockta-linux-x64.tar.gz"
             },
             {
-              "path": "build/dockter-macos-x64.tar.gz",
-              "label": "dockter-macos-x64.tar.gz"
+              "path": "build/dockta-macos-x64.tar.gz",
+              "label": "dockta-macos-x64.tar.gz"
             },
             {
-              "path": "build/dockter-win-x64.zip",
-              "label": "dockter-win-x64.zip"
+              "path": "build/dockta-win-x64.zip",
+              "label": "dockta-win-x64.zip"
             }
           ]
         }
