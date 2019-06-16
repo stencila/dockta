@@ -83,7 +83,7 @@
     "docker-file-parser": "^1.0.4",
     "dockerode": "^2.5.7",
     "express": "^4.16.3",
-    "fast-glob": "^2.2.6",
+    "fast-glob": "^3.0.0",
     "got": "^9.2.2",
     "js-yaml": "^3.13.1",
     "ndjson": "^1.5.0",
