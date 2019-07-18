@@ -62,7 +62,7 @@
     "@types/tmp": "0.1.0",
     "@types/yargs": "^13.0.0",
     "all-contributors-cli": "^6.1.2",
-    "commitizen": "^3.0.7",
+    "commitizen": "^4.0.0",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^24.1.0",
     "markdown-toc": "^1.2.0",
