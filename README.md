@@ -3,7 +3,6 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors)
 [![Build status](https://travis-ci.org/stencila/dockta.svg?branch=master)](https://travis-ci.org/stencila/dockta)
 [![Code coverage](https://codecov.io/gh/stencila/dockta/branch/master/graph/badge.svg)](https://codecov.io/gh/stencila/dockta)
-[![Greenkeeper badge](https://badges.greenkeeper.io/stencila/dockta.svg)](https://greenkeeper.io/)
 [![NPM](http://img.shields.io/npm/v/@stencila/dockta.svg?style=flat)](https://www.npmjs.com/package/@stencila/dockta)
 [![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://stencila.github.io/dockta/)
 [![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
