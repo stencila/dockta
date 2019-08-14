@@ -1,20 +1,14 @@
 #!/usr/bin/env node
 
 import os from 'os'
-import path from 'path'
 // @ts-ignore
 import yargonaut from 'yargonaut'
 import yargs from 'yargs'
-import yaml from 'js-yaml'
+import { ApplicationError } from './errors'
+import nix from './cli-nix'
+import { build, compile, execute, who } from './index'
 
 const VERSION = require('../package').version
-
-import DockerCompiler from './DockerCompiler'
-import { ApplicationError } from './errors'
-import CachingUrlFetcher from './CachingUrlFetcher'
-import nix from './cli-nix'
-
-const compiler = new DockerCompiler(new CachingUrlFetcher())
 
 yargonaut
   .style('blue')
@@ -35,7 +29,8 @@ yargs
 
   // Nix global option
   .option('nix', {
-    describe: 'Use NixOS base image'
+    describe: 'Use NixOS base image',
+    type: 'boolean'
   })
 
   // Ensure at least one command
@@ -51,11 +46,7 @@ yargs
   .command('compile [folder]', 'Compile a project to a software environment', yargs => {
     folderArg(yargs)
   }, async (args: any) => {
-    const folder = path.resolve(args.folder)
-    let environ = await compiler.compile('file://' + folder, false).catch(error)
-    if (args.nix) {
-      nix.compile(environ, folder)
-    }
+    await compile(args.folder, args.nix)
   })
 
   // Build command
@@ -63,31 +54,20 @@ yargs
   .command('build [folder]', 'Build a Docker image for project', yargs => {
     folderArg(yargs)
   }, async (args: any) => {
-    const folder = path.resolve(args.folder)
-    if (args.nix) {
-      await nix.build(folder)
-    } else {
-      await compiler.compile('file://' + folder, true).catch(error)
-    }
+    await build(args.folder, args.nix)
   })
 
   // Execute command
   // @ts-ignore
   .command('execute [folder] [command]', 'Execute a project', yargs => {
     folderArg(yargs),
-    yargs.positional('command', {
-      type: 'string',
-      default: '',
-      describe: 'The command to execute'
-    })
+      yargs.positional('command', {
+        type: 'string',
+        default: '',
+        describe: 'The command to execute'
+      })
   }, async (args: any) => {
-    const folder = path.resolve(args.folder)
-    if (args.nix) {
-      await nix.execute(folder, args.command)
-    } else {
-      const node = await compiler.execute('file://' + folder, args.command).catch(error)
-      output(node, args.format)
-    }
+    await execute(args.folder, args.command, args.nix)
   })
 
   // Who command
@@ -101,27 +81,8 @@ yargs
       describe: 'The maximum dependency recursion depth'
     })
   }, async (args: any) => {
-    const folder = path.resolve(args.folder)
-    const people = await compiler.who('file://' + folder, args.depth).catch(error)
-    if (!people) {
-      console.log('Nobody (?)')
-    } else {
-      // Sort by number of packages descending and then alphabetically ascending
-      let sorted = Object.entries(people).sort(([aName,aPkgs], [bName, bPkgs]) => {
-        if (aPkgs.length > bPkgs.length) return -1
-        if (aPkgs.length < bPkgs.length) return 1
-        if (aName < bName) return -1
-        if (aName > bName) return 1
-        return 0
-      })
-      // Output in a CLI friendly way
-      const output = sorted.map(([name, packages]) => {
-        return `${name} (${packages.join(', ')})`
-      }).join(', ')
-      console.log(output)
-    }
+    await who(args.folder, args.depth)
   })
-
   .parse()
 
 /**
@@ -135,16 +96,6 @@ function folderArg (yargs: yargs.Argv) {
     default: '.',
     describe: 'The path to the project folder'
   })
-}
-
-/**
- * Print output to stdout
- *
- * @param object The object to print
- * @param format The format use: `json` or `yaml`
- */
-function output (object: any, format: string = 'json') {
-  if (object) console.log(format === 'yaml' ? yaml.safeDump(object, { lineWidth: 120 }) : JSON.stringify(object, null, '  '))
 }
 
 /**
