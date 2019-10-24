@@ -14,6 +14,7 @@ const REQUIREMENTS_COMMENT_REGEX = /^\s*#/
 const REQUIREMENTS_EDITABLE_SOURCE_REGEX = /^\s*-e\s*([^\s]+)\s*/
 const REQUIREMENTS_INCLUDE_PATH_REGEX = /^\s*-r\s+([^\s]+)\s*/
 const REQUIREMENTS_STANDARD_REGEX = /^\s*([^\s]+)/
+const REQUIREMENTS_FILE_NAME = 'requirements.txt'
 
 /**
  * Return true if the passed in line is a requirements.txt comment (starts with "#" which might be preceded by spaces).
@@ -189,11 +190,6 @@ export default class PythonParser extends Parser {
   async parse (): Promise<SoftwarePackage | null> {
     const files = this.glob(['**/*.py'])
 
-    if (!files.length) {
-      // no .py files so don't parse this directory
-      return null
-    }
-
     const pkg = new SoftwarePackage()
     pkg.runtimePlatform = 'Python'
 
@@ -203,9 +199,13 @@ export default class PythonParser extends Parser {
 
     let requirements
 
-    if (this.exists('requirements.txt')) {
-      requirements = await this.parseRequirementsFile('requirements.txt')
+    if (this.exists(REQUIREMENTS_FILE_NAME)) {
+      requirements = await this.parseRequirementsFile(REQUIREMENTS_FILE_NAME)
     } else {
+      if (!files.length) {
+        // no .py files so don't parse this directory
+        return null
+      }
       requirements = this.generateRequirementsFromSource()
     }
 
