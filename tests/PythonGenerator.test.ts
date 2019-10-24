@@ -14,7 +14,7 @@ const urlFetcher = new MockUrlFetcher()
 test('generate:empty', async () => {
   const pkg = new SoftwarePackage()
   const generator = new PythonGenerator(urlFetcher, pkg)
-  expect(await generator.generate(false)).toEqual('FROM ubuntu:18.04\n')
+  expect(await generator.generate(false)).toEqual('FROM ubuntu:18.10\n')
 })
 
 /**
@@ -35,7 +35,7 @@ test('generate:requirements', async () => {
 
   const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-generated'))
 
-  expect(await generator.generate(false, true)).toEqual(`FROM ubuntu:18.04
+  expect(await generator.generate(false, true)).toEqual(`FROM ubuntu:18.10
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -80,7 +80,7 @@ test('generate:requirements-file', async () => {
 
   const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-existing'), 2)
 
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -128,7 +128,7 @@ test('generate:apt-packages', async () => {
 
   const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-generated'), 2)
 
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.04
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\

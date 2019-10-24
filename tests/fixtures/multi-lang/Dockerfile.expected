@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.10
 
 RUN apt-get update \
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -9,8 +9,8 @@ RUN apt-get update \
 
 RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
-RUN apt-add-repository "deb https://deb.nodesource.com/node_10.x bionic main" \
- && apt-add-repository "deb https://mran.microsoft.com/snapshot/2018-11-04/bin/linux/ubuntu bionic-cran35/"
+RUN apt-add-repository "deb https://deb.nodesource.com/node_12.x cosmic main" \
+ && apt-add-repository "deb https://mran.microsoft.com/snapshot/2019-10-23/bin/linux/ubuntu cosmic-cran35/"
 
 ENV TZ="Etc/UTC"
 

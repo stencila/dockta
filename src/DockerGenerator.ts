@@ -4,7 +4,7 @@ import Generator from './Generator'
 import generators from './generators'
 import IUrlFetcher from './IUrlFetcher'
 
-const PREFERRED_UBUNTU_VERSION = '18.04'
+const PREFERRED_UBUNTU_VERSION = '18.10'
 
 /**
  * Compare semantic version numbers
@@ -28,7 +28,7 @@ function versionCompare (versionOne: string, versionTwo: string) {
     splitV2.push('0')
   }
 
-  for (let i = 0; i < splitV1.length; i) {
+  for (let i = 0; i < splitV1.length; ++i) {
     let component1 = parseInt(splitV1[i], 10)
     let component2 = parseInt(splitV2[i], 10)
 

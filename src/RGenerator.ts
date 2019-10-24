@@ -47,7 +47,7 @@ export default class RGenerator extends PackageGenerator {
     // At time of writing, MRAN did not have an ubuntu:18.04(bionic) repo which supported R 3.4 (only bionic_3.5)
     // See https://cran.microsoft.com/snapshot/2018-11-05/bin/linux/ubuntu/
     // So append that to the deb line
-    if (version === 'bionic') version += '-cran35'
+    if (version !== 'trusty' && version !== 'xenial') version += '-cran35'
     return [
       `deb https://mran.microsoft.com/snapshot/${this.date}/bin/linux/ubuntu ${version}/`
     ]
