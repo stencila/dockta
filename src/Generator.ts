@@ -36,7 +36,10 @@ export default class Generator extends Doer {
 
     if (comments) dockerfile += '\n# This tells Docker which base image to use.\n'
     const baseIdentifier = this.baseIdentifier()
-    dockerfile += `FROM ${baseIdentifier}\n`
+
+    const fromImage = this.baseImage !== undefined ? this.baseImage : baseIdentifier
+
+    dockerfile += `FROM ${fromImage}\n`
 
     if (!this.applies()) return dockerfile
 
@@ -191,10 +194,6 @@ WORKDIR /home/docktauser
    * Generate a base image identifier
    */
   baseIdentifier (): string {
-    if (this.baseImage !== undefined) {
-      return this.baseImage // allow for override
-    }
-
     const joiner = this.baseVersion() === '' ? '' : ':'
 
     return `${this.baseName()}${joiner}${this.baseVersion()}`
