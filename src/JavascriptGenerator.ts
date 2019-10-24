@@ -20,7 +20,7 @@ export default class JavascriptGenerator extends PackageGenerator {
 
   // Methods that override those in `Generator`
 
-  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string, nodeMajorVersion: number = 10) {
+  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string, nodeMajorVersion: number = 12) {
     super(urlFetcher, pkg, folder)
 
     this.nodeMajorVersion = nodeMajorVersion

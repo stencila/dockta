@@ -173,7 +173,7 @@ WORKDIR /home/docktauser
    * Version of the base image
    */
   baseVersion (): string {
-    return '18.04'
+    return '18.10'
   }
 
   /**
@@ -185,7 +185,8 @@ WORKDIR /home/docktauser
     const lookup: { [key: string]: string } = {
       '14.04': 'trusty',
       '16.04': 'xenial',
-      '18.04': 'bionic'
+      '18.04': 'bionic',
+      '18.10': 'cosmic'
     }
     return lookup[version]
   }
