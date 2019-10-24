@@ -61,8 +61,8 @@ export default class DockerGenerator extends Generator {
    */
   protected generators: Array<Generator>
 
-  constructor (urlFetcher: IUrlFetcher, environ: SoftwareEnvironment, folder?: string) {
-    super(urlFetcher, folder)
+  constructor (urlFetcher: IUrlFetcher, environ: SoftwareEnvironment, folder?: string, baseImage?: string) {
+    super(urlFetcher, folder, baseImage)
     this.environ = environ
 
     // Each of the environment's `softwareRequirements` is

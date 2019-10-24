@@ -32,6 +32,14 @@ yargs
     describe: 'Use NixOS base image',
     type: 'boolean'
   })
+  .option('from', {
+    describe: 'The base docker image to inherit FROM'
+  })
+  .option('stencila', {
+    describe: 'Add stencila execution hosts',
+    default: false,
+    type: 'boolean'
+  })
 
   // Ensure at least one command
   .demandCommand(1, 'Please provide a command.')
@@ -46,7 +54,7 @@ yargs
   .command('compile [folder]', 'Compile a project to a software environment', yargs => {
     folderArg(yargs)
   }, async (args: any) => {
-    await compile(args.folder, args.nix)
+    await compile(args.folder, args.nix, args.stencila, args.from)
   })
 
   // Build command
@@ -54,7 +62,7 @@ yargs
   .command('build [folder]', 'Build a Docker image for project', yargs => {
     folderArg(yargs)
   }, async (args: any) => {
-    await build(args.folder, args.nix)
+    await build(args.folder, args.nix, args.stencila, args.from)
   })
 
   // Execute command

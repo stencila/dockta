@@ -43,9 +43,11 @@ function stringifyNode (object: any, format: string): string {
  * @param folder Path of the folder to compile
  * @param useNix Compile the environment for nix
  */
-export async function compile (folder: string, useNix: boolean) {
+export async function compile (folder: string, useNix: boolean, addStencila: boolean, from?: string) {
   const absoluteFolder = path.resolve(folder)
-  let environ = await compiler.compile('file://' + absoluteFolder, false).catch(loggingErrorHandler)
+  const comments = true
+  const build = false
+  let environ = await compiler.compile('file://' + absoluteFolder, build, comments, addStencila, from).catch(loggingErrorHandler)
   if (useNix) {
     nix.compile(environ, folder)
   }
@@ -57,13 +59,15 @@ export async function compile (folder: string, useNix: boolean) {
  * @param folder Path of the folder to build
  * @param useNix Build the environment with nix
  */
-export async function build (folder: string, useNix: boolean) {
+export async function build (folder: string, useNix: boolean, addStencila: boolean, from?: string) {
   const absoluteFolder = path.resolve(folder)
 
   if (useNix) {
     await nix.build(absoluteFolder)
   } else {
-    compiler.compile(absoluteFolder).catch(loggingErrorHandler)
+    const comments = true
+    const build = true
+    compiler.compile(absoluteFolder, build, comments, addStencila, from).catch(loggingErrorHandler)
   }
 }
 

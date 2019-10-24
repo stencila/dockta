@@ -1,6 +1,7 @@
 import Doer from './Doer'
 import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
 import { join } from 'path'
+import IUrlFetcher from './IUrlFetcher'
 
 const VERSION = require('../package').version
 
@@ -8,6 +9,15 @@ const VERSION = require('../package').version
  * Generates a Dockerfile for a `SoftwareEnvironment` instance
  */
 export default class Generator extends Doer {
+  /**
+   * Manually define the image to inherit FROM
+   */
+  baseImage?: string
+
+  constructor (urlFetcher: IUrlFetcher, folder: string | undefined, baseImage?: string) {
+    super(urlFetcher, folder)
+    this.baseImage = baseImage
+  }
 
   /**
    * Generate a Dockerfile for a `SoftwareEnvironment` instance
@@ -181,6 +191,10 @@ WORKDIR /home/docktauser
    * Generate a base image identifier
    */
   baseIdentifier (): string {
+    if (this.baseImage !== undefined) {
+      return this.baseImage // allow for override
+    }
+
     const joiner = this.baseVersion() === '' ? '' : ':'
 
     return `${this.baseName()}${joiner}${this.baseVersion()}`
