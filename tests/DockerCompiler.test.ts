@@ -38,7 +38,7 @@ test('compile:multi-lang', async () => {
   let environ = await compiler.compile('file://' + fixture('multi-lang'), false, false)
 
   // Remove the date from the MRAN line to allow for changing date of test v expected
-  const aptAddMRAN = /(apt-add-repository "deb https:\/\/mran.microsoft.com\/snapshot)\/([\d-]+)\/(bin\/linux\/ubuntu bionic-cran35\/)"/
+  const aptAddMRAN = /(apt-add-repository "deb https:\/\/mran.microsoft.com\/snapshot)\/([\d-]+)\/(bin\/linux\/ubuntu cosmic-cran35\/)"/
   const actual = fs.readFileSync(fixture('multi-lang/.Dockerfile'), 'utf8').replace(aptAddMRAN, '$1/YYYY-MM-DD/$3')
   const expected = fs.readFileSync(fixture('multi-lang/Dockerfile.expected'), 'utf8').replace(aptAddMRAN, '$1/YYYY-MM-DD/$3')
   expect(actual).toEqual(expected)
@@ -48,5 +48,5 @@ test('who:r-gsl', async () => {
   const compiler = new DockerCompiler(urlFetcher)
   let people = await compiler.who('file://' + fixture('r-gsl'))
 
-  expect(people).toEqual({"Robin K.": ["gsl"]})
+  expect(people).toEqual({'Robin K.': ['gsl']})
 })

@@ -51,8 +51,8 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash guest
+WORKDIR /home/guest
 
 # dockta
 
@@ -60,7 +60,7 @@ COPY .DESCRIPTION DESCRIPTION
 
 RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockta/src/install.R)"
 
-USER docktauser
+USER guest
 `)
 })
 
@@ -114,8 +114,8 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash guest
+WORKDIR /home/guest
 
 # dockta
 
@@ -126,7 +126,7 @@ RUN bash -c "Rscript <(curl -sL https://unpkg.com/@stencila/dockta/src/install.R
 COPY main.R main.R
 COPY other.R other.R
 
-USER docktauser
+USER guest
 
 CMD Rscript main.R
 `)

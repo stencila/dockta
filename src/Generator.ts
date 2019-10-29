@@ -1,9 +1,8 @@
 import Doer from './Doer'
-import { SoftwareEnvironment, SoftwarePackage } from '@stencila/schema'
-import { join } from 'path'
 import IUrlFetcher from './IUrlFetcher'
 
 const VERSION = require('../package').version
+const DOCKER_USER = 'guest'
 
 /**
  * Generates a Dockerfile for a `SoftwareEnvironment` instance
@@ -104,8 +103,8 @@ RUN apt-get update \\
 # This section creates a new user and its home directory as the default working directory.`
     }
     dockerfile += `
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash ${DOCKER_USER}
+WORKDIR /home/${DOCKER_USER}
 `
 
     const installFiles = this.installFiles(baseIdentifier)
@@ -139,7 +138,7 @@ WORKDIR /home/docktauser
 
     // Now all installation is finished set the user
     if (comments) dockerfile += '\n# This sets the default user when the container is run'
-    dockerfile += '\nUSER docktauser\n'
+    dockerfile += `\nUSER ${DOCKER_USER}\n`
 
     // Add any CMD
     if (runCommand) {

@@ -27,8 +27,8 @@ RUN apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash guest
+WORKDIR /home/guest
 
 # dockta
 
@@ -44,4 +44,4 @@ COPY script.js script.js
 COPY script.py script.py
 COPY script.R script.R
 
-USER docktauser
+USER guest

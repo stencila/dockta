@@ -48,8 +48,8 @@ RUN apt-get update \\
 RUN pip3 install --no-cache-dir https://github.com/stencila/py/archive/91a05a139ac120a89fc001d9d267989f062ad374.zip \\
  && python3 -m stencila register
 
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash guest
+WORKDIR /home/guest
 
 # dockta
 
@@ -59,7 +59,7 @@ RUN pip3 install --requirement requirements.txt
 
 COPY main.py main.py
 
-USER docktauser
+USER guest
 
 CMD python3 main.py
 `)
@@ -90,8 +90,8 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash guest
+WORKDIR /home/guest
 
 # dockta
 
@@ -101,7 +101,7 @@ RUN pip install --requirement requirements.txt
 
 COPY main.py main.py
 
-USER docktauser
+USER guest
 
 CMD python main.py
 `)
@@ -139,8 +139,8 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash docktauser
-WORKDIR /home/docktauser
+RUN useradd --create-home --uid 1001 -s /bin/bash guest
+WORKDIR /home/guest
 
 # dockta
 
@@ -150,7 +150,7 @@ RUN pip install --requirement requirements.txt
 
 COPY main.py main.py
 
-USER docktauser
+USER guest
 
 CMD python main.py
 `)
