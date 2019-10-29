@@ -48,5 +48,5 @@ test('who:r-gsl', async () => {
   const compiler = new DockerCompiler(urlFetcher)
   let people = await compiler.who('file://' + fixture('r-gsl'))
 
-  expect(people).toEqual({'Robin K.': ['gsl']})
+  expect(people).toEqual({ 'Robin K.': ['gsl'] })
 })

@@ -51,7 +51,7 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash guest
+RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash guest
 WORKDIR /home/guest
 
 # dockta
@@ -114,7 +114,7 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN useradd --create-home --uid 1001 -s /bin/bash guest
+RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash guest
 WORKDIR /home/guest
 
 # dockta

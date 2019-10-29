@@ -103,7 +103,7 @@ RUN apt-get update \\
 # This section creates a new user and its home directory as the default working directory.`
     }
     dockerfile += `
-RUN useradd --create-home --uid 1001 -s /bin/bash ${DOCKER_USER}
+RUN id -u ${DOCKER_USER} >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash ${DOCKER_USER}
 WORKDIR /home/${DOCKER_USER}
 `
 

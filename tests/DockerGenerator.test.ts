@@ -14,7 +14,7 @@ test('generate:empty', async () => {
   const generator = new DockerGenerator(urlFetcher, environ)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
 
-RUN useradd --create-home --uid 1001 -s /bin/bash guest
+RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash guest
 WORKDIR /home/guest
 
 USER guest
