@@ -45,6 +45,8 @@ export default class Generator extends Doer {
     const aptRepos = this.aptRepos(baseIdentifier)
     let aptKeysCommand = this.aptKeysCommand(baseIdentifier)
 
+    dockerfile += 'USER root\n'  // in case the Dockerfile it inherits from drops down to a different user
+
     if (aptRepos.length || aptKeysCommand) {
       if (comments) dockerfile += '\n# This section installs system packages needed to add extra system repositories.'
       dockerfile += `

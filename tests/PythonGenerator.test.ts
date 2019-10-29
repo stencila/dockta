@@ -36,6 +36,7 @@ test('generate:requirements', async () => {
   const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-generated'))
 
   expect(await generator.generate(false, true)).toEqual(`FROM ubuntu:18.10
+USER root
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -81,6 +82,7 @@ test('generate:requirements-file', async () => {
   const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-existing'), 2)
 
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
+USER root
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -129,6 +131,7 @@ test('generate:apt-packages', async () => {
   const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-generated'), 2)
 
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
+USER root
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\

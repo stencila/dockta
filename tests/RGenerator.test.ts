@@ -31,6 +31,7 @@ test('generate:packages', async () => {
 
   const generator = new RGenerator(urlFetcher, pkg2)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
+USER root
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -93,6 +94,7 @@ test('generate:r-xml2', async () => {
 
   const dockerfile = await new RGenerator(urlFetcher, pkg, folder).generate(false)
   expect(dockerfile).toEqual(`FROM ubuntu:18.10
+USER root
 
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
