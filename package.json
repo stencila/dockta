@@ -13,20 +13,12 @@
     "contributors:add": "all-contributors add",
     "contributors:generate": "all-contributors generate",
     "cover": "jest --collectCoverage",
-    "build": "npm run build-dist && npm run build-bins",
-    "build-dist": "tsc && cp ./src/*.json dist",
-    "build-bins": "pkg --out-path=build .",
-    "bundle": "npm run bundle-linux && npm run bundle-macos && npm run bundle-win",
-    "bundle-linux": "tar --transform 's|build/dockta-linux|dockta|' -czvf build/dockta-linux-x64.tar.gz build/dockta-linux",
-    "bundle-macos": "tar --transform 's|build/dockta-macos|dockta|' -czvf build/dockta-macos-x64.tar.gz build/dockta-macos",
-    "bundle-win": "./bundle-win.sh",
+    "build": "tsc && cp ./src/*.json dist",
     "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
     "cli": "ts-node src/cli.ts",
     "server": "ts-node src/server.ts",
     "start": "node ./dist/server.js",
-    "commit": "git-cz",
-    "prepublishOnly": "npm run build && npm run bundle",
-    "semantic-release": "semantic-release"
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -66,7 +58,6 @@
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^24.1.0",
     "markdown-toc": "^1.2.0",
-    "pkg": "^4.3.7",
     "semantic-release": "^15.13.27",
     "semantic-release-cli": "^5.1.1",
     "ts-jest": "^24.0.0",
@@ -101,35 +92,13 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "pkg": {
-    "scripts": "./dist/**/*.js",
-    "assets": "./dist/**/*.json"
-  },
   "release": {
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
       "@semantic-release/npm",
       "@semantic-release/git",
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            {
-              "path": "build/dockta-linux-x64.tar.gz",
-              "label": "dockta-linux-x64.tar.gz"
-            },
-            {
-              "path": "build/dockta-macos-x64.tar.gz",
-              "label": "dockta-macos-x64.tar.gz"
-            },
-            {
-              "path": "build/dockta-win-x64.zip",
-              "label": "dockta-win-x64.zip"
-            }
-          ]
-        }
-      ]
+      "@semantic-release/github"
     ]
   }
 }

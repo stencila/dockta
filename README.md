@@ -28,11 +28,6 @@ Dockta makes it easier for researchers to create Docker images for their researc
   * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
 - [Demo](#demo)
 - [Install](#install)
-  * [CLI](#cli)
-    + [Windows](#windows)
-    + [MacOS](#macos)
-    + [Linux](#linux)
-  * [Package](#package)
 - [Use](#use)
   * [Compile a project](#compile-a-project)
   * [Build a Docker image](#build-a-docker-image)
@@ -254,59 +249,7 @@ Dockta is designed to make it easier to get started creating Docker images for y
 
 ## Install
 
-Dockta is available as pre-compiled, standalone command line tool (CLI), or as a Node.js package. In both cases, if you want to use Dockta to build Docker images, you will need to [install Docker](https://docs.docker.com/install/) if you don't already have it.
-
-### CLI
-
-#### Windows
-
-To install the latest release of the `dockta` command line tool, download `dockta-win-x64.zip` for the [latest release](https://github.com/stencila/dockta/releases/) and place it somewhere on your `PATH`.
-
-#### MacOS
-
-To install the latest release of the `dockta` command line tool to `/usr/local/bin` just use,
-
-```bash
-curl -L https://raw.githubusercontent.com/stencila/dockta/master/install.sh | bash
-```
-
-To install a specific version, append `-s vX.X.X` e.g.
-
-```bash
-curl -L https://raw.githubusercontent.com/stencila/dockta/master/install.sh | bash -s v0.13.0
-```
-
-Or, if you'd prefer to do things manually, download `dockta-macos-x64.tar.gz` for the [latest release](https://github.com/stencila/dockta/releases/) and then,
-
-```bash
-tar xvf dockta-macos-x64.tar.gz
-sudo mv -f dockta /usr/local/bin # or wherever you like
-```
-
-#### Linux
-
-To install the latest release of the `dockta` command line tool to `~/.local/bin/` just use,
-
-```bash
-curl -L https://raw.githubusercontent.com/stencila/dockta/master/install.sh | bash
-```
-
-To install a specific version, append `-s vX.X.X` e.g.
-
-```bash
-curl -L https://raw.githubusercontent.com/stencila/dockta/master/install.sh | bash -s v0.13.0
-```
-
-Or, if you'd prefer to do things manually, or place Dockta elewhere, download `dockta-linux-x64.tar.gz` for the [latest release](https://github.com/stencila/dockta/releases/) and then,
-
-```bash
-tar xvf dockta-linux-x64.tar.gz
-mv -f dockta ~/.local/bin/ # or wherever you like
-```
-
-### Package
-
-If you want to integrate Dockta into another application or package, it is also available as a Node.js package :
+Dockta is available as a Node.js package with a command line interface (CLI). If you want to use Dockta to build Docker images, you will need to [install Docker](https://docs.docker.com/install/) if you don't already have it.
 
 ```bash
 npm install @stencila/dockta
