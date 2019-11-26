@@ -7,18 +7,6 @@ node_js:
 services:
   docker
 
-# Install code signing tool 
-addons:
-  apt:
-    sources:
-      - sourceline: ppa:likemartinma/osslsigncode
-    packages:
-      - osslsigncode
-
-# Decrypt code signing certificates (see https://docs.travis-ci.com/user/encrypting-files/)
-before_install:
-  - openssl aes-256-cbc -K $encrypted_1d93d61b46d3_key -iv $encrypted_1d93d61b46d3_iv -in win-cert.p12.enc -out win-cert.p12 -d
-
 # Use npm install if this is a Greenkeeper branch
 # See https://github.com/greenkeeperio/greenkeeper-lockfile/issues/156#issuecomment-397719017
 install: 
