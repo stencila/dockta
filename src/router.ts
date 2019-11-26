@@ -1,9 +1,9 @@
 import { Router, Request, Response, json } from 'express'
 
-const router = Router()
-
 import DockerCompiler from './DockerCompiler'
 import CachingUrlFetcher from './CachingUrlFetcher'
+
+const router = Router()
 
 const compiler = new DockerCompiler(new CachingUrlFetcher())
 
@@ -13,7 +13,7 @@ router.use(json())
  * Run a method of `DockerCompiler`
  * @param method The method to run e.g `compile`, `build`
  */
-function run (method: string) {
+function run(method: string) {
   return async (req: Request, res: Response) => {
     try {
       // @ts-ignore

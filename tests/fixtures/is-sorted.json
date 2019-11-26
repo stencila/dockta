@@ -1,1 +1,48 @@
-{"name":"is-sorted","version":"1.0.5","description":"A small module to check if an Array is sorted","main":"index.js","scripts":{"standard":"standard","test":"npm run-script unit","unit":"tape test/*.js"},"repository":{"type":"git","url":"git+https://github.com/dcousens/is-sorted.git"},"bugs":{"url":"https://github.com/dcousens/is-sorted/issues"},"homepage":"https://github.com/dcousens/is-sorted","keywords":["is-sorted","sorting","sort","sorted","array","list","comparison"],"author":{"name":"Daniel Cousens"},"license":"MIT","devDependencies":{"standard":"*","tape":"^4.8.0"},"gitHead":"24829180ba1fafb86b8abca7b30681b3cefc3b5e","_id":"is-sorted@1.0.5","_npmVersion":"6.0.1","_nodeVersion":"10.1.0","_npmUser":{"name":"dcousens","email":"npm@dcousens.com"},"dist":{"integrity":"sha512-KZJvKDrI+Kg3ixeDaZQIt7RIwcGnm07+NSipyj1r9MtjDrLG678ETy4yO6dBJLUjejPdge9fLCGxsWkQO/3PJg==","shasum":"ded2e357010bc79350b10ec2768e27db1b92b128","tarball":"https://registry.npmjs.org/is-sorted/-/is-sorted-1.0.5.tgz","fileCount":7,"unpackedSize":4361,"npm-signature":"-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbA9ZdCRA9TVsSAnZWagAAaXkP/Rn7ohT4nPpJqzaC9jil\naTAPPSltdSgdI13MXDnymjX8B51QCXOeIvM8acF7bgh3Ey5wn/yFPjhSnTVN\nECPXcrEllQzFTTU5xRCYb+4QT7856YyjHM1lYV5FwwcVqy8bOxS7QqMASpRq\nm4ftlZHqf9YkAqvbk/ZH1yPn+SmSdv5yaXVq7BkP+z6A9M/Ea3GmnS+Mutn4\n2frMvBThKE7dVD0U/h4nwf/HTYCBFiAPT1sRAsJNzSEFqeLreInDDYDHQhHk\n7BxkYX0B+YnGJKkD4JhqtOy18H7CXIQI3EfTF2s+JaUY86LTLKpR27QDFQS0\n4UCM4tooEpGV1MdSlV3E8AMLjBPOe+7F7cah+MMtUIsjKzqCm6gBGYaZNVMK\ngT4B+88z9YdbQi4Wq45IyYG8nq1OkZoG8yG4A6rLdtl6QP6TrA0QkSv/MTTv\nF4KZlu9RDKHJOaorvz3+Y4Gm2qETLnNQU45zMs1CesiqQE+YASA6SDvC68Zo\n7h6+kZSvHUdY9oCqgGBEG253Wi6FgWrc2oJC/Ywy9B7JNsGVFex31Y+HKujf\noHgWXJHbLFlpEoX0Bo42QqrPDNd3qGkKcePkXRqJMoWZADNzC//HzHR2dk3m\nbN9UAKXgrCSTJXZStbs8xKbCM9Xn01AKwL5ry+pUHzs5kade2hUiO5Q8P0Sy\n4b+p\r\n=ABFn\r\n-----END PGP SIGNATURE-----\r\n"},"maintainers":[{"name":"dcousens","email":"email@dcousens.com"}],"directories":{},"_npmOperationalInternal":{"host":"s3://npm-registry-packages","tmp":"tmp/is-sorted_1.0.5_1526978140131_0.9554924783134939"}}
+{
+  "name": "is-sorted",
+  "version": "1.0.5",
+  "description": "A small module to check if an Array is sorted",
+  "main": "index.js",
+  "scripts": {
+    "standard": "standard",
+    "test": "npm run-script unit",
+    "unit": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dcousens/is-sorted.git"
+  },
+  "bugs": { "url": "https://github.com/dcousens/is-sorted/issues" },
+  "homepage": "https://github.com/dcousens/is-sorted",
+  "keywords": [
+    "is-sorted",
+    "sorting",
+    "sort",
+    "sorted",
+    "array",
+    "list",
+    "comparison"
+  ],
+  "author": { "name": "Daniel Cousens" },
+  "license": "MIT",
+  "devDependencies": { "standard": "*", "tape": "^4.8.0" },
+  "gitHead": "24829180ba1fafb86b8abca7b30681b3cefc3b5e",
+  "_id": "is-sorted@1.0.5",
+  "_npmVersion": "6.0.1",
+  "_nodeVersion": "10.1.0",
+  "_npmUser": { "name": "dcousens", "email": "npm@dcousens.com" },
+  "dist": {
+    "integrity": "sha512-KZJvKDrI+Kg3ixeDaZQIt7RIwcGnm07+NSipyj1r9MtjDrLG678ETy4yO6dBJLUjejPdge9fLCGxsWkQO/3PJg==",
+    "shasum": "ded2e357010bc79350b10ec2768e27db1b92b128",
+    "tarball": "https://registry.npmjs.org/is-sorted/-/is-sorted-1.0.5.tgz",
+    "fileCount": 7,
+    "unpackedSize": 4361,
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbA9ZdCRA9TVsSAnZWagAAaXkP/Rn7ohT4nPpJqzaC9jil\naTAPPSltdSgdI13MXDnymjX8B51QCXOeIvM8acF7bgh3Ey5wn/yFPjhSnTVN\nECPXcrEllQzFTTU5xRCYb+4QT7856YyjHM1lYV5FwwcVqy8bOxS7QqMASpRq\nm4ftlZHqf9YkAqvbk/ZH1yPn+SmSdv5yaXVq7BkP+z6A9M/Ea3GmnS+Mutn4\n2frMvBThKE7dVD0U/h4nwf/HTYCBFiAPT1sRAsJNzSEFqeLreInDDYDHQhHk\n7BxkYX0B+YnGJKkD4JhqtOy18H7CXIQI3EfTF2s+JaUY86LTLKpR27QDFQS0\n4UCM4tooEpGV1MdSlV3E8AMLjBPOe+7F7cah+MMtUIsjKzqCm6gBGYaZNVMK\ngT4B+88z9YdbQi4Wq45IyYG8nq1OkZoG8yG4A6rLdtl6QP6TrA0QkSv/MTTv\nF4KZlu9RDKHJOaorvz3+Y4Gm2qETLnNQU45zMs1CesiqQE+YASA6SDvC68Zo\n7h6+kZSvHUdY9oCqgGBEG253Wi6FgWrc2oJC/Ywy9B7JNsGVFex31Y+HKujf\noHgWXJHbLFlpEoX0Bo42QqrPDNd3qGkKcePkXRqJMoWZADNzC//HzHR2dk3m\nbN9UAKXgrCSTJXZStbs8xKbCM9Xn01AKwL5ry+pUHzs5kade2hUiO5Q8P0Sy\n4b+p\r\n=ABFn\r\n-----END PGP SIGNATURE-----\r\n"
+  },
+  "maintainers": [{ "name": "dcousens", "email": "email@dcousens.com" }],
+  "directories": {},
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/is-sorted_1.0.5_1526978140131_0.9554924783134939"
+  }
+}

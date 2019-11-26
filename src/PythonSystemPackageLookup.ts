@@ -1,15 +1,18 @@
 import fs from 'fs'
 
-type PythonSystemPackageLookupMap = Map<string, Map<string, Map<string, Map<string, Array<string> | null>>>>
+type PythonSystemPackageLookupMap = Map<
+  string,
+  Map<string, Map<string, Map<string, Array<string> | null>>>
+>
 
 /**
  * Parses a value and converts it to a Map (recursively) if it is a plain JavaScript object, otherwise just return the
  * value
  */
-function valueToMap (value: any): any {
+function valueToMap(value: any): any {
   if (!Array.isArray(value) && typeof value === 'object') {
-    let m = new Map<any, any>()
-    for (let key in value) {
+    const m = new Map<any, any>()
+    for (const key in value) {
       if (!value.hasOwnProperty(key)) {
         continue
       }
@@ -29,13 +32,12 @@ export default class PythonSystemPackageLookup {
   /**
    * @param packageLookup: PythonSystemPackageLookupMap the Map
    */
-  constructor (private readonly packageLookup: PythonSystemPackageLookupMap) {
-  }
+  constructor(private readonly packageLookup: PythonSystemPackageLookupMap) {}
 
   /**
    * Construct a `PythonSystemPackageLookup` by parsing a JSON representation of the package map from `path`
    */
-  static fromFile (path: string): PythonSystemPackageLookup {
+  static fromFile(path: string): PythonSystemPackageLookup {
     const dependencyLookupRaw = JSON.parse(fs.readFileSync(path, 'utf8'))
     return new PythonSystemPackageLookup(valueToMap(dependencyLookupRaw))
   }
@@ -44,7 +46,12 @@ export default class PythonSystemPackageLookup {
    * Look up the system package required for a python package given python version, package type and system version.
    * Will always return an Array, which will be empty if there are no packages to install.
    */
-  lookupSystemPackage (pythonPackage: string, pythonMajorVersion: number, systemPackageType: string, systemVersion: string): Array<string> {
+  lookupSystemPackage(
+    pythonPackage: string,
+    pythonMajorVersion: number,
+    systemPackageType: string,
+    systemVersion: string
+  ): Array<string> {
     const pyPackageMap = this.packageLookup.get(pythonPackage)
 
     if (!pyPackageMap) {

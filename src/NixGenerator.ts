@@ -6,16 +6,15 @@ const VERSION = require('../package').version
  * Generates a default.nix for a `SoftwareEnvironment` instance
  */
 export default class NixGenerator extends Doer {
-
   /**
    * Generate a default.nix file for a `SoftwareEnvironment` instance
    *
    * @param environ `SoftwareEnvironment` instance
    */
-  generate (environ: any, folder: string): string {
+  generate(environ: any, folder: string): string {
     this.folder = folder
 
-    let comments = true
+    const comments = true
 
     let nixfile = ''
 
@@ -39,19 +38,26 @@ stdenv.mkDerivation rec {
     bashInteractive coreutils utillinux findutils gnugrep which openssl cacert
 `
 
-    for (let softwareRequirement of environ.softwareRequirements) {
-
-      let platform = softwareRequirement.runtimePlatform
-      if (platform === 'R') { nixfile += `    R\n` }
-      if (platform === 'Node.js') { nixfile += `    nodejs\n` }
-      if (platform === 'Python') { nixfile += `    python37\n` }
+    for (const softwareRequirement of environ.softwareRequirements) {
+      const platform = softwareRequirement.runtimePlatform
+      if (platform === 'R') {
+        nixfile += `    R\n`
+      }
+      if (platform === 'Node.js') {
+        nixfile += `    nodejs\n`
+      }
+      if (platform === 'Python') {
+        nixfile += `    python37\n`
+      }
 
       let language = platform.toLowerCase().replace(/\.[^/.]+$/, '')
-      if (language === 'python') { language = 'python37' }
+      if (language === 'python') {
+        language = 'python37'
+      }
 
-      let pkgs = softwareRequirement.softwareRequirements.map(
-        (x: any) => `${language}Packages.${x.name.toLowerCase()}`
-      ).join(' ')
+      const pkgs = softwareRequirement.softwareRequirements
+        .map((x: any) => `${language}Packages.${x.name.toLowerCase()}`)
+        .join(' ')
 
       nixfile += `    ${pkgs}\n`
     }

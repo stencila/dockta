@@ -26,27 +26,26 @@ import Docker from 'dockerode'
  *     docker run --rm --volume $(pwd):/work --workdir=/work --user=$(id -u):$(id -g) <image>
  */
 export default class DockerExecutor {
-
   /**
    * Run a Docker container
    *
    * @param name Name of the Docker image to use
    * @param folder Path of the project folder which will be mounted into the image
    */
-  async execute (name: string, folder: string, command: string = '') {
+  async execute(name: string, folder: string, command = '') {
     // Capture stdout so we can attempt to parse it
     // to JSON
     let out = ''
-    let stdout = new stream.Writable({
-      write (chunk, encoding, callback) {
+    const stdout = new stream.Writable({
+      write(chunk, encoding, callback) {
         out += chunk.toString()
         callback()
       }
     })
 
     // Just write errors through to local console error
-    let stderr = new stream.Writable({
-      write (chunk, encoding, callback) {
+    const stderr = new stream.Writable({
+      write(chunk, encoding, callback) {
         console.error(chunk.toString())
         callback()
       }
@@ -66,9 +65,7 @@ export default class DockerExecutor {
     const container = await docker.run(name, [], [stdout, stderr], {
       Cmd: cmd,
       HostConfig: {
-        Binds: [
-          `${path.resolve(folder)}:/work`
-        ]
+        Binds: [`${path.resolve(folder)}:/work`]
       },
       Tty: false,
       User: user,

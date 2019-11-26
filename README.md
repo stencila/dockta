@@ -7,7 +7,7 @@
 [![Docs](https://img.shields.io/badge/docs-latest-blue.svg)](https://stencila.github.io/dockta/)
 [![Chat](https://badges.gitter.im/stencila/stencila.svg)](https://gitter.im/stencila/stencila)
 
-Docker is a useful tool for creating reproducible computing environments. But creating truly reproducible Docker images can be difficult - even if you already know how to write a `Dockerfile`. 
+Docker is a useful tool for creating reproducible computing environments. But creating truly reproducible Docker images can be difficult - even if you already know how to write a `Dockerfile`.
 
 Dockta makes it easier for researchers to create Docker images for their research projects. Dockta generates a `Dockerfile` and builds a image, for _your_ project, based on _your_ source code.
 
@@ -83,12 +83,11 @@ If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_
 
 #### Jupyter
 
-If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockta/issues/9) Dockta will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also  🦄 [#10](https://github.com/stencila/dockta/issues/10) add the necesary Jupyter kernels to the built Docker image.
-
+If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockta/issues/9) Dockta will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also 🦄 [#10](https://github.com/stencila/dockta/issues/10) add the necesary Jupyter kernels to the built Docker image.
 
 ### Automatically determines system requirements
 
-One of the headaches researchers face when hand writing Dockerfiles is figuring out which system dependencies your project needs. Often this involves a lot of trial and error. 
+One of the headaches researchers face when hand writing Dockerfiles is figuring out which system dependencies your project needs. Often this involves a lot of trial and error.
 
 Dockta automatically checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages and installs those into the image. For example, let's say you have a project with an R script that requires the `rgdal` package for geospatial analyses,
 
@@ -118,7 +117,7 @@ No more trial and error of build, fail, add dependency, repeat... cycles!
 
 ### Faster re-installation of language packages
 
-If you have built a Docker image before, you'll know that it can be frustrating waiting for *all* your project's dependencies to reinstall when you simply add or remove one of them.
+If you have built a Docker image before, you'll know that it can be frustrating waiting for _all_ your project's dependencies to reinstall when you simply add or remove one of them.
 
 The reason this happens is that, due to Docker's layered filesystem, when you update a requirements file, Docker throws away all the subsequent layers - including the one where you previously installed your dependencies. That means that all those packages need to get reinstalled.
 
@@ -155,7 +154,7 @@ Now, let's say that we want to get the latest version of `pandas` and increment 
 pandas==0.23.1
 ```
 
-When we do `docker build .` again to update the image, Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequent ones. This means that it will download and install *all* the necessary packages again, including the ones that we previously installed. For a more contrived illustration of this, simply add a space to one of the lines in the `requirements.txt` file and notice how the package install gets repeated all over again.
+When we do `docker build .` again to update the image, Docker notices that the `requirements.txt` file has changed and so throws away that layer and all subsequent ones. This means that it will download and install _all_ the necessary packages again, including the ones that we previously installed. For a more contrived illustration of this, simply add a space to one of the lines in the `requirements.txt` file and notice how the package install gets repeated all over again.
 
 Now, let's add a special `# dockta` comment to the Dockerfile before the `COPY` directive,
 
@@ -186,7 +185,7 @@ Dockta 2/2 : RUN pip install -r requirements.txt
 Collecting pandas==0.23.1 (from -r requirements.txt (line 1))
 
   <snip>
-  
+
 Successfully built pandas
 Installing collected packages: pandas
   Found existing installation: pandas 0.23.0
@@ -196,12 +195,11 @@ Successfully installed pandas-0.23.1
 
 ```
 
-
 ### Generates structured meta-data for your project
 
 Dockta uses [JSON-LD](https://json-ld.org/) as it's internal data structure. When it parses your project's source code it generates a JSON-LD tree using a vocabularies from [schema.org](https://schema.org) and [CodeMeta](https://codemeta.github.io/index.html).
 
-For example, It will parse a `Dockerfile` into a schema.org [`SoftwareSourceCode`](https://schema.org/SoftwareSourceCode) node extracting meta-data about the Dockerfile. 
+For example, It will parse a `Dockerfile` into a schema.org [`SoftwareSourceCode`](https://schema.org/SoftwareSourceCode) node extracting meta-data about the Dockerfile.
 
 Dockta also fetches meta data on your project's dependencies, which could be used to generate a complete software citation for your project.
 
@@ -233,19 +231,17 @@ Dockta also fetches meta data on your project's dependencies, which could be use
 
 ### Easy to pick up, easy to throw away
 
-Dockta is designed to make it easier to get started creating Docker images for your project. But it's also designed not to get in your way or restrict you from using bare Docker. You can easily, and individually, override any of the steps that Dockta takes to build an image. 
+Dockta is designed to make it easier to get started creating Docker images for your project. But it's also designed not to get in your way or restrict you from using bare Docker. You can easily, and individually, override any of the steps that Dockta takes to build an image.
 
-- *Code analysis*: To stop Dockta doing code analysis and take over specifying your project's package dependencies, just remove the leading '.' from the `.DESCRIPTION`, `.requirements.txt` or `.package.json` file that Dockta generates. 
+- _Code analysis_: To stop Dockta doing code analysis and take over specifying your project's package dependencies, just remove the leading '.' from the `.DESCRIPTION`, `.requirements.txt` or `.package.json` file that Dockta generates.
 
-- *Dockerfile generation*: Dockta aims to generate readable Dockerfiles that conform to best practices. They include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockta generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
+- _Dockerfile generation_: Dockta aims to generate readable Dockerfiles that conform to best practices. They include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockta generating a `.Dockerfile`, and start editing it yourself, just rename it to `Dockerfile`.
 
-- *Image building*: Dockta manages incremental builds using a special comment in the `Dockerfile`, so you can stop using Dockta altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
-
+- _Image building_: Dockta manages incremental builds using a special comment in the `Dockerfile`, so you can stop using Dockta altogether and build the same image using Docker (it will just take longer if you change you project dependencies).
 
 ## Demo
 
 <a href="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk.svg" /></a>
-
 
 ## Install
 
@@ -297,7 +293,7 @@ To stop Dockta generating any of these files and start editing it yourself, remo
 
 ### Build a Docker image
 
-Usually, you'll compile and build a Docker image for your project in one step using the `build` command. This command runs the `compile` command and builds a Docker image from the generated `.Dockerfile` (or  handwritten `Dockerfile`):
+Usually, you'll compile and build a Docker image for your project in one step using the `build` command. This command runs the `compile` command and builds a Docker image from the generated `.Dockerfile` (or handwritten `Dockerfile`):
 
 ```bash
 dockta build
@@ -313,7 +309,7 @@ rdate             latest              545aa877bd8d        About a minute ago   7
 
 If you want to build your image with bare Docker rename `.Dockerfile` to `Dockerfile` and run `docker build .` instead. This might be a good approach when you have finished the exploratory phase of your project (i.e. there is litte or no churn in your package dependencies) and want to create a more final image.
 
-> 🛈 Docker images can get very large (2-3 GB is not unusual for an image with R and/or Python and associated packages). 
+> 🛈 Docker images can get very large (2-3 GB is not unusual for an image with R and/or Python and associated packages).
 > You might want to occasionally do a clean up of 'dangling' images using `docker image prune` to save disk space.
 > See the Docker [documentation for more on cleaning up](https://docs.docker.com/config/pruning/) unused images and containers.
 
@@ -341,8 +337,7 @@ Dockta compiles a meta-data tree of all the packages that your project relies on
 Roger Bivand (rgdal, sp), Tim Keitt (rgdal), Barry Rowlingson (rgdal), Edzer Pebesma (sp)
 ```
 
-Use the  `depth` option to restrict the listing to a particular depth in the dependency tree. For example, to list the authors of the packages that your project directly relies upon use:
-
+Use the `depth` option to restrict the listing to a particular depth in the dependency tree. For example, to list the authors of the packages that your project directly relies upon use:
 
 ```bash
 > dockta who --depth=1
@@ -355,7 +350,7 @@ Use the  `depth` option to restrict the listing to a particular depth in the dep
 
 ## Contributors
 
-We 💕 contributions! All contributions: ideas 🤔, examples 💡, bug reports 🐛, documentation 📖, code 💻, questions 💬. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details. 
+We 💕 contributions! All contributions: ideas 🤔, examples 💡, bug reports 🐛, documentation 📖, code 💻, questions 💬. See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
 This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Thanks 🙏 to these wonderful ✨ people who have contributed so far 💖!
 
@@ -363,6 +358,7 @@ This project follows the [all-contributors](https://github.com/kentcdodds/all-co
 <!-- prettier-ignore -->
 | [<img src="https://avatars3.githubusercontent.com/u/426784?v=4" width="100px;"/><br /><sub><b>Remi Rampin</b></sub>](https://remirampin.com/)<br />[🐛](https://github.com/stencila/dockta/issues?q=author%3Aremram44 "Bug reports") [💻](https://github.com/stencila/dockta/commits?author=remram44 "Code") [🤔](#ideas-remram44 "Ideas, Planning, & Feedback") | [<img src="https://avatars1.githubusercontent.com/u/292725?v=4" width="100px;"/><br /><sub><b>Ben</b></sub>](http://bbit.co.nz)<br />[💻](https://github.com/stencila/dockta/commits?author=beneboy "Code") [🤔](#ideas-beneboy "Ideas, Planning, & Feedback") | [<img src="https://avatars2.githubusercontent.com/u/2358535?v=4" width="100px;"/><br /><sub><b>Aleksandra Pawlik</b></sub>](http://stenci.la)<br />[💻](https://github.com/stencila/dockta/commits?author=apawlik "Code") [💡](#example-apawlik "Examples") [🐛](https://github.com/stencila/dockta/issues?q=author%3Aapawlik "Bug reports") | [<img src="https://avatars0.githubusercontent.com/u/1152336?v=4" width="100px;"/><br /><sub><b>Nokome Bentley</b></sub>](https://github.com/nokome)<br />[💻](https://github.com/stencila/dockta/commits?author=nokome "Code") [⚠️](https://github.com/stencila/dockta/commits?author=nokome "Tests") | [<img src="https://avatars3.githubusercontent.com/u/160299?v=4" width="100px;"/><br /><sub><b>Giorgio Sironi</b></sub>](http://giorgiosironi.com)<br />[👀](#review-giorgiosironi "Reviewed Pull Requests") [🐛](https://github.com/stencila/dockta/issues?q=author%3Agiorgiosironi "Bug reports") [🤔](#ideas-giorgiosironi "Ideas, Planning, & Feedback") [💬](#question-giorgiosironi "Answering Questions") | [<img src="https://avatars3.githubusercontent.com/u/263386?v=4" width="100px;"/><br /><sub><b>Bruno Vieira</b></sub>](http://bmpvieira.com)<br />[💻](https://github.com/stencila/dockta/commits?author=bmpvieira "Code") [🤔](#ideas-bmpvieira "Ideas, Planning, & Feedback") [⚠️](https://github.com/stencila/dockta/commits?author=bmpvieira "Tests") |
 | :---: | :---: | :---: | :---: | :---: | :---: |
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## See also
@@ -402,39 +398,37 @@ If you don't want to build a Docker image and just want a tool that helps determ
 - Python: [`modulefinder`](https://docs.python.org/3.7/library/modulefinder.html)
 - R: [`requirements`](https://github.com/hadley/requirements)
 
-
 ## FAQ
 
-*Why go to the effort of generating a JSON-LD intermediate representation instead of writing a Dockerfile directly?*
+_Why go to the effort of generating a JSON-LD intermediate representation instead of writing a Dockerfile directly?_
 
-Having an intermediate representation of the software environment allows this data to be used for other purposes (e.g. software citations, publishing, archiving). It also allows us to reuse much of this code for build targets other than Docker (e.g. Nix) and sources other than code files (e.g. a GUI). 
+Having an intermediate representation of the software environment allows this data to be used for other purposes (e.g. software citations, publishing, archiving). It also allows us to reuse much of this code for build targets other than Docker (e.g. Nix) and sources other than code files (e.g. a GUI).
 
-*Why is Dockta a Node.js package?*
+_Why is Dockta a Node.js package?_
 
 We've implemented this as a Node.js package for easier integration into Stencila's Node.js based desktop and cloud deployments. We already had familiarity with using `dockerode` the Node.js package that we use to talk to Docker for incremental builds and container execution.
 
-*Why is Dockta implemented in Typescript?*
+_Why is Dockta implemented in Typescript?_
 
 Typescript's type-checking and type-annotations can reduce the number of runtime errors and improves developer experience. For this particular project, we wanted to use the Typescript type definitions for `SoftwarePackage`, `CreativeWork`, `Person` etc that are defined in [stencila/schema](https://github.com/stencila/schema).
 
-*Why didn't you use, and contribute to, an existing project rather than creating a new tool*
+_Why didn't you use, and contribute to, an existing project rather than creating a new tool_
 
 When existing projects don't take the approach or provide the features you want, it's often a difficult decision to make whether to invest the time to understand and refactor an existing code base or to start fresh. In this case, we chose to start fresh for the reasons and differences outlined above. We felt it would take too much refactoring of existing projects to shoehorn in the approach we wanted to take. We also wanted to be able to reuse much of the code developed here in a sister project, [Nixster](https://github.com/stencila/nixster), which aims to make it easier for researchers to build Nix environments.
 
-*I'd love to help out! Where do I start?*
+_I'd love to help out! Where do I start?_
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) (OK, so this isn't asked *that* frequently. But it's worth a try eh :woman_shrugging:.)
-
+See [CONTRIBUTING.md](CONTRIBUTING.md) (OK, so this isn't asked _that_ frequently. But it's worth a try eh :woman_shrugging:.)
 
 ## Acknowledgments
 
 Dockta was inspired by, and combines ideas from, several similar tools including [`binder`](https://github.com/binder-project/binder), [`repo2docker`](https://github.com/jupyter/repo2docker), [`source-to-image`](https://github.com/openshift/source-to-image) and [`containerit`](https://github.com/o2r-project/containerit). It relies on many great open source projects, in particular:
 
- - [CodeMeta](https://codemeta.github.io/)
- - [`crandb`](https://github.com/metacran/crandb)
- - [`dockerode`](https://www.npmjs.com/package/dockerode)
- - [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser)
- - [`npm/registry`](https://github.com/npm/registry)
- - [`pypa`](https://warehouse.pypa.io)
- - [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
- - and of course, [Docker](https://www.docker.com/)
+- [CodeMeta](https://codemeta.github.io/)
+- [`crandb`](https://github.com/metacran/crandb)
+- [`dockerode`](https://www.npmjs.com/package/dockerode)
+- [`docker-file-parser`](https://www.npmjs.com/package/docker-file-parser)
+- [`npm/registry`](https://github.com/npm/registry)
+- [`pypa`](https://warehouse.pypa.io)
+- [`sysreqsdb`](https://github.com/r-hub/sysreqsdb)
+- and of course, [Docker](https://www.docker.com/)

@@ -26,7 +26,6 @@ interface DockerMessage {
  *  - applies all following instructions into a single layer
  */
 export default class DockerBuilder {
-
   /**
    * Build a Docker image for a project
    *
@@ -34,9 +33,12 @@ export default class DockerBuilder {
    * @param name The name to tag the image with
    * @param dockerfile The name of the Dockerfile within `dir` to use for the build
    */
-  async build (dir: string, name?: string, dockerfile: string = 'Dockerfile') {
+  async build(dir: string, name?: string, dockerfile = 'Dockerfile') {
     if (!name) {
-      const hash = crypto.createHash('md5').update(dir).digest('hex')
+      const hash = crypto
+        .createHash('md5')
+        .update(dir)
+        .digest('hex')
       name = 'dockta-' + hash
     }
 
@@ -51,7 +53,7 @@ export default class DockerBuilder {
     let docktarize = false
     let newContent = ''
     let index = 0
-    for (let instruction of instructions) {
+    for (const instruction of instructions) {
       if (instruction.name === 'WORKDIR') {
         workdir = path.join(workdir, instruction.args as string)
       } else if (instruction.name === 'USER') {
@@ -78,7 +80,11 @@ export default class DockerBuilder {
         // Ignore original Dockerfile
         // Ignore the special `snapshot` directory which exists when this
         // is run within a `pkg` binary and dir is `.`
-        return relpath === 'Dockerfile' || relpath[0] === '.' || relpath === 'snapshot'
+        return (
+          relpath === 'Dockerfile' ||
+          relpath.startsWith('.') ||
+          relpath === 'snapshot'
+        )
       },
       finalize: false,
       finish: pack => {
@@ -126,7 +132,7 @@ export default class DockerBuilder {
     */
 
     // Wait for build to finish and record the id of the system layer
-    let currentSystemLayer = await new Promise<string>((resolve, reject) => {
+    const currentSystemLayer = await new Promise<string>((resolve, reject) => {
       let id: string
       stream.pipe(ndjson.parse()).on('data', (data: DockerMessage) => {
         if (data.error) {
@@ -152,7 +158,12 @@ export default class DockerBuilder {
 
     // Check for any error message
     const errors = messages.filter(message => message.level === 'error')
-    if (errors.length) throw new Error(`There was an error when building the image: ${errors.map(error => error.message).join(',')}`)
+    if (errors.length)
+      throw new Error(
+        `There was an error when building the image: ${errors
+          .map(error => error.message)
+          .join(',')}`
+      )
 
     // Get information on the current
     const image = docker.getImage(name + ':latest')
@@ -161,7 +172,8 @@ export default class DockerBuilder {
     try {
       const imageInfo = await image.inspect()
       appLayer = imageInfo.Id
-      lastSystemLayer = imageInfo.Config.Labels && imageInfo.Config.Labels.systemLayer
+      lastSystemLayer =
+        imageInfo.Config.Labels && imageInfo.Config.Labels.systemLayer
     } catch (error) {
       // No existing image, just continue
     }
@@ -177,7 +189,7 @@ export default class DockerBuilder {
     }
 
     // Create a container from the layer and start it up
-    let container = await docker.createContainer({
+    const container = await docker.createContainer({
       Image: layer,
       Tty: true,
       Cmd: ['/bin/bash']
@@ -187,7 +199,7 @@ export default class DockerBuilder {
     // Handle the remaining instructions
     let count = 1
     let changes = ''
-    for (let instruction of instructions) {
+    for (const instruction of instructions) {
       const step = `Dockta ${count}/${instructions.length} :`
       switch (instruction.name) {
         case 'USER':
@@ -205,7 +217,7 @@ export default class DockerBuilder {
           const to = copy.pop() as string
           const pack = tarFs.pack(dir, {
             // Set the destination of each file (last item in `COPY` command)
-            map: function (header) {
+            map: function(header) {
               header.name = to
               return header
             },
@@ -234,7 +246,7 @@ export default class DockerBuilder {
 
           // Wait until the exec has finished running, checking every 100ms
           while (true) {
-            let status = await exec.inspect()
+            const status = await exec.inspect()
             if (status.Running === false) break
             await new Promise(resolve => setTimeout(resolve, 100))
           }
@@ -250,7 +262,9 @@ export default class DockerBuilder {
           break
 
         default:
-          throw new Error(`Dockta can not yet handle a ${instruction.name} instruction. Put it before the # dockta comment in your Dockerfile.`)
+          throw new Error(
+            `Dockta can not yet handle a ${instruction.name} instruction. Put it before the # dockta comment in your Dockerfile.`
+          )
       }
       count += 1
     }
@@ -260,7 +274,10 @@ export default class DockerBuilder {
       // Options to commit
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageCommit
       repo: name,
-      comment: instructions.length > 0 ? 'Updated application layer' : 'No updates requested',
+      comment:
+        instructions.length > 0
+          ? 'Updated application layer'
+          : 'No updates requested',
       changes,
       User: user,
       WorkingDir: workdir,

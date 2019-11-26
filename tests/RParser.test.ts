@@ -31,12 +31,18 @@ test('parse:non-r', async () => {
  */
 test('parse:r-source', async () => {
   const parser = new RParser(urlFetcher, fixture('r-source'))
-  const environ = await parser.parse() as SoftwarePackage
+  const environ = (await parser.parse()) as SoftwarePackage
   expect(environ.name).toEqual('rsource')
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
-  expect(reqs.map(req => req.name)).toEqual(['MASS', 'digest', 'dplyr', 'ggplot2', 'lubridate'])
+  expect(reqs.map(req => req.name)).toEqual([
+    'MASS',
+    'digest',
+    'dplyr',
+    'ggplot2',
+    'lubridate'
+  ])
 })
 
 /**
@@ -45,7 +51,7 @@ test('parse:r-source', async () => {
  */
 test('parse:r-requirements', async () => {
   const parser = new RParser(urlFetcher, fixture('r-requirements'))
-  const environ = await parser.parse() as SoftwarePackage
+  const environ = (await parser.parse()) as SoftwarePackage
 
   expect(environ.name).toEqual('rrequirements')
 
@@ -60,20 +66,26 @@ test('parse:r-requirements', async () => {
  */
 test('parse:r-mixed', async () => {
   const parser = new RParser(urlFetcher, fixture('r-mixed'))
-  const environ = await parser.parse() as SoftwarePackage
+  const environ = (await parser.parse()) as SoftwarePackage
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
-  expect(reqs.map(req => req.name)).toEqual(['car', 'coin', 'ggplot2', 'httr', 'lsmeans'])
+  expect(reqs.map(req => req.name)).toEqual([
+    'car',
+    'coin',
+    'ggplot2',
+    'httr',
+    'lsmeans'
+  ])
 })
 
 /**
- * When applied to the `r-gsl` fixture, handles the sysreqs (which has an 
+ * When applied to the `r-gsl` fixture, handles the sysreqs (which has an
  * array of Debian packages) correctly.
  */
 test('parse:r-gsl', async () => {
   const parser = new RParser(urlFetcher, fixture('r-gsl'))
-  const environ = await parser.parse() as SoftwarePackage
+  const environ = (await parser.parse()) as SoftwarePackage
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()

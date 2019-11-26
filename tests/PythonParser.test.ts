@@ -1,7 +1,12 @@
 import { fixture } from './test-functions'
 
 import PythonParser, { RequirementType } from '../src/PythonParser'
-import { ComputerLanguage, OperatingSystem, Person, SoftwarePackage } from '@stencila/schema'
+import {
+  ComputerLanguage,
+  OperatingSystem,
+  Person,
+  SoftwarePackage
+} from '@stencila/schema'
 
 import MockUrlFetcher from './MockUrlFetcher'
 
@@ -31,7 +36,9 @@ describe('PythonParser', () => {
   test('parse:py-requirements', async () => {
     const parser = new PythonParser(urlFetcher, fixture('py-requirements'))
 
-    const requirementsContent = await parser.parseRequirementsFile('requirements.txt')
+    const requirementsContent = await parser.parseRequirementsFile(
+      'requirements.txt'
+    )
 
     const expected = [
       {
@@ -40,48 +47,48 @@ describe('PythonParser', () => {
         type: RequirementType.Named
       },
       {
-        'type': RequirementType.Named,
-        'value': 'requests',
-        'version': '==2.19.1'
+        type: RequirementType.Named,
+        value: 'requests',
+        version: '==2.19.1'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'less-than',
-        'version': '<1'
+        type: RequirementType.Named,
+        value: 'less-than',
+        version: '<1'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'greater-than',
-        'version': '>2'
+        type: RequirementType.Named,
+        value: 'greater-than',
+        version: '>2'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'less-than-equal',
-        'version': '<=3'
+        type: RequirementType.Named,
+        value: 'less-than-equal',
+        version: '<=3'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'greater-than-equal',
-        'version': '>=4'
+        type: RequirementType.Named,
+        value: 'greater-than-equal',
+        version: '>=4'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'multiple-things',
-        'version': '>5,<=6'
+        type: RequirementType.Named,
+        value: 'multiple-things',
+        version: '>5,<=6'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'squiggly-boye',
-        'version': '~=7'
+        type: RequirementType.Named,
+        value: 'squiggly-boye',
+        version: '~=7'
       },
       {
-        'type': RequirementType.URL,
-        'value': 'svn+http://myrepo/svn/MyApp#egg=MyApp'
+        type: RequirementType.URL,
+        value: 'svn+http://myrepo/svn/MyApp#egg=MyApp'
       },
       {
-        'type': RequirementType.Named,
-        'value': 'final-requirement',
-        'version': '==2.4'
+        type: RequirementType.Named,
+        value: 'final-requirement',
+        version: '==2.4'
       }
     ]
 
@@ -102,15 +109,22 @@ describe('PythonParser', () => {
     arrowPackage.programmingLanguages = [ComputerLanguage.py]
 
     // This data is populated by the metadata lookup and the `got` mock
-    arrowPackage.authors = [Person.fromText('Joe Bloggs <joe.bloggs@example.com>')]
-    arrowPackage.operatingSystems = [OperatingSystem.windows, OperatingSystem.linux, OperatingSystem.macos,
-      OperatingSystem.unix]
+    arrowPackage.authors = [
+      Person.fromText('Joe Bloggs <joe.bloggs@example.com>')
+    ]
+    arrowPackage.operatingSystems = [
+      OperatingSystem.windows,
+      OperatingSystem.linux,
+      OperatingSystem.macos,
+      OperatingSystem.unix
+    ]
     arrowPackage.codeRepository = 'http://www.example.com/project'
     arrowPackage.applicationCategories = ['Database', 'Software Development']
     arrowPackage.applicationSubCategories = ['Front-Ends', 'Libraries']
     arrowPackage.keywords = 'test keywords list'
     arrowPackage.license = 'Free Software License'
-    arrowPackage.description = 'This is the long description that will be used in priority over description'
+    arrowPackage.description =
+      'This is the long description that will be used in priority over description'
 
     const environ = new SoftwarePackage()
     environ.name = 'py-mixed'
@@ -128,7 +142,9 @@ describe('PythonParser', () => {
     const parser = new PythonParser(urlFetcher, fixture('py-source'))
     const environ = await parser.parse()
     expect(environ).not.toBeNull()
-    const requirementNames = environ!.softwareRequirements.map(requirement => requirement.name)
+    const requirementNames = environ!.softwareRequirements.map(
+      requirement => requirement.name
+    )
     expect(requirementNames.length).toEqual(2)
     expect(requirementNames).toContain('django')
     expect(requirementNames).toContain('requests')

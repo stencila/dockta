@@ -19,14 +19,14 @@ const REQUIREMENTS_FILE_NAME = 'requirements.txt'
 /**
  * Return true if the passed in line is a requirements.txt comment (starts with "#" which might be preceded by spaces).
  */
-function lineIsComment (line: string): boolean {
+function lineIsComment(line: string): boolean {
   return REQUIREMENTS_COMMENT_REGEX.exec(line) !== null
 }
 
 /**
  * Execute the given `regex` against the line and return the first match. If there is no match, return `null`.
  */
-function applyRegex (line: string, regex: RegExp): string | null {
+function applyRegex(line: string, regex: RegExp): string | null {
   const result = regex.exec(line)
 
   if (result === null) {
@@ -39,7 +39,7 @@ function applyRegex (line: string, regex: RegExp): string | null {
  * Execute the `REQUIREMENTS_EDITABLE_SOURCE_REGEX` against a line and return the first result (or null if no match).
  * This is used to find a requirements.txt line of a URL source (e.g. including a package from github).
  */
-function extractEditableSource (line: string): string | null {
+function extractEditableSource(line: string): string | null {
   return applyRegex(line, REQUIREMENTS_EDITABLE_SOURCE_REGEX)
 }
 
@@ -47,7 +47,7 @@ function extractEditableSource (line: string): string | null {
  * Execute the `REQUIREMENTS_INCLUDE_PATH_REGEX` against a line and return the first result (or null if no match).
  * This is used to find a requirements.txt line that includes another requirements file.
  */
-function extractIncludedRequirementsPath (line: string): string | null {
+function extractIncludedRequirementsPath(line: string): string | null {
   return applyRegex(line, REQUIREMENTS_INCLUDE_PATH_REGEX)
 }
 
@@ -55,7 +55,7 @@ function extractIncludedRequirementsPath (line: string): string | null {
  * Execute the `REQUIREMENTS_STANDARD_REGEX` against a line and return the first result (or null if no match).
  * This is used to find "standard" requirements.txt lines.
  */
-function extractStandardRequirements (line: string): string | null {
+function extractStandardRequirements(line: string): string | null {
   return applyRegex(line, REQUIREMENTS_STANDARD_REGEX)
 }
 
@@ -63,18 +63,26 @@ function extractStandardRequirements (line: string): string | null {
  * Split a requirement line into name and then version. For example "package==1.0.1" => ["package", "==1.0.1"]
  * The version specifier can be `==`, `<=`, `>=`, `~=`, `<` or `>`.
  */
-function splitStandardRequirementVersion (requirement: string): [string, string | null] {
+function splitStandardRequirementVersion(
+  requirement: string
+): [string, string | null] {
   let firstSplitterIndex = -1
 
-  for (let splitter of ['==', '<=', '>=', '~=', '<', '>']) {
-    let splitterIndex = requirement.indexOf(splitter)
-    if (splitterIndex > -1 && (firstSplitterIndex === -1 || splitterIndex < firstSplitterIndex)) {
+  for (const splitter of ['==', '<=', '>=', '~=', '<', '>']) {
+    const splitterIndex = requirement.indexOf(splitter)
+    if (
+      splitterIndex > -1 &&
+      (firstSplitterIndex === -1 || splitterIndex < firstSplitterIndex)
+    ) {
       firstSplitterIndex = splitterIndex
     }
   }
 
   if (firstSplitterIndex !== -1) {
-    return [requirement.substring(0, firstSplitterIndex), requirement.substring(firstSplitterIndex)]
+    return [
+      requirement.substring(0, firstSplitterIndex),
+      requirement.substring(firstSplitterIndex)
+    ]
   }
 
   return [requirement, null]
@@ -84,14 +92,16 @@ function splitStandardRequirementVersion (requirement: string): [string, string 
  * Convert a list of classifiers to a Map between main classification and sub classification(s).
  * e.g: ['A :: B', 'A :: C', 'D :: E'] => {'A': ['B', 'C'], 'D': ['E']}
  */
-function buildClassifierMap (classifiers: Array<string>): Map<string, Array<string>> {
+function buildClassifierMap(
+  classifiers: Array<string>
+): Map<string, Array<string>> {
   const classifierMap = new Map<string, Array<string>>()
 
-  for (let classifier of classifiers) {
-    let doubleColonPosition = classifier.indexOf('::')
+  for (const classifier of classifiers) {
+    const doubleColonPosition = classifier.indexOf('::')
 
-    let classifierKey = classifier.substring(0, doubleColonPosition).trim()
-    let classifierValue = classifier.substring(doubleColonPosition + 2).trim()
+    const classifierKey = classifier.substring(0, doubleColonPosition).trim()
+    const classifierValue = classifier.substring(doubleColonPosition + 2).trim()
 
     if (!classifierMap.has(classifierKey)) {
       classifierMap.set(classifierKey, [])
@@ -108,7 +118,7 @@ function buildClassifierMap (classifiers: Array<string>): Map<string, Array<stri
  * "Topic :: Category :: Secondary Category :: Tertiary Category". This will split into an array of strings of the same
  * length as the number of categories, i.e. ["Category", "Secondary Category", "Tertiary Category"]
  */
-function splitTopic (topics: string): Array<string> {
+function splitTopic(topics: string): Array<string> {
   return topics.split('::').map(topic => topic.trim())
 }
 
@@ -117,17 +127,21 @@ function splitTopic (topics: string): Array<string> {
  * topics. This is because PyPI will repeat top level Topics in sub topics, e.g. the list might contain:
  * ["Topic :: Game", "Topic :: Game :: Arcade"] hence "Game" is defined twice.
  */
-function parseTopics (topicsList: Array<string>): [Array<string>, Array<string>] {
-  let primaryTopics: Array<string> = []
-  let secondaryTopics: Array<string> = []
+function parseTopics(
+  topicsList: Array<string>
+): [Array<string>, Array<string>] {
+  const primaryTopics: Array<string> = []
+  const secondaryTopics: Array<string> = []
 
-  for (let topics of topicsList) {
-    let splitTopics = splitTopic(topics)
+  for (const topics of topicsList) {
+    const splitTopics = splitTopic(topics)
     if (splitTopics.length) {
-      if (!primaryTopics.includes(splitTopics[0])) primaryTopics.push(splitTopics[0])
+      if (!primaryTopics.includes(splitTopics[0]))
+        primaryTopics.push(splitTopics[0])
 
       if (splitTopics.length > 1) {
-        if (!secondaryTopics.includes(splitTopics[1])) secondaryTopics.push(splitTopics[1])
+        if (!secondaryTopics.includes(splitTopics[1]))
+          secondaryTopics.push(splitTopics[1])
       }
     }
   }
@@ -139,7 +153,7 @@ function parseTopics (topicsList: Array<string>): [Array<string>, Array<string>]
  * Convert a string containing an operating system name into an array of `OperatingSystem`s. In some instances the
  * description may map to multiple `OperatingSystems`, e.g. "Unix" => Linux and macOS.
  */
-function parseOperatingSystem (operatingSystem: string): Array<OperatingSystem> {
+function parseOperatingSystem(operatingSystem: string): Array<OperatingSystem> {
   if (operatingSystem.match(/windows/i)) {
     return [OperatingSystem.windows]
   }
@@ -186,8 +200,7 @@ interface PythonRequirement {
  * If no `requirements.txt` file exists then the Parser will attempt to read requirements from the Python source code.
  */
 export default class PythonParser extends Parser {
-
-  async parse (): Promise<SoftwarePackage | null> {
+  async parse(): Promise<SoftwarePackage | null> {
     const files = this.glob(['**/*.py'])
 
     const pkg = new SoftwarePackage()
@@ -209,11 +222,11 @@ export default class PythonParser extends Parser {
       requirements = this.generateRequirementsFromSource()
     }
 
-    for (let rawRequirement of requirements) {
+    for (const rawRequirement of requirements) {
       if (rawRequirement.type === RequirementType.Named) {
         pkg.softwareRequirements.push(await this.createPackage(rawRequirement))
       } else if (rawRequirement.type === RequirementType.URL) {
-        let sourceRequirement = new SoftwareSourceCode()
+        const sourceRequirement = new SoftwareSourceCode()
         sourceRequirement.runtimePlatform = 'Python'
         sourceRequirement.codeRepository = rawRequirement.value
       }
@@ -225,7 +238,9 @@ export default class PythonParser extends Parser {
   /**
    * Convert a `PythonRequirement` into a `SoftwarePackage` by augmenting with metadata from PyPI
    */
-  private async createPackage (requirement: PythonRequirement): Promise<SoftwarePackage> {
+  private async createPackage(
+    requirement: PythonRequirement
+  ): Promise<SoftwarePackage> {
     const softwarePackage = new SoftwarePackage()
     softwarePackage.name = requirement.value
     softwarePackage.runtimePlatform = 'Python'
@@ -235,11 +250,17 @@ export default class PythonParser extends Parser {
       softwarePackage.version = requirement.version
     }
 
-    const pyPiMetadata = await this.fetch(`https://pypi.org/pypi/${softwarePackage.name}/json`)
+    const pyPiMetadata = await this.fetch(
+      `https://pypi.org/pypi/${softwarePackage.name}/json`
+    )
 
     if (pyPiMetadata.info) {
       if (pyPiMetadata.info.author) {
-        softwarePackage.authors.push(Person.fromText(`${pyPiMetadata.info.author} <${pyPiMetadata.info.author_email}>`))
+        softwarePackage.authors.push(
+          Person.fromText(
+            `${pyPiMetadata.info.author} <${pyPiMetadata.info.author_email}>`
+          )
+        )
       }
 
       if (pyPiMetadata.info.project_url) {
@@ -250,26 +271,34 @@ export default class PythonParser extends Parser {
         const classifiers = buildClassifierMap(pyPiMetadata.info.classifiers)
 
         if (classifiers.has('Topic')) {
-          let [topics, subTopics] = parseTopics(classifiers.get('Topic')!)
+          const [topics, subTopics] = parseTopics(classifiers.get('Topic')!)
 
           if (topics.length) softwarePackage.applicationCategories = topics
-          if (subTopics.length) softwarePackage.applicationSubCategories = subTopics
+          if (subTopics.length)
+            softwarePackage.applicationSubCategories = subTopics
         }
 
         if (classifiers.has('Operating System')) {
           const operatingSystems: Array<OperatingSystem> = []
 
-          for (let operatingSystemDescription of classifiers.get('Operating System')!) {
-            for (let operatingSystem of parseOperatingSystem(operatingSystemDescription)) {
-              if (!operatingSystems.includes(operatingSystem)) operatingSystems.push(operatingSystem)
+          for (const operatingSystemDescription of classifiers.get(
+            'Operating System'
+          )!) {
+            for (const operatingSystem of parseOperatingSystem(
+              operatingSystemDescription
+            )) {
+              if (!operatingSystems.includes(operatingSystem))
+                operatingSystems.push(operatingSystem)
             }
           }
           softwarePackage.operatingSystems = operatingSystems
         }
       }
-      if (pyPiMetadata.info.keywords) softwarePackage.keywords = pyPiMetadata.info.keywords
+      if (pyPiMetadata.info.keywords)
+        softwarePackage.keywords = pyPiMetadata.info.keywords
 
-      if (pyPiMetadata.info.license) softwarePackage.license = pyPiMetadata.info.license
+      if (pyPiMetadata.info.license)
+        softwarePackage.license = pyPiMetadata.info.license
 
       if (pyPiMetadata.info.long_description) {
         softwarePackage.description = pyPiMetadata.info.long_description
@@ -283,36 +312,44 @@ export default class PythonParser extends Parser {
   /**
    * Parse a `requirements.txt` file at `path` and return a list of `PythonRequirement`s
    */
-  async parseRequirementsFile (path: string): Promise<Array<PythonRequirement>> {
+  async parseRequirementsFile(path: string): Promise<Array<PythonRequirement>> {
     const requirementsContent = this.read(path)
 
     const allRequirementLines = requirementsContent.split('\n')
 
     let requirements: Array<PythonRequirement> = []
 
-    for (let line of allRequirementLines) {
+    for (const line of allRequirementLines) {
       if (lineIsComment(line)) {
         continue
       }
-      let editableSource = extractEditableSource(line)
+      const editableSource = extractEditableSource(line)
 
       if (editableSource !== null) {
         requirements.push({ value: editableSource, type: RequirementType.URL })
         continue
       }
 
-      let includePath = extractIncludedRequirementsPath(line)
+      const includePath = extractIncludedRequirementsPath(line)
 
       if (includePath !== null) {
-        let includedRequirements = await this.parseRequirementsFile(includePath)
+        const includedRequirements = await this.parseRequirementsFile(
+          includePath
+        )
         requirements = requirements.concat(includedRequirements)
         continue
       }
 
-      let standardRequirement = extractStandardRequirements(line)
+      const standardRequirement = extractStandardRequirements(line)
       if (standardRequirement !== null) {
-        let [requirementName, version] = splitStandardRequirementVersion(standardRequirement)
-        requirements.push({ value: requirementName, type: RequirementType.Named, version: version })
+        const [requirementName, version] = splitStandardRequirementVersion(
+          standardRequirement
+        )
+        requirements.push({
+          value: requirementName,
+          type: RequirementType.Named,
+          version: version
+        })
       }
     }
 
@@ -322,12 +359,16 @@ export default class PythonParser extends Parser {
   /**
    * Parse Python source files are find any non-system imports, return this as an array of `PythonRequirement`s.
    */
-  generateRequirementsFromSource (): Array<PythonRequirement> {
-    const nonSystemImports = this.findImports().filter(pythonImport => !pythonSystemModules.includes(pythonImport))
+  generateRequirementsFromSource(): Array<PythonRequirement> {
+    const nonSystemImports = this.findImports().filter(
+      pythonImport => !pythonSystemModules.includes(pythonImport)
+    )
 
     return nonSystemImports.map(nonSystemImport => {
       return {
-        value: nonSystemImport, type: RequirementType.Named, version: ''
+        value: nonSystemImport,
+        type: RequirementType.Named,
+        version: ''
       }
     })
   }
@@ -335,14 +376,14 @@ export default class PythonParser extends Parser {
   /**
    * Parse Python source files are find all imports (including system imports).
    */
-  findImports (): Array<string> {
+  findImports(): Array<string> {
     const files = this.glob(['**/*.py'])
 
     const imports: Array<string> = []
 
     if (files.length) {
-      for (let file of files) {
-        for (let importName of this.readImportsInFile(file)) {
+      for (const file of files) {
+        for (const importName of this.readImportsInFile(file)) {
           if (!imports.includes(importName)) imports.push(importName)
         }
       }
@@ -353,18 +394,23 @@ export default class PythonParser extends Parser {
   /**
    * Parse Python a single Python source file for imports.
    */
-  readImportsInFile (path: string): Array<string> {
+  readImportsInFile(path: string): Array<string> {
     const fileContent = this.read(path)
     const importRegex = /^\s*from ([\w_]+)|^\s*import ([\w_]+)/gm
     const imports: Array<string> = []
     const fileDirectory = dirname(path)
     while (true) {
-      let match = importRegex.exec(fileContent)
+      const match = importRegex.exec(fileContent)
 
       if (!match) break
 
       const pkg = match[1] || match[2]
-      if (this.glob([fileDirectory + '/' + pkg + '.py', fileDirectory + '/' + pkg + '/__init__.py']).length) {
+      if (
+        this.glob([
+          fileDirectory + '/' + pkg + '.py',
+          fileDirectory + '/' + pkg + '/__init__.py'
+        ]).length
+      ) {
         continue
       }
       if (!imports.includes(pkg)) imports.push(pkg)

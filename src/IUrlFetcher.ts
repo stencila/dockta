@@ -8,5 +8,5 @@ export default interface IUrlFetcher {
    * @param url URL to fetch
    * @param options Any options
    */
-  fetchUrl (url: string, options: any): any
+  fetchUrl(url: string, options: any): any
 }

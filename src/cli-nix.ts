@@ -13,19 +13,21 @@ const docker = new Docker()
 /**
  * Generates a default.nix and a nixDockerfile for a `SoftwareEnvironment`
  */
-function compile (environ: void | SoftwareEnvironment | null, folder: any) {
+function compile(environ: void | SoftwareEnvironment | null, folder: any) {
   // Generate .default.nix file
   generator.generate(environ, folder)
 
   // Figure out if a custom default.nix file is present
-  let defaultNix = path.join(folder, 'default.nix')
-  let docktaNix = path.join(folder, '.default.nix')
-  let nixfile = fs.existsSync(defaultNix) ? defaultNix : docktaNix
+  const defaultNix = path.join(folder, 'default.nix')
+  const docktaNix = path.join(folder, '.default.nix')
+  const nixfile = fs.existsSync(defaultNix) ? defaultNix : docktaNix
 
   // Generate .nixDockerfile
-  let dockerfile = path.join(folder, '.nixDockerfile')
+  const dockerfile = path.join(folder, '.nixDockerfile')
 
-  fs.writeFileSync(dockerfile, `FROM nixos/nix
+  fs.writeFileSync(
+    dockerfile,
+    `FROM nixos/nix
 
 # Copy over the Nix derivation
 COPY ${path.basename(nixfile)} default.nix
@@ -37,19 +39,25 @@ CMD nix-shell --pure\n`
 /**
  * Builds a Docker image from a nixDockerfile
  */
-async function build (folder: any) {
-  let name = path.basename(folder).toLocaleLowerCase().replace(' ', '-')
+async function build(folder: any) {
+  const name = path
+    .basename(folder)
+    .toLocaleLowerCase()
+    .replace(' ', '-')
 
   // Figure out if a custom default.nix file is present
-  let defaultNix = path.join(folder, 'default.nix')
-  let docktaNix = path.join(folder, '.default.nix')
-  let nixfile = fs.existsSync(defaultNix) ? defaultNix : docktaNix
+  const defaultNix = path.join(folder, 'default.nix')
+  const docktaNix = path.join(folder, '.default.nix')
+  const nixfile = fs.existsSync(defaultNix) ? defaultNix : docktaNix
 
   // Start building the image
-  let build = await docker.buildImage({
-    context: folder,
-    src: ['.nixDockerfile', path.basename(nixfile)]
-  }, { t: name, dockerfile: '.nixDockerfile' })
+  const build = await docker.buildImage(
+    {
+      context: folder,
+      src: ['.nixDockerfile', path.basename(nixfile)]
+    },
+    { t: name, dockerfile: '.nixDockerfile' }
+  )
 
   // Wait for image to finish building
   docker.modem.followProgress(build, (err: any, res: any) => {
@@ -61,25 +69,33 @@ async function build (folder: any) {
 /**
  * Executes nix-shell inside a Docker image from nixDockerfile with a Docker data volume for /nix store
  */
-async function execute (folder: any, command: string = '') {
+async function execute(folder: any, command = '') {
   // Create shared /nix/store Docker volume if needed
-  let volumes: any = await docker.listVolumes()
-  let nixStoreVolume = volumes.Volumes.find((vol: any) => (vol.Name === 'nix-store'))
-  if (!nixStoreVolume) { await docker.createVolume({ name: 'nix-store' }) }
+  const volumes: any = await docker.listVolumes()
+  const nixStoreVolume = volumes.Volumes.find(
+    (vol: any) => vol.Name === 'nix-store'
+  )
+  if (!nixStoreVolume) {
+    await docker.createVolume({ name: 'nix-store' })
+  }
 
-  let name = path.basename(folder).toLocaleLowerCase().replace(' ', '-')
+  const name = path
+    .basename(folder)
+    .toLocaleLowerCase()
+    .replace(' ', '-')
   let args = `run -it --rm -v /tmp:/tmp -v nix-store:/nix ${name}`
   // If there is a user specified command then run that within the Nix shell, otherwise
   // will run the CMD from the Dockerfile
-  if (command) args += ` /root/.nix-profile/bin/nix-shell --pure --run "${command.replace('"', '\\"')}"`
-  spawnSync(
-    'docker', args.split(' '),
-    {
-      shell: true,
-      cwd: process.cwd(),
-      stdio: 'inherit'
-    }
-  )
+  if (command)
+    args += ` /root/.nix-profile/bin/nix-shell --pure --run "${command.replace(
+      '"',
+      '\\"'
+    )}"`
+  spawnSync('docker', args.split(' '), {
+    shell: true,
+    cwd: process.cwd(),
+    stdio: 'inherit'
+  })
 }
 
 export default { compile, build, execute }
@@ -90,6 +106,11 @@ export default { compile, build, execute }
  * @param object The object to print
  * @param format The format use: `json` or `yaml`
  */
-function output (object: any, format: string = 'json') {
-  if (object) console.log(format === 'yaml' ? yaml.safeDump(object, { lineWidth: 120 }) : JSON.stringify(object, null, '  '))
+function output(object: any, format = 'json') {
+  if (object)
+    console.log(
+      format === 'yaml'
+        ? yaml.safeDump(object, { lineWidth: 120 })
+        : JSON.stringify(object, null, '  ')
+    )
 }

@@ -51,46 +51,66 @@ yargs
 
   // Compile command
   // @ts-ignore
-  .command('compile [folder]', 'Compile a project to a software environment', yargs => {
-    folderArg(yargs)
-  }, async (args: any) => {
-    await compile(args.folder, args.nix, args.stencila, args.from)
-  })
+  .command(
+    'compile [folder]',
+    'Compile a project to a software environment',
+    yargs => {
+      folderArg(yargs)
+    },
+    async (args: any) => {
+      await compile(args.folder, args.nix, args.stencila, args.from)
+    }
+  )
 
   // Build command
   // @ts-ignore
-  .command('build [folder]', 'Build a Docker image for project', yargs => {
-    folderArg(yargs)
-  }, async (args: any) => {
-    await build(args.folder, args.nix, args.stencila, args.from)
-  })
+  .command(
+    'build [folder]',
+    'Build a Docker image for project',
+    yargs => {
+      folderArg(yargs)
+    },
+    async (args: any) => {
+      await build(args.folder, args.nix, args.stencila, args.from)
+    }
+  )
 
   // Execute command
   // @ts-ignore
-  .command('execute [folder] [command]', 'Execute a project', yargs => {
-    folderArg(yargs),
-      yargs.positional('command', {
-        type: 'string',
-        default: '',
-        describe: 'The command to execute'
-      })
-  }, async (args: any) => {
-    await execute(args.folder, args.command, args.nix)
-  })
+  .command(
+    'execute [folder] [command]',
+    'Execute a project',
+    yargs => {
+      folderArg(yargs),
+        yargs.positional('command', {
+          type: 'string',
+          default: '',
+          describe: 'The command to execute'
+        })
+    },
+    async (args: any) => {
+      await execute(args.folder, args.command, args.nix)
+    }
+  )
 
   // Who command
   // @ts-ignore
-  .command('who [folder]', 'List the people your project depends upon', yargs => {
-    folderArg(yargs)
-    yargs.option('depth', {
-      alias: 'd',
-      type: 'integer',
-      default: 100,
-      describe: 'The maximum dependency recursion depth'
-    })
-  }, async (args: any) => {
-    await who(args.folder, args.depth)
-  })
+  .command(
+    'who [folder]',
+    'List the people your project depends upon',
+    yargs => {
+      folderArg(yargs)
+      yargs.option('depth', {
+        alias: 'd',
+        type: 'integer',
+        default: 100,
+        describe: 'The maximum dependency recursion depth'
+      })
+    },
+    async (args: any) => {
+      await who(args.folder, args.depth)
+    }
+  )
   .parse()
 
 /**
@@ -98,7 +118,7 @@ yargs
  *
  * @param yargs The yargs object
  */
-function folderArg (yargs: yargs.Argv) {
+function folderArg(yargs: yargs.Argv) {
   yargs.positional('folder', {
     type: 'string',
     default: '.',
@@ -111,12 +131,14 @@ function folderArg (yargs: yargs.Argv) {
  *
  * @param error The error to print
  */
-function error (error: Error) {
+function error(error: Error) {
   if (error instanceof ApplicationError) {
     console.error(error.message)
   } else {
     console.error('Woops, sorry something went wrong :(')
-    console.error('Please help us fix this issue by posting this output to https://github.com/stencila/dockta/issues/new')
+    console.error(
+      'Please help us fix this issue by posting this output to https://github.com/stencila/dockta/issues/new'
+    )
     console.error(`  args: ${process.argv.slice(2).join(' ')}`)
     console.error(`  version: ${VERSION}`)
     console.error(`  platform: ${os.platform()}`)

@@ -2,18 +2,14 @@
   "pygit2": {
     "default": {
       "deb": {
-        "default": [
-          "libgit2-dev"
-        ]
+        "default": ["libgit2-dev"]
       }
     }
   },
   "pygraphviz": {
     "default": {
       "deb": {
-        "default": [
-          "libgraphviz-dev"
-        ]
+        "default": ["libgraphviz-dev"]
       }
     }
   }
