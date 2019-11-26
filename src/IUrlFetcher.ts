@@ -1,7 +1,7 @@
 /**
  * Standard interface that can be used for fetching URLs
  */
-export default interface IUrlFetcher {
+export default interface UrlFetcher {
   /**
    * Fetch a URL
    *

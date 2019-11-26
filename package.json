@@ -100,7 +100,14 @@
     }
   },
   "eslintConfig": {
-    "extends": "@stencila/eslint-config"
+    "extends": "@stencila/eslint-config",
+    "rules": {
+      "@typescript-eslint/prefer-regexp-exec": 1,
+      "@typescript-eslint/require-await": 1,
+      "@typescript-eslint/restrict-plus-operands": 1,
+      "@typescript-eslint/strict-boolean-expressions": 1,
+      "@typescript-eslint/unbound-method": 1
+    }
   },
   "husky": {
     "hooks": {

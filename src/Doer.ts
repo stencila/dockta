@@ -4,7 +4,7 @@ import path from 'path'
 import tmp from 'tmp'
 
 import { PermissionError } from './errors'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 /**
  * A utility base class for the `Parser` and `Generator` classes
@@ -19,9 +19,9 @@ export default abstract class Doer {
   /**
    * The instance of IUrlFetcher to fetch URLs
    */
-  protected readonly urlFetcher: IUrlFetcher
+  protected readonly urlFetcher: UrlFetcher
 
-  constructor(urlFetcher: IUrlFetcher, folder: string | undefined) {
+  constructor(urlFetcher: UrlFetcher, folder: string | undefined) {
     if (!folder) folder = tmp.dirSync().name
     this.folder = folder
     this.urlFetcher = urlFetcher

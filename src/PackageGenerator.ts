@@ -1,7 +1,7 @@
 import { SoftwarePackage } from '@stencila/schema'
 
 import Generator from './Generator'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 /**
  * Generates a Dockerfile for a `SoftwarePackage` instance
@@ -12,7 +12,7 @@ export default class PackageGenerator extends Generator {
    */
   package: SoftwarePackage
 
-  constructor(urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string) {
+  constructor(urlFetcher: UrlFetcher, pkg: SoftwarePackage, folder?: string) {
     super(urlFetcher, folder)
     this.package = pkg
   }

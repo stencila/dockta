@@ -2,7 +2,7 @@ import { SoftwareEnvironment } from '@stencila/schema'
 
 import Generator from './Generator'
 import generators from './generators'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 const PREFERRED_UBUNTU_VERSION = '18.10'
 
@@ -61,7 +61,7 @@ export default class DockerGenerator extends Generator {
   protected generators: Array<Generator>
 
   constructor(
-    urlFetcher: IUrlFetcher,
+    urlFetcher: UrlFetcher,
     environ: SoftwareEnvironment,
     folder?: string,
     baseImage?: string

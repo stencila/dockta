@@ -98,10 +98,10 @@ export default class JavascriptParser extends Parser {
         } else if (data.repository.match(/bitbucket:/)) {
           pkg.codeRepository =
             data.repository.replace(/bitbucket:/, 'https://bitbucket.com') + '/'
-        } else if (data.repository.match(/^[^\/]*\/[^\/]*$/)) {
+        } else if (data.repository.match(/^[^/]*\/[^/]*$/)) {
           pkg.codeRepository =
             data.repository.replace(
-              /^([^\/]*)\/([^\/]*)$/,
+              /^([^/]*)\/([^/]*)$/,
               'https://www.npmjs.com/package/$1/$2'
             ) + '/'
         } else {

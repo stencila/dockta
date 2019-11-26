@@ -8,7 +8,7 @@ import parsers from './parsers'
 import DockerGenerator from './DockerGenerator'
 import DockerBuilder from './DockerBuilder'
 import DockerExecutor from './DockerExecutor'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 /**
  * Compiles a project into a Dockerfile, or Docker image
@@ -17,9 +17,9 @@ export default class DockerCompiler {
   /**
    * The instance of IUrlFetcher to fetch URLs
    */
-  private readonly urlFetcher: IUrlFetcher
+  private readonly urlFetcher: UrlFetcher
 
-  constructor(urlFetcher: IUrlFetcher) {
+  constructor(urlFetcher: UrlFetcher) {
     this.urlFetcher = urlFetcher
   }
 

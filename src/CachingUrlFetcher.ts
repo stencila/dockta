@@ -1,4 +1,4 @@
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 import { NetworkError } from './errors'
 import persist from 'node-persist'
@@ -10,7 +10,7 @@ let REQUEST_CACHE_INITIALISED = false
 /**
  * The default URL fetcher that Dockta uses. Fetches using `got` and caches results using `persist`
  */
-export default class CachingUrlFetcher implements IUrlFetcher {
+export default class CachingUrlFetcher implements UrlFetcher {
   /**
    * Fetch a URL using `got`, attempting to retrieve it from cache first.
    */

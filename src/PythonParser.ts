@@ -8,7 +8,7 @@ import {
 import OperatingSystem from '@stencila/schema/dist/OperatingSystem'
 
 import Parser from './Parser'
-import { default as pythonSystemModules } from './PythonBuiltins'
+import pythonSystemModules from './PythonBuiltins'
 
 const REQUIREMENTS_COMMENT_REGEX = /^\s*#/
 const REQUIREMENTS_EDITABLE_SOURCE_REGEX = /^\s*-e\s*([^\s]+)\s*/
