@@ -102,7 +102,7 @@ yargs
       folderArg(yargs)
       yargs.option('depth', {
         alias: 'd',
-        type: 'integer',
+        type: 'number',
         default: 100,
         describe: 'The maximum dependency recursion depth'
       })
