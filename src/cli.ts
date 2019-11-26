@@ -57,8 +57,10 @@ yargs
     yargs => {
       folderArg(yargs)
     },
-    async (args: any) => {
-      await compile(args.folder, args.nix, args.stencila, args.from)
+    (args: any) => {
+      compile(args.folder, args.nix, args.stencila, args.from).catch(err =>
+        error(err)
+      )
     }
   )
 
@@ -70,8 +72,10 @@ yargs
     yargs => {
       folderArg(yargs)
     },
-    async (args: any) => {
-      await build(args.folder, args.nix, args.stencila, args.from)
+    (args: any) => {
+      build(args.folder, args.nix, args.stencila, args.from).catch(err =>
+        error(err)
+      )
     }
   )
 
@@ -81,15 +85,15 @@ yargs
     'execute [folder] [command]',
     'Execute a project',
     yargs => {
-      folderArg(yargs),
-        yargs.positional('command', {
-          type: 'string',
-          default: '',
-          describe: 'The command to execute'
-        })
+      folderArg(yargs)
+      yargs.positional('command', {
+        type: 'string',
+        default: '',
+        describe: 'The command to execute'
+      })
     },
-    async (args: any) => {
-      await execute(args.folder, args.command, args.nix)
+    (args: any) => {
+      execute(args.folder, args.command, args.nix).catch(err => error(err))
     }
   )
 
@@ -107,8 +111,8 @@ yargs
         describe: 'The maximum dependency recursion depth'
       })
     },
-    async (args: any) => {
-      await who(args.folder, args.depth)
+    (args: any) => {
+      who(args.folder, args.depth).catch(err => error(err))
     }
   )
   .parse()

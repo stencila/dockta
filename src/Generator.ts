@@ -1,5 +1,5 @@
 import Doer from './Doer'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 const VERSION = require('../package').version
 const DOCKER_USER = 'guest'
@@ -14,7 +14,7 @@ export default class Generator extends Doer {
   baseImage?: string
 
   constructor(
-    urlFetcher: IUrlFetcher,
+    urlFetcher: UrlFetcher,
     folder: string | undefined,
     baseImage?: string
   ) {

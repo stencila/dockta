@@ -3,7 +3,7 @@ import path from 'path'
 
 import PackageGenerator from './PackageGenerator'
 import PythonSystemPackageLookup from './PythonSystemPackageLookup'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 const GENERATED_REQUIREMENTS_FILE = '.requirements.txt'
 
@@ -24,7 +24,7 @@ export default class PythonGenerator extends PackageGenerator {
   // Methods that override those in `Generator`
 
   constructor(
-    urlFetcher: IUrlFetcher,
+    urlFetcher: UrlFetcher,
     pkg: SoftwarePackage,
     folder?: string,
     pythonMajorVersion = 3
@@ -135,7 +135,7 @@ export default class PythonGenerator extends PackageGenerator {
    */
   projectFiles(): Array<[string, string]> {
     const pyFiles = this.glob('**/*.py')
-    return pyFiles.map(file => [file, file]) as Array<[string, string]>
+    return pyFiles.map(file => [file, file])
   }
 
   runCommand(): string | undefined {

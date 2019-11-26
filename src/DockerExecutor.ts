@@ -62,7 +62,7 @@ export default class DockerExecutor {
     // CMD in the Dockerfile
     let cmd
     if (command) cmd = command.split(' ')
-    const container = await docker.run(name, [], [stdout, stderr], {
+    await docker.run(name, [], [stdout, stderr], {
       Cmd: cmd,
       HostConfig: {
         Binds: [`${path.resolve(folder)}:/work`]
@@ -71,7 +71,6 @@ export default class DockerExecutor {
       User: user,
       WorkingDir: '/work'
     })
-    container.remove()
 
     // Attempt to parse output as JSON
     try {

@@ -1,7 +1,7 @@
 import { SoftwarePackage } from '@stencila/schema'
 
 import PackageGenerator from './PackageGenerator'
-import IUrlFetcher from './IUrlFetcher'
+import UrlFetcher from './IUrlFetcher'
 
 const PACKAGE_JSON_GENERATED = '.package.json'
 const PACKAGE_JSON = 'package.json'
@@ -20,7 +20,7 @@ export default class JavascriptGenerator extends PackageGenerator {
   // Methods that override those in `Generator`
 
   constructor(
-    urlFetcher: IUrlFetcher,
+    urlFetcher: UrlFetcher,
     pkg: SoftwarePackage,
     folder?: string,
     nodeMajorVersion = 12
@@ -77,7 +77,7 @@ export default class JavascriptGenerator extends PackageGenerator {
 
   projectFiles(): Array<[string, string]> {
     const files = this.glob('**/*.js')
-    return files.map(file => [file, file]) as Array<[string, string]>
+    return files.map(file => [file, file])
   }
 
   runCommand(): string | undefined {

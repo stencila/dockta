@@ -13,7 +13,7 @@ function valueToMap(value: any): any {
   if (!Array.isArray(value) && typeof value === 'object') {
     const m = new Map<any, any>()
     for (const key in value) {
-      if (!value.hasOwnProperty(key)) {
+      if (!Object.hasOwnProperty.call(value, key)) {
         continue
       }
 
@@ -29,10 +29,14 @@ function valueToMap(value: any): any {
  * The lookup is in the format {packageName: pythonVersion: systemPackageType: systemVersion: [sysPackage, sysPackage...]}
  */
 export default class PythonSystemPackageLookup {
+  private readonly packageLookup: PythonSystemPackageLookupMap
+
   /**
    * @param packageLookup: PythonSystemPackageLookupMap the Map
    */
-  constructor(private readonly packageLookup: PythonSystemPackageLookupMap) {}
+  constructor(packageLookup: PythonSystemPackageLookupMap) {
+    this.packageLookup = packageLookup
+  }
 
   /**
    * Construct a `PythonSystemPackageLookup` by parsing a JSON representation of the package map from `path`

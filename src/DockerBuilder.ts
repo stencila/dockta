@@ -211,7 +211,7 @@ export default class DockerBuilder {
           break
 
         case 'COPY':
-        case 'ADD':
+        case 'ADD': {
           // Add files/subdirs to the container
           const copy = instruction.args as Array<string>
           const to = copy.pop() as string
@@ -229,8 +229,8 @@ export default class DockerBuilder {
           })
           await container.putArchive(pack, { path: workdir })
           break
-
-        case 'RUN':
+        }
+        case 'RUN': {
           // Execute code in the container
           const script = instruction.args as string
           const exec = await container.exec({
@@ -251,7 +251,7 @@ export default class DockerBuilder {
             await new Promise(resolve => setTimeout(resolve, 100))
           }
           break
-
+        }
         case 'CMD':
           // Dockerfile instructions to apply when committing the image
           changes += instruction.raw + '\n\n'
