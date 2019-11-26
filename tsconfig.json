@@ -1,7 +1,7 @@
 {
   "extends": "@stencila/dev-config/tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/lib"
+    "outDir": "dist"
   },
   "include": ["src/**/*.ts"]
 }
