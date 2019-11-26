@@ -12,22 +12,21 @@ import { SoftwarePackage, Person } from '@stencila/schema'
  * System dependencies for each package are obtained from https://sysreqs.r-hub.io.
  */
 export default class RParser extends Parser {
-
   /**
    * Parse a folder by detecting any R requirements or source code files
    * and return a `SoftwarePackage` instance
    */
-  async parse (): Promise<SoftwarePackage | null> {
+  async parse(): Promise<SoftwarePackage | null> {
     const pkg = new SoftwarePackage()
 
     let name
     let version
-    let date: Date | undefined = undefined
-    let packages: Array<string> = []
+    let date: Date | undefined
+    const packages: Array<string> = []
 
     if (this.exists('DESCRIPTION')) {
       // Read the existing/generated DESCRIPTION file
-      let desc = this.read('DESCRIPTION')
+      const desc = this.read('DESCRIPTION')
 
       // Get `name`
       const matchName = desc.match(/^Package:\s*(.+)/m)
@@ -39,9 +38,11 @@ export default class RParser extends Parser {
       // packages are available on MRAN
       const matchDate = desc.match(/^Date:\s*(.+)/m)
       if (matchDate) {
-        let dateNum = Date.parse(matchDate[1])
+        const dateNum = Date.parse(matchDate[1])
         if (isNaN(dateNum)) {
-          throw new Error('Unable to parse date in DESCRIPTION file: ' + matchDate[1])
+          throw new Error(
+            'Unable to parse date in DESCRIPTION file: ' + matchDate[1]
+          )
         } else {
           date = new Date(dateNum)
         }
@@ -51,12 +52,14 @@ export default class RParser extends Parser {
       const start = /^Imports:[ \t]*\n/gm.exec(desc)
       if (start) {
         // Find next un-indented line or use end of string
-        let match = desc.substring(start.index + start[0].length).match(/\n^\w/m)
+        const match = desc
+          .substring(start.index + start[0].length)
+          .match(/\n^\w/m)
         let end
         if (match) end = match.index
         else end = desc.length - 1
         const imports = desc.substring(start.index + start[0].length, end)
-        for (let imported of imports.split(',')) {
+        for (const imported of imports.split(',')) {
           let pkg
           const match = imported.match(/^\s*(\w+).*/)
           if (match) {
@@ -74,8 +77,8 @@ export default class RParser extends Parser {
         // Analyse files for `library(<pkg>)`, `require(<pkg>)`, `<pkg>::<member>`, `<pkg>:::<member>`
         // Wondering WTF this regex does? See https://regex101.com/r/hG4iij/4
         const regex = /(?:(?:library|require)\s*\(\s*(?:(?:\s*(\w+)\s*)|(?:"([^"]*)")|(?:'([^']*)'))\s*\))|(?:(\w+):::?\w+)/g
-        for (let file of files) {
-          let code = this.read(file)
+        for (const file of files) {
+          const code = this.read(file)
           let match = regex.exec(code)
           while (match) {
             const pkg = match[1] || match[2] || match[3] || match[4]
@@ -99,7 +102,7 @@ export default class RParser extends Parser {
     // Set package properties
     pkg.name = name
     pkg.runtimePlatform = 'R'
-    pkg.datePublished = date.toISOString().substring(0,10)
+    pkg.datePublished = date.toISOString().substring(0, 10)
 
     // For each dependency, query https://crandb.r-pkg.org to get a manifest including it's own
     // dependencies and convert it to a `SoftwarePackage`
@@ -119,7 +122,7 @@ export default class RParser extends Parser {
    *
    * @param name Name of the R package
    */
-  private async createPackage (name: string): Promise<SoftwarePackage> {
+  private async createPackage(name: string): Promise<SoftwarePackage> {
     // Create new package instance and populate it's
     // properties in order of type hierarchy:
     //   Thing > CreativeWork > SoftwareSourceCode > SoftwarePackage
@@ -128,7 +131,17 @@ export default class RParser extends Parser {
 
     // These packages are built-in to R distributions, so we don't need to collect
     // meta-data for them.
-    if (['stats', 'graphics', 'grDevices', 'tools', 'utils', 'datasets', 'methods'].includes(name)) {
+    if (
+      [
+        'stats',
+        'graphics',
+        'grDevices',
+        'tools',
+        'utils',
+        'datasets',
+        'methods'
+      ].includes(name)
+    ) {
       return pkg
     }
 
@@ -168,7 +181,9 @@ export default class RParser extends Parser {
     // Create `SoftwarePackage` for each dependency
     if (crandb.Imports) {
       pkg.softwareRequirements = await Promise.all(
-        Object.entries(crandb.Imports).map(([name, version]) => this.createPackage(name))
+        Object.entries(crandb.Imports).map(([name, version]) =>
+          this.createPackage(name)
+        )
       )
     }
 
@@ -176,11 +191,14 @@ export default class RParser extends Parser {
     // added as `softwareRequirements` with "deb" as `runtimePlatform`
     const sysreqs = await this.fetch(`https://sysreqs.r-hub.io/pkg/${name}`)
 
-    for (let sysreq of sysreqs) {
+    for (const sysreq of sysreqs) {
       const keys = Object.keys(sysreq)
-      if (keys.length > 1) throw new Error(`Expected on one key for each sysreq but got: ${keys.join(',')}`)
+      if (keys.length > 1)
+        throw new Error(
+          `Expected on one key for each sysreq but got: ${keys.join(',')}`
+        )
       const name = keys[0]
-      const debPackage = sysreq[name].platforms['DEB']
+      const debPackage = sysreq[name].platforms.DEB
       // The deb package can be null e.g. `curl https://sysreqs.r-hub.io/pkg/lubridate`
       if (typeof debPackage === 'string') {
         // Handle strings e.g. curl https://sysreqs.r-hub.io/pkg/XML
@@ -190,7 +208,9 @@ export default class RParser extends Parser {
         pkg.softwareRequirements.push(required)
       } else if (Array.isArray(debPackage)) {
         // Handle arrays e.g. curl https://sysreqs.r-hub.io/pkg/gsl
-        for (let deb of debPackage.filter(deb => deb.distribution === 'Ubuntu' && deb.releases === undefined)) {
+        for (const deb of debPackage.filter(
+          deb => deb.distribution === 'Ubuntu' && deb.releases === undefined
+        )) {
           if (deb.buildtime) {
             const required = new SoftwarePackage()
             required.name = deb.buildtime

@@ -16,15 +16,15 @@ Dockta is a tool to make it easier for researchers to create reproducible resear
 
 In addition, Dockta manages the image building process to better fit your everyday workflow (determines package system dependencies, manages builds) and generates JSON-LD meta-data describing the image (from which citations etc can be generated).
 
-You can manually edit the files which Dockta generates so that the containers build of it exactly suit your project. 
+You can manually edit the files which Dockta generates so that the containers build of it exactly suit your project.
 
 #### 1. Install
 
 a) Download the latest stable binary package (ready to run) [for your operating system](https://github.com/stencila/dockta/releases):
 
-b) Copy the binary file into the folder where you would like Dockta to be (eg. `Applications` on your Mac OS, or `Program Files` on Windows). 
+b) Copy the binary file into the folder where you would like Dockta to be (eg. `Applications` on your Mac OS, or `Program Files` on Windows).
 
-c) Once the file is downloaded, rename it to `dockta`.  Dockta is a command line tool (at least for now) so you need to interact with it through the terminal (on Windows it will be Power Shell). 
+c) Once the file is downloaded, rename it to `dockta`. Dockta is a command line tool (at least for now) so you need to interact with it through the terminal (on Windows it will be Power Shell).
 
 **Basic use**
 
@@ -34,20 +34,18 @@ c) Once the file is downloaded, rename it to `dockta`.  Dockta is a command line
   dockta execute [folder] [format]  Execute a project
 ```
 
-
 #### 2. Dockta for R
 
 Dockta can create a software environment file which reflects the requirements to run the project written in R.
 The software environment file is a file in `JSON` or `yaml` format with comprehensive meta data about the project.
 Dockta parses the folder with the R project for `R` and `Rmd` files and extracts the relevant information.
 
- * For each R package installed or loaded, the meta data is retrieved from [CRAN](http://crandb.r-pkg.org).
-    - The packages must be installed and loaded using the standard R command syntax: `install.packages()` and `library()`. If the R source code
+- For each R package installed or loaded, the meta data is retrieved from [CRAN](http://crandb.r-pkg.org).
+  - The packages must be installed and loaded using the standard R command syntax: `install.packages()` and `library()`. If the R source code
     includes a non-standard syntax, for example to load a number of packages in one go using `lapply()`, Dockta will not be able to recognize it and
     the information about the required packages will not be recorded.
- * System dependencies for each package are obtained from [R-Hub](https://sysreqs.r-hub.io/pkg/xml2).
- * Meta data about the authors, title, abstract and so on.
-
+- System dependencies for each package are obtained from [R-Hub](https://sysreqs.r-hub.io/pkg/xml2).
+- Meta data about the authors, title, abstract and so on.
 
 #### 3. Dockta for Python
 
@@ -59,8 +57,8 @@ Dockta parses the folder with the Python project for `py` files and extracts the
 
 **R**
 
-The [r-spatial](r-spatial/) folder includes an example R project based on one of  on the tutorials [Geocoding in R by Claudia Engel](http://www.rpubs.com/cengel248/97543). This series of tutorials is a pretty comprehensive course introducing geospatial researchers into the
-world of R. The challenge of getting to run these tutorials hands-on (including trying to complete the exercises included) is that 
+The [r-spatial](r-spatial/) folder includes an example R project based on one of on the tutorials [Geocoding in R by Claudia Engel](http://www.rpubs.com/cengel248/97543). This series of tutorials is a pretty comprehensive course introducing geospatial researchers into the
+world of R. The challenge of getting to run these tutorials hands-on (including trying to complete the exercises included) is that
 the user needs to install a number of R packages for geospatial research and some packages for dealing with formats such as `xml` or `json`.
 So there is already one obstacle that an R novice will face - dealing with packages, their versions and compatibilities. One package in particular,
 [rgdal]() [requires some system-wide (non-R) libraries](https://gist.github.com/dncgst/111b74066eaea87c92cdc5211949cd1e) to be installed. This
@@ -86,6 +84,7 @@ creates 3 files inside the project folder:
 ```
 
 ```
+
 ```
 
 ```
@@ -104,10 +103,6 @@ creates 3 files inside the project folder:
 }
 ```
 
-
-
 ### Resources
 
 [A beginner's guide to containters](https://medium.freecodecamp.org/a-beginner-friendly-introduction-to-containers-vms-and-docker-79a9e3e119b)
-
-

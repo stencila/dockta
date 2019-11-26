@@ -13,7 +13,11 @@ export default class Generator extends Doer {
    */
   baseImage?: string
 
-  constructor (urlFetcher: IUrlFetcher, folder: string | undefined, baseImage?: string) {
+  constructor(
+    urlFetcher: IUrlFetcher,
+    folder: string | undefined,
+    baseImage?: string
+  ) {
     super(urlFetcher, folder)
     this.baseImage = baseImage
   }
@@ -24,7 +28,7 @@ export default class Generator extends Doer {
    * @param comments Should a comments be added to the Dockerfile?
    * @param stencila Should relevant Stencila language packages be installed in the image?
    */
-  generate (comments: boolean = true, stencila: boolean = false): string {
+  generate(comments = true, stencila = false): string {
     let dockerfile = ''
 
     if (comments) {
@@ -33,22 +37,26 @@ export default class Generator extends Doer {
 # rename it to "Dockerfile".\n`
     }
 
-    if (comments) dockerfile += '\n# This tells Docker which base image to use.\n'
+    if (comments)
+      dockerfile += '\n# This tells Docker which base image to use.\n'
     const baseIdentifier = this.baseIdentifier()
 
-    const fromImage = this.baseImage !== undefined ? this.baseImage : baseIdentifier
+    const fromImage =
+      this.baseImage !== undefined ? this.baseImage : baseIdentifier
 
     dockerfile += `FROM ${fromImage}\n`
 
     if (!this.applies()) return dockerfile
 
     const aptRepos = this.aptRepos(baseIdentifier)
-    let aptKeysCommand = this.aptKeysCommand(baseIdentifier)
+    const aptKeysCommand = this.aptKeysCommand(baseIdentifier)
 
-    dockerfile += 'USER root\n'  // in case the Dockerfile it inherits from drops down to a different user
+    dockerfile += 'USER root\n' // in case the Dockerfile it inherits from drops down to a different user
 
     if (aptRepos.length || aptKeysCommand) {
-      if (comments) dockerfile += '\n# This section installs system packages needed to add extra system repositories.'
+      if (comments)
+        dockerfile +=
+          '\n# This section installs system packages needed to add extra system repositories.'
       dockerfile += `
 RUN apt-get update \\
  && DEBIAN_FRONTEND=noninteractive apt-get install -y \\
@@ -60,20 +68,28 @@ RUN apt-get update \\
     }
 
     if (comments && (aptKeysCommand || aptRepos.length)) {
-      dockerfile += '\n# This section adds system repositories required to install extra system packages.'
+      dockerfile +=
+        '\n# This section adds system repositories required to install extra system packages.'
     }
     if (aptKeysCommand) dockerfile += `\nRUN ${aptKeysCommand}`
-    if (aptRepos.length) dockerfile += `\nRUN ${aptRepos.map(repo => `apt-add-repository "${repo}"`).join(' \\\n && ')}\n`
+    if (aptRepos.length)
+      dockerfile += `\nRUN ${aptRepos
+        .map(repo => `apt-add-repository "${repo}"`)
+        .join(' \\\n && ')}\n`
 
     // Set env vars after previous section to improve caching
     const envVars = this.envVars(baseIdentifier)
     if (envVars.length) {
-      if (comments) dockerfile += '\n# This section sets environment variables within the image.'
-      const pairs = envVars.map(([key, value]) => `${key}="${value.replace('"', '\\"')}"`)
+      if (comments)
+        dockerfile +=
+          '\n# This section sets environment variables within the image.'
+      const pairs = envVars.map(
+        ([key, value]) => `${key}="${value.replace('"', '\\"')}"`
+      )
       dockerfile += `\nENV ${pairs.join(' \\\n    ')}\n`
     }
 
-    let aptPackages: Array<string> = this.aptPackages(baseIdentifier)
+    const aptPackages: Array<string> = this.aptPackages(baseIdentifier)
     if (aptPackages.length) {
       if (comments) {
         dockerfile += `
@@ -91,9 +107,11 @@ RUN apt-get update \\
     }
 
     if (stencila) {
-      let stencilaInstall = this.stencilaInstall(baseIdentifier)
+      const stencilaInstall = this.stencilaInstall(baseIdentifier)
       if (stencilaInstall) {
-        if (comments) dockerfile += '\n# This section runs commands to install Stencila execution hosts.'
+        if (comments)
+          dockerfile +=
+            '\n# This section runs commands to install Stencila execution hosts.'
         dockerfile += `\nRUN ${stencilaInstall}\n`
       }
     }
@@ -116,35 +134,52 @@ WORKDIR /home/${DOCKER_USER}
 
     // Add Dockta special comment for managed installation of language packages
     if (installCommand) {
-      if (comments) dockerfile += '\n# This is a special comment to tell Dockta to manage the build from here on'
+      if (comments)
+        dockerfile +=
+          '\n# This is a special comment to tell Dockta to manage the build from here on'
       dockerfile += `\n# dockta\n`
     }
 
     // Copy files needed for installation of language packages
     if (installFiles.length) {
-      if (comments) dockerfile += '\n# This section copies package requirement files into the image'
-      dockerfile += '\n' + installFiles.map(([src, dest]) => `COPY ${src} ${dest}`).join('\n') + '\n'
+      if (comments)
+        dockerfile +=
+          '\n# This section copies package requirement files into the image'
+      dockerfile +=
+        '\n' +
+        installFiles.map(([src, dest]) => `COPY ${src} ${dest}`).join('\n') +
+        '\n'
     }
 
     // Run command to install packages
     if (installCommand) {
-      if (comments) dockerfile += '\n# This section runs commands to install the packages specified in the requirement file/s'
+      if (comments)
+        dockerfile +=
+          '\n# This section runs commands to install the packages specified in the requirement file/s'
       dockerfile += `\nRUN ${installCommand}\n`
     }
 
     // Copy files needed to run project
     if (projectFiles.length) {
-      if (comments) dockerfile += '\n# This section copies your project\'s files into the image'
-      dockerfile += '\n' + projectFiles.map(([src, dest]) => `COPY ${src} ${dest}`).join('\n') + '\n'
+      if (comments)
+        dockerfile +=
+          "\n# This section copies your project's files into the image"
+      dockerfile +=
+        '\n' +
+        projectFiles.map(([src, dest]) => `COPY ${src} ${dest}`).join('\n') +
+        '\n'
     }
 
     // Now all installation is finished set the user
-    if (comments) dockerfile += '\n# This sets the default user when the container is run'
+    if (comments)
+      dockerfile += '\n# This sets the default user when the container is run'
     dockerfile += `\nUSER ${DOCKER_USER}\n`
 
     // Add any CMD
     if (runCommand) {
-      if (comments) dockerfile += '\n# This tells Docker the default command to run when the container is started'
+      if (comments)
+        dockerfile +=
+          '\n# This tells Docker the default command to run when the container is started'
       dockerfile += `\nCMD ${runCommand}\n`
     }
 
@@ -159,21 +194,21 @@ WORKDIR /home/${DOCKER_USER}
   /**
    * Does this generator apply to the package?
    */
-  applies (): boolean {
+  applies(): boolean {
     return false
   }
 
   /**
    * Name of the base image
    */
-  baseName (): string {
+  baseName(): string {
     return 'ubuntu'
   }
 
   /**
    * Version of the base image
    */
-  baseVersion (): string {
+  baseVersion(): string {
     return '18.10'
   }
 
@@ -181,8 +216,8 @@ WORKDIR /home/${DOCKER_USER}
    * Get the version name for a base image
    * @param baseIdentifier The base image name e.g. `ubuntu:18.04`
    */
-  baseVersionName (baseIdentifier: string): string {
-    let [name, version] = baseIdentifier.split(':')
+  baseVersionName(baseIdentifier: string): string {
+    const [name, version] = baseIdentifier.split(':')
     const lookup: { [key: string]: string } = {
       '14.04': 'trusty',
       '16.04': 'xenial',
@@ -195,7 +230,7 @@ WORKDIR /home/${DOCKER_USER}
   /**
    * Generate a base image identifier
    */
-  baseIdentifier (): string {
+  baseIdentifier(): string {
     const joiner = this.baseVersion() === '' ? '' : ':'
 
     return `${this.baseName()}${joiner}${this.baseVersion()}`
@@ -207,7 +242,7 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  envVars (sysVersion: string): Array<[string, string]> {
+  envVars(sysVersion: string): Array<[string, string]> {
     return []
   }
 
@@ -216,8 +251,8 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  aptKeysCommand (sysVersion: string): string | undefined {
-    return
+  aptKeysCommand(sysVersion: string): string | undefined {
+    return undefined
   }
 
   /**
@@ -225,7 +260,7 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  aptRepos (sysVersion: string): Array<string> {
+  aptRepos(sysVersion: string): Array<string> {
     return []
   }
 
@@ -234,7 +269,7 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  aptPackages (sysVersion: string): Array<string> {
+  aptPackages(sysVersion: string): Array<string> {
     return []
   }
 
@@ -243,8 +278,8 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  stencilaInstall (sysVersion: string): string | undefined {
-    return
+  stencilaInstall(sysVersion: string): string | undefined {
+    return undefined
   }
 
   /**
@@ -254,7 +289,7 @@ WORKDIR /home/${DOCKER_USER}
    * @param sysVersion The Ubuntu system version being used
    * @returns An array of [src, dest] tuples
    */
-  installFiles (sysVersion: string): Array<[string, string]> {
+  installFiles(sysVersion: string): Array<[string, string]> {
     return []
   }
 
@@ -263,8 +298,8 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  installCommand (sysVersion: string): string | undefined {
-    return
+  installCommand(sysVersion: string): string | undefined {
+    return undefined
   }
 
   /**
@@ -273,7 +308,7 @@ WORKDIR /home/${DOCKER_USER}
    * @param sysVersion The Ubuntu system version being used
    * @returns An array of [src, dest] tuples
    */
-  projectFiles (sysVersion: string): Array<[string, string]> {
+  projectFiles(sysVersion: string): Array<[string, string]> {
     return []
   }
 
@@ -285,7 +320,7 @@ WORKDIR /home/${DOCKER_USER}
    *
    * @param sysVersion The Ubuntu system version being used
    */
-  runCommand (sysVersion: string): string | undefined {
-    return
+  runCommand(sysVersion: string): string | undefined {
+    return undefined
   }
 }

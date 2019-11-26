@@ -7,13 +7,12 @@ import IUrlFetcher from './IUrlFetcher'
  * Generates a Dockerfile for a `SoftwarePackage` instance
  */
 export default class PackageGenerator extends Generator {
-
   /**
    * The package that this generator generates a Dockerfile for
    */
   package: SoftwarePackage
 
-  constructor (urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string) {
+  constructor(urlFetcher: IUrlFetcher, pkg: SoftwarePackage, folder?: string) {
     super(urlFetcher, folder)
     this.package = pkg
   }
@@ -22,13 +21,14 @@ export default class PackageGenerator extends Generator {
    * Get a list of packages in `this.package.softwareRequirements`
    * which have have a particular `runtimePlatform` value
    */
-  filterPackages (runtimePlatform: string): Array<SoftwarePackage> {
+  filterPackages(runtimePlatform: string): Array<SoftwarePackage> {
     if (this.package.softwareRequirements) {
       return this.package.softwareRequirements
-          .filter(req => (req as SoftwarePackage).runtimePlatform === runtimePlatform)
-          .map(req => req as SoftwarePackage)
+        .filter(
+          req => (req as SoftwarePackage).runtimePlatform === runtimePlatform
+        )
+        .map(req => req as SoftwarePackage)
     }
     return []
   }
-
 }

@@ -15,7 +15,7 @@ const logger = logga.getLogger('dockta')
  *
  * @param error
  */
-function loggingErrorHandler (error: Error) {
+function loggingErrorHandler(error: Error) {
   if (error instanceof ApplicationError) {
     logger.error(error.message)
   } else {
@@ -29,12 +29,14 @@ function loggingErrorHandler (error: Error) {
  * @param object The object to print
  * @param format The format use: `json` or `yaml`
  */
-function stringifyNode (object: any, format: string): string {
+function stringifyNode(object: any, format: string): string {
   if (!object) {
     return ''
   }
 
-  return format === 'yaml' ? yaml.safeDump(object, { lineWidth: 120 }) : JSON.stringify(object, null, '  ')
+  return format === 'yaml'
+    ? yaml.safeDump(object, { lineWidth: 120 })
+    : JSON.stringify(object, null, '  ')
 }
 
 /**
@@ -43,11 +45,18 @@ function stringifyNode (object: any, format: string): string {
  * @param folder Path of the folder to compile
  * @param useNix Compile the environment for nix
  */
-export async function compile (folder: string, useNix: boolean, addStencila: boolean, from?: string) {
+export async function compile(
+  folder: string,
+  useNix: boolean,
+  addStencila: boolean,
+  from?: string
+) {
   const absoluteFolder = path.resolve(folder)
   const comments = true
   const build = false
-  let environ = await compiler.compile('file://' + absoluteFolder, build, comments, addStencila, from).catch(loggingErrorHandler)
+  const environ = await compiler
+    .compile('file://' + absoluteFolder, build, comments, addStencila, from)
+    .catch(loggingErrorHandler)
   if (useNix) {
     nix.compile(environ, folder)
   }
@@ -59,7 +68,12 @@ export async function compile (folder: string, useNix: boolean, addStencila: boo
  * @param folder Path of the folder to build
  * @param useNix Build the environment with nix
  */
-export async function build (folder: string, useNix: boolean, addStencila: boolean, from?: string) {
+export async function build(
+  folder: string,
+  useNix: boolean,
+  addStencila: boolean,
+  from?: string
+) {
   const absoluteFolder = path.resolve(folder)
 
   if (useNix) {
@@ -67,7 +81,9 @@ export async function build (folder: string, useNix: boolean, addStencila: boole
   } else {
     const comments = true
     const build = true
-    compiler.compile(absoluteFolder, build, comments, addStencila, from).catch(loggingErrorHandler)
+    compiler
+      .compile(absoluteFolder, build, comments, addStencila, from)
+      .catch(loggingErrorHandler)
   }
 }
 
@@ -81,13 +97,21 @@ export async function build (folder: string, useNix: boolean, addStencila: boole
  * @param outputFormat The format to output as ('json' or 'yaml')
  * @param outputFunction Optional callback to receive the output. If undefined, node output goes to stdout.
  */
-export async function execute (folder: string, command: string, useNix: boolean, outputFormat: string = 'json', outputFunction: Function = console.log) {
+export async function execute(
+  folder: string,
+  command: string,
+  useNix: boolean,
+  outputFormat = 'json',
+  outputFunction: Function = console.log
+) {
   const absoluteFolder = path.resolve(folder)
 
   if (useNix) {
     await nix.execute(absoluteFolder, command)
   } else {
-    const node = await compiler.execute('file://' + absoluteFolder, command).catch(loggingErrorHandler)
+    const node = await compiler
+      .execute('file://' + absoluteFolder, command)
+      .catch(loggingErrorHandler)
     const nodeString = stringifyNode(node, outputFormat)
 
     outputFunction(nodeString)
@@ -101,25 +125,35 @@ export async function execute (folder: string, command: string, useNix: boolean,
  * @param depth Maximum depth of dependencies to traverse to find people
  * @param outputFunction Optional callback to receive the output. If undefined, utput goes to stdout.
  */
-export async function who (folder: string, depth: number = 100, outputFunction: Function = console.log) {
+export async function who(
+  folder: string,
+  depth = 100,
+  outputFunction: Function = console.log
+) {
   const absoluteFolder = path.resolve(folder)
-  const people = await compiler.who('file://' + absoluteFolder, depth).catch(loggingErrorHandler)
+  const people = await compiler
+    .who('file://' + absoluteFolder, depth)
+    .catch(loggingErrorHandler)
 
   if (!people) {
     outputFunction('Nobody (?)')
   } else {
     // Sort by number of packages descending and then alphabetically ascending
-    let sorted = Object.entries(people).sort(([aName, aPkgs], [bName, bPkgs]) => {
-      if (aPkgs.length > bPkgs.length) return -1
-      if (aPkgs.length < bPkgs.length) return 1
-      if (aName < bName) return -1
-      if (aName > bName) return 1
-      return 0
-    })
+    const sorted = Object.entries(people).sort(
+      ([aName, aPkgs], [bName, bPkgs]) => {
+        if (aPkgs.length > bPkgs.length) return -1
+        if (aPkgs.length < bPkgs.length) return 1
+        if (aName < bName) return -1
+        if (aName > bName) return 1
+        return 0
+      }
+    )
     // Output in a CLI friendly way
-    const output = sorted.map(([name, packages]) => {
-      return `${name} (${packages.join(', ')})`
-    }).join(', ')
+    const output = sorted
+      .map(([name, packages]) => {
+        return `${name} (${packages.join(', ')})`
+      })
+      .join(', ')
     outputFunction(output)
   }
 }

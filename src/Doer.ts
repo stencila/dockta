@@ -11,7 +11,6 @@ import IUrlFetcher from './IUrlFetcher'
  * providing a convenient interface to a filesystem folder and HTTP requests
  */
 export default abstract class Doer {
-
   /**
    * The directory to scan for relevant files
    */
@@ -22,7 +21,7 @@ export default abstract class Doer {
    */
   protected readonly urlFetcher: IUrlFetcher
 
-  constructor (urlFetcher: IUrlFetcher, folder: string | undefined) {
+  constructor(urlFetcher: IUrlFetcher, folder: string | undefined) {
     if (!folder) folder = tmp.dirSync().name
     this.folder = folder
     this.urlFetcher = urlFetcher
@@ -33,7 +32,7 @@ export default abstract class Doer {
    *
    * @param subpath The path within the folder
    */
-  exists (subpath: string): boolean {
+  exists(subpath: string): boolean {
     return fs.existsSync(path.join(this.folder, subpath))
   }
 
@@ -42,7 +41,7 @@ export default abstract class Doer {
    *
    * @param pattern The glob pattern
    */
-  glob (pattern: string | Array<string>): Array<string> {
+  glob(pattern: string | Array<string>): Array<string> {
     try {
       return glob.sync(pattern, {
         cwd: this.folder
@@ -50,7 +49,7 @@ export default abstract class Doer {
     } catch (error) {
       if (error.code === 'EACCES') {
         throw new PermissionError(
-            `You do no have permission to access the whole of folder "${this.folder}". Are you sure you want Dockta to compile this folder?`
+          `You do no have permission to access the whole of folder "${this.folder}". Are you sure you want Dockta to compile this folder?`
         )
       } else throw error
     }
@@ -61,7 +60,7 @@ export default abstract class Doer {
    *
    * @param subpath The path within the folder
    */
-  read (subpath: string): string {
+  read(subpath: string): string {
     return fs.readFileSync(path.join(this.folder, subpath), 'utf8')
   }
 
@@ -71,7 +70,7 @@ export default abstract class Doer {
    * @param subpath The path within the folder
    * @param content The content to write to the file
    */
-  write (subpath: string, content: string) {
+  write(subpath: string, content: string) {
     fs.writeFileSync(path.join(this.folder, subpath), content, 'utf8')
   }
 
@@ -81,7 +80,7 @@ export default abstract class Doer {
    * @param url The URL to fetch
    * @param options Request options
    */
-  async fetch (url: string, options: any = { json: true }): Promise<any> {
+  async fetch(url: string, options: any = { json: true }): Promise<any> {
     return this.urlFetcher.fetchUrl(url, options)
   }
 }

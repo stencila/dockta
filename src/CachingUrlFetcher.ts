@@ -14,7 +14,7 @@ export default class CachingUrlFetcher implements IUrlFetcher {
   /**
    * Fetch a URL using `got`, attempting to retrieve it from cache first.
    */
-  async fetchUrl (url: string, options: any = { json: true }): Promise<any> {
+  async fetchUrl(url: string, options: any = { json: true }): Promise<any> {
     let value = await CachingUrlFetcher.getFromCache(url)
     if (value) return value
 
@@ -24,9 +24,18 @@ export default class CachingUrlFetcher implements IUrlFetcher {
     } catch (error) {
       if (error.statusCode === 404) {
         value = null
-      } else if (['ENOTFOUND', 'ECONNRESET', 'EAI_AGAIN', 'DEPTH_ZERO_SELF_SIGNED_CERT'].includes(error.code)) {
+      } else if (
+        [
+          'ENOTFOUND',
+          'ECONNRESET',
+          'EAI_AGAIN',
+          'DEPTH_ZERO_SELF_SIGNED_CERT'
+        ].includes(error.code)
+      ) {
         // These are usually connection errors
-        throw new NetworkError(`There was a problem fetching ${url} (${error.code}). Are you connected to the internet?`)
+        throw new NetworkError(
+          `There was a problem fetching ${url} (${error.code}). Are you connected to the internet?`
+        )
       } else {
         throw error
       }
@@ -41,7 +50,7 @@ export default class CachingUrlFetcher implements IUrlFetcher {
    *  Try to get a result from the `persist` cache. This method with initialise the `persist` cache if it has not been
    *  set up.
    */
-  static async getFromCache (url: string): Promise<any> {
+  static async getFromCache(url: string): Promise<any> {
     if (!REQUEST_CACHE_INITIALISED) {
       await persist.init({
         dir: REQUEST_CACHE_DIR,
@@ -67,7 +76,7 @@ export default class CachingUrlFetcher implements IUrlFetcher {
   /**
    * Set a value (URL response body, usually) to the `persist` cache.
    */
-  static async setToCache (url: string, value: any): Promise<void> {
+  static async setToCache(url: string, value: any): Promise<void> {
     await persist.setItem(url, value)
   }
 }

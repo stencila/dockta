@@ -22,7 +22,10 @@ test('generate:empty', async () => {
  * the docker container and use for install
  */
 test('generate:requirements', async () => {
-  cleanup(['py-generator-generated/.Dockerfile', 'py-generator-generated/.requirements.txt'])
+  cleanup([
+    'py-generator-generated/.Dockerfile',
+    'py-generator-generated/.requirements.txt'
+  ])
 
   const arrowPackage = new SoftwarePackage()
   arrowPackage.name = 'arrow'
@@ -33,7 +36,11 @@ test('generate:requirements', async () => {
   pkg.runtimePlatform = 'Python'
   pkg.softwareRequirements = [arrowPackage]
 
-  const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-generated'))
+  const generator = new PythonGenerator(
+    urlFetcher,
+    pkg,
+    fixture('py-generator-generated')
+  )
 
   expect(await generator.generate(false, true)).toEqual(`FROM ubuntu:18.10
 USER root
@@ -67,7 +74,10 @@ CMD python3 main.py
 
   expectedFixture(fixture('py-generator-generated'), '.requirements.txt')
 
-  cleanup(['py-generator-generated/.Dockerfile', 'py-generator-generated/.requirements.txt'])
+  cleanup([
+    'py-generator-generated/.Dockerfile',
+    'py-generator-generated/.requirements.txt'
+  ])
 })
 
 /**
@@ -79,7 +89,12 @@ test('generate:requirements-file', async () => {
   const pkg = new SoftwarePackage()
   pkg.runtimePlatform = 'Python'
 
-  const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-existing'), 2)
+  const generator = new PythonGenerator(
+    urlFetcher,
+    pkg,
+    fixture('py-generator-existing'),
+    2
+  )
 
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
 USER root
@@ -109,7 +124,9 @@ CMD python main.py
 `)
 
   // it should not generate a .requirements.txt
-  expect(fs.existsSync(fixture('py-generator-existing/.requirements.txt'))).toBeFalsy()
+  expect(
+    fs.existsSync(fixture('py-generator-existing/.requirements.txt'))
+  ).toBeFalsy()
   cleanup(['py-generator-existing/.Dockerfile'])
 })
 
@@ -118,7 +135,10 @@ CMD python main.py
  * installed, these should be found and added to the apt-get install lines
  */
 test('generate:apt-packages', async () => {
-  cleanup(['py-generator-generated/.Dockerfile', 'py-generator-generated/.requirements.txt'])
+  cleanup([
+    'py-generator-generated/.Dockerfile',
+    'py-generator-generated/.requirements.txt'
+  ])
   const pygit2 = new SoftwarePackage()
   pygit2.name = 'pygit2'
   pygit2.version = '==0.27.0'
@@ -128,7 +148,12 @@ test('generate:apt-packages', async () => {
   pkg.runtimePlatform = 'Python'
   pkg.softwareRequirements = [pygit2]
 
-  const generator = new PythonGenerator(urlFetcher, pkg, fixture('py-generator-generated'), 2)
+  const generator = new PythonGenerator(
+    urlFetcher,
+    pkg,
+    fixture('py-generator-generated'),
+    2
+  )
 
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
 USER root
@@ -157,5 +182,8 @@ USER guest
 
 CMD python main.py
 `)
-  cleanup(['py-generator-generated/.Dockerfile', 'py-generator-generated/.requirements.txt'])
+  cleanup([
+    'py-generator-generated/.Dockerfile',
+    'py-generator-generated/.requirements.txt'
+  ])
 })

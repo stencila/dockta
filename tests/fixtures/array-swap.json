@@ -1,1 +1,24 @@
-{"name":"array-swap","version":"0.0.4","description":"Swapping two items in a javascript array - Array.prototype.swap","main":"index.js","repository":{"type":"git","url":"https://github.com/Marko-Jankovic/array-swap.git"},"keywords":["array","swap","Array.prototype.swap"],"author":{"name":"Marko Jankovic"},"bugs":{"url":"https://github.com/Marko-Jankovic/array-swap/issues"},"homepage":"https://github.com/Marko-Jankovic/array-swap","_id":"array-swap@0.0.4","dist":{"shasum":"5fea6c843c6e53099417050c9db99f4bc1011e31","tarball":"https://registry.npmjs.org/array-swap/-/array-swap-0.0.4.tgz"},"_from":".","_npmVersion":"1.4.3","_npmUser":{"name":"markoj","email":"markoj@vast.com"},"maintainers":[{"name":"markoj","email":"markoj@vast.com"}],"directories":{}}
+{
+  "name": "array-swap",
+  "version": "0.0.4",
+  "description": "Swapping two items in a javascript array - Array.prototype.swap",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Marko-Jankovic/array-swap.git"
+  },
+  "keywords": ["array", "swap", "Array.prototype.swap"],
+  "author": { "name": "Marko Jankovic" },
+  "bugs": { "url": "https://github.com/Marko-Jankovic/array-swap/issues" },
+  "homepage": "https://github.com/Marko-Jankovic/array-swap",
+  "_id": "array-swap@0.0.4",
+  "dist": {
+    "shasum": "5fea6c843c6e53099417050c9db99f4bc1011e31",
+    "tarball": "https://registry.npmjs.org/array-swap/-/array-swap-0.0.4.tgz"
+  },
+  "_from": ".",
+  "_npmVersion": "1.4.3",
+  "_npmUser": { "name": "markoj", "email": "markoj@vast.com" },
+  "maintainers": [{ "name": "markoj", "email": "markoj@vast.com" }],
+  "directories": {}
+}

@@ -33,11 +33,15 @@ describe('JavascriptParser', () => {
    */
   test('parse:js-requirements', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-requirements'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const pkg = (await parser.parse()) as SoftwarePackage
 
     expect(pkg.name).toEqual('js-package')
     expect(pkg.license).toEqual('ISC')
-    expect(pkg.authors).toEqual([Person.fromText('Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)')])
+    expect(pkg.authors).toEqual([
+      Person.fromText(
+        'Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)'
+      )
+    ])
     expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockta/')
     expect(pkg.softwareRequirements.length).toEqual(5)
     const expecteds = [
@@ -60,10 +64,17 @@ describe('JavascriptParser', () => {
    * string instead of an object, parse should return `authors` populated correctly.
    */
   test('parse:js-requirements', async () => {
-    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-author-string'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const parser = new JavascriptParser(
+      urlFetcher,
+      fixture('js-requirements-author-string')
+    )
+    const pkg = (await parser.parse()) as SoftwarePackage
 
-    expect(pkg.authors).toEqual([Person.fromText('Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)')])
+    expect(pkg.authors).toEqual([
+      Person.fromText(
+        'Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)'
+      )
+    ])
   })
 
   /**
@@ -72,28 +83,45 @@ describe('JavascriptParser', () => {
    * parse should return `codeRepository` populated correctly.
    */
   test('parse:js-requirements-github-shortcut', async () => {
-    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-github-shortcut'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const parser = new JavascriptParser(
+      urlFetcher,
+      fixture('js-requirements-github-shortcut')
+    )
+    const pkg = (await parser.parse()) as SoftwarePackage
     expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockta/')
   })
   test('parse:js-requirements-gitlab-shortcut', async () => {
-    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-gitlab-shortcut'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const parser = new JavascriptParser(
+      urlFetcher,
+      fixture('js-requirements-gitlab-shortcut')
+    )
+    const pkg = (await parser.parse()) as SoftwarePackage
     expect(pkg.codeRepository).toEqual('https://gitlab.com/stencila/dockta/')
   })
   test('parse:js-requirements-bitbucket-shortcut', async () => {
-    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-bitbucket-shortcut'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const parser = new JavascriptParser(
+      urlFetcher,
+      fixture('js-requirements-bitbucket-shortcut')
+    )
+    const pkg = (await parser.parse()) as SoftwarePackage
     expect(pkg.codeRepository).toEqual('https://bitbucket.com/stencila/dockta/')
   })
   test('parse:js-requirements-npm-shortcut', async () => {
-    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-npm-shortcut'))
-    const pkg = await parser.parse() as SoftwarePackage
-    expect(pkg.codeRepository).toEqual('https://www.npmjs.com/package/@stencila/dockta/')
+    const parser = new JavascriptParser(
+      urlFetcher,
+      fixture('js-requirements-npm-shortcut')
+    )
+    const pkg = (await parser.parse()) as SoftwarePackage
+    expect(pkg.codeRepository).toEqual(
+      'https://www.npmjs.com/package/@stencila/dockta/'
+    )
   })
   test('parse:js-requirements-repo-string', async () => {
-    const parser = new JavascriptParser(urlFetcher, fixture('js-requirements-repo-string'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const parser = new JavascriptParser(
+      urlFetcher,
+      fixture('js-requirements-repo-string')
+    )
+    const pkg = (await parser.parse()) as SoftwarePackage
     expect(pkg.codeRepository).toEqual('https://website.com/users/project/')
   })
 
@@ -104,7 +132,7 @@ describe('JavascriptParser', () => {
    */
   test('parse:js-sources', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-sources'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const pkg = (await parser.parse()) as SoftwarePackage
 
     expect(pkg.name).toEqual('js-sources')
     expect(pkg.softwareRequirements.length).toEqual(2)
@@ -118,7 +146,7 @@ describe('JavascriptParser', () => {
    */
   test('parse:js-mixed', async () => {
     const parser = new JavascriptParser(urlFetcher, fixture('js-mixed'))
-    const pkg = await parser.parse() as SoftwarePackage
+    const pkg = (await parser.parse()) as SoftwarePackage
 
     expect(pkg.name).toEqual('js-mixed')
     expect(pkg.description).toEqual('A test Node.js package for js-mixed')

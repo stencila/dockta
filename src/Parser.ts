@@ -15,9 +15,8 @@ import { SoftwarePackage } from '@stencila/schema'
  * generates a package list from those statements and creates a requirements file.
  */
 export default abstract class Parser extends Doer {
-
   /**
    * Parse the project folder
    */
-  abstract async parse (): Promise<SoftwarePackage | null>
+  abstract async parse(): Promise<SoftwarePackage | null>
 }

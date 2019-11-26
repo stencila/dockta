@@ -1,17 +1,20 @@
 import PythonSystemPackageLookup from '../src/PythonSystemPackageLookup'
 import { fixture } from './test-functions'
 
-const packageLookup = PythonSystemPackageLookup.fromFile(fixture('py-system-package-lookup.json'))
+const packageLookup = PythonSystemPackageLookup.fromFile(
+  fixture('py-system-package-lookup.json')
+)
 
 /**
  * Test reading the system requirements of a Python package where all matching values are found.
  */
 test('python-sys-lookup:full-depth', () => {
   const requirements = packageLookup.lookupSystemPackage(
-      'numpy',
-      3,
-      'deb',
-      'xenial')
+    'numpy',
+    3,
+    'deb',
+    'xenial'
+  )
   expect(requirements).toEqual(['xenial-numpy-dependencies'])
 })
 
@@ -20,10 +23,11 @@ test('python-sys-lookup:full-depth', () => {
  */
 test('python-sys-lookup:no-sysname', () => {
   const requirements = packageLookup.lookupSystemPackage(
-      'numpy',
-      3,
-      'deb',
-      'test')
+    'numpy',
+    3,
+    'deb',
+    'test'
+  )
   expect(requirements).toEqual(['deb-default-dependencies'])
 })
 
@@ -32,10 +36,11 @@ test('python-sys-lookup:no-sysname', () => {
  */
 test('python-sys-lookup:no-package-type', () => {
   const requirements = packageLookup.lookupSystemPackage(
-      'numpy',
-      3,
-      'rpm',
-      'test')
+    'numpy',
+    3,
+    'rpm',
+    'test'
+  )
   expect(requirements).toEqual(['default-default-dependencies'])
 })
 
@@ -44,10 +49,11 @@ test('python-sys-lookup:no-package-type', () => {
  */
 test('python-sys-lookup:no-python-version', () => {
   const requirements = packageLookup.lookupSystemPackage(
-      'numpy',
-      2,
-      'deb',
-      'xenial')
+    'numpy',
+    2,
+    'deb',
+    'xenial'
+  )
   expect(requirements).toEqual(['python-2-dependency'])
 })
 
@@ -56,9 +62,10 @@ test('python-sys-lookup:no-python-version', () => {
  */
 test('python-sys-lookup:no-package', () => {
   const requirements = packageLookup.lookupSystemPackage(
-      'my-fake-package',
-      2,
-      'rpm',
-      'test')
+    'my-fake-package',
+    2,
+    'rpm',
+    'test'
+  )
   expect(requirements).toEqual([])
 })

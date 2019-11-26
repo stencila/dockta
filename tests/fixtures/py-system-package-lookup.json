@@ -3,12 +3,8 @@
   "numpy": {
     "3": {
       "deb": {
-        "xenial": [
-          "xenial-numpy-dependencies"
-        ],
-        "default": [
-          "deb-default-dependencies"
-        ]
+        "xenial": ["xenial-numpy-dependencies"],
+        "default": ["deb-default-dependencies"]
       },
       "default": {
         "default": ["default-default-dependencies"]

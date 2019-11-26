@@ -84,15 +84,13 @@ test('generate:r-xml2', async () => {
   xml2Package.name = 'xml2'
   xml2Package.runtimePlatform = 'R'
 
-  xml2Package.softwareRequirements = [
-    xml2DevPackage
-  ]
+  xml2Package.softwareRequirements = [xml2DevPackage]
 
-  pkg.softwareRequirements = [
-    xml2Package
-  ]
+  pkg.softwareRequirements = [xml2Package]
 
-  const dockerfile = await new RGenerator(urlFetcher, pkg, folder).generate(false)
+  const dockerfile = await new RGenerator(urlFetcher, pkg, folder).generate(
+    false
+  )
   expect(dockerfile).toEqual(`FROM ubuntu:18.10
 USER root
 

@@ -46,13 +46,11 @@ import Doer from './Doer'
  */
 
 export default class DockerParser extends Doer {
-
   /**
    * Parse a folder by detecting any Dockerfile
    * and return a `SoftwareEnvironment` instance
    */
-  async parse (content?: string): Promise<SoftwareEnvironment | null> {
-
+  async parse(content?: string): Promise<SoftwareEnvironment | null> {
     let dockerfile: string
     if (content) {
       dockerfile = content
@@ -67,10 +65,14 @@ export default class DockerParser extends Doer {
     const instructions = parser.parse(dockerfile)
 
     // Process LABEL instructions
-    for (let instruction of instructions.filter(instruction => instruction.name === 'LABEL')) {
+    for (const instruction of instructions.filter(
+      instruction => instruction.name === 'LABEL'
+    )) {
       for (let [key, value] of Object.entries(instruction.args)) {
         // Remove recognised prefixes from key
-        const match = key.match(/^(org\.opencontainers\.image|org\.label-schema)\.([^ ]+)$/)
+        const match = key.match(
+          /^(org\.opencontainers\.image|org\.label-schema)\.([^ ]+)$/
+        )
         if (match) key = match[2]
 
         // Unquote value if necessary
@@ -95,14 +97,18 @@ export default class DockerParser extends Doer {
     }
 
     // Process MAINTAINER instructions
-    for (let instruction of instructions.filter(instruction => instruction.name === 'MAINTAINER')) {
+    for (const instruction of instructions.filter(
+      instruction => instruction.name === 'MAINTAINER'
+    )) {
       let author = ''
       if (typeof instruction.args === 'string') author = instruction.args
-      else throw new Error(`Unexpected type of instruction arguments ${typeof instruction.args}`)
+      else
+        throw new Error(
+          `Unexpected type of instruction arguments ${typeof instruction.args}`
+        )
       environ.authors.push(Person.fromText(author))
     }
 
     return environ
   }
-
 }
