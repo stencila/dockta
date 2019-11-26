@@ -7,15 +7,11 @@ node_js:
 services:
   docker
 
-# Use npm install if this is a Greenkeeper branch
-# See https://github.com/greenkeeperio/greenkeeper-lockfile/issues/156#issuecomment-397719017
-install: 
-  - case $TRAVIS_BRANCH in greenkeeper*) npm i;; *) npm ci;; esac;
-
-# Do linting, coverage, and build docs (to upload to Github pages)
+# Do linting, coverage, etc and build docs (to upload to Github pages)
 script:
   - make lint
   - make cover
+  - make build
   - make docs
 
 # Upload test coverage to codecov
@@ -32,7 +28,7 @@ deploy:
   # Deploy a new version of NPM package and create a Github release
   - provider: script
     skip_cleanup: true
-    script: npm run semantic-release
+    script: npx semantic-release
 
   # Deploy documentation to Github Pages
   # See https://docs.travis-ci.com/user/deployment/pages/
