@@ -1,23 +1,22 @@
-all: setup lint test build docs
+all: lint format cover build docs
 
 setup:
 	npm install
 
-hooks:
-	cp pre-commit.sh .git/hooks/pre-commit
-
 lint:
 	npm run lint
+
+format:
+	npm run format
 
 test:
 	npm test
 
 cover:
-	npm run cover
+	npm run test:cover
 
 build:
 	npm run build
-.PHONY: build
 
 docs:
 	npm run docs
