@@ -1,8 +1,8 @@
 # Use Node.js
 language: node_js
 node_js:
-  - "10"
-  - "12"
+  - '10'
+  - '12'
 
 # Require docker service for building images during tests
 services:
@@ -30,12 +30,16 @@ deploy:
   - provider: script
     skip_cleanup: true
     script: npx semantic-release
+    on:
+      branch: master
+      condition: $TRAVIS_OS_NAME = linux && $TRAVIS_NODE_VERSION = '12'
 
   # Deploy documentation to Github Pages
   # See https://docs.travis-ci.com/user/deployment/pages/
   - provider: pages
-    skip-cleanup: true
-    github-token: $GITHUB_TOKEN
-    local-dir: docs
+    skip_cleanup: true
+    token: $GITHUB_TOKEN
+    local_dir: docs
     on:
       branch: master
+      condition: $TRAVIS_OS_NAME = linux && $TRAVIS_NODE_VERSION = '12'
