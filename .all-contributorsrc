@@ -73,6 +73,17 @@
         "ideas",
         "test"
       ]
+    },
+    {
+      "login": "gliptak",
+      "name": "Gábor Lipták",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/50109?v=4",
+      "profile": "https://gliptak.github.io/",
+      "contributions": [
+        "infra",
+        "bug"
+      ]
     }
-  ]
+  ],
+  "contributorsPerLine": 7
 }
