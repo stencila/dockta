@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "bin": "dist/cli.js",
   "files": [
-    "dist"
+    "dist",
+    "src/install.R"
   ],
   "scripts": {
     "lint": "eslint --fix 'src/**/*.{js,ts}'",
