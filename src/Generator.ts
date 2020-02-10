@@ -225,7 +225,8 @@ WORKDIR /home/${DOCKER_USER}
       '18.04': 'bionic',
       '18.10': 'cosmic',
       '19.04': 'disco',
-      '19.10': 'eoan'
+      '19.10': 'eoan',
+      '20.04': 'focal'
     }
     return lookup[version]
   }
