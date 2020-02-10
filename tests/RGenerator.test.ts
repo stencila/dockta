@@ -12,7 +12,7 @@ const urlFetcher = new MockUrlFetcher()
 test('generate:empty', async () => {
   const pkg = new SoftwarePackage()
   const generator = new RGenerator(urlFetcher, pkg)
-  expect(await generator.generate(false)).toEqual('FROM ubuntu:18.10\n')
+  expect(await generator.generate(false)).toEqual('FROM ubuntu:19.10\n')
 })
 
 /**
@@ -30,7 +30,7 @@ test('generate:packages', async () => {
   pkg2.softwareRequirements = [pkg1]
 
   const generator = new RGenerator(urlFetcher, pkg2)
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:18.10
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:19.10
 USER root
 
 RUN apt-get update \\
@@ -41,7 +41,7 @@ RUN apt-get update \\
       software-properties-common
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
-RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu cosmic-cran35/"
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/2017-01-01/bin/linux/ubuntu eoan-cran35/"
 
 ENV TZ="Etc/UTC"
 
@@ -91,7 +91,7 @@ test('generate:r-xml2', async () => {
   const dockerfile = await new RGenerator(urlFetcher, pkg, folder).generate(
     false
   )
-  expect(dockerfile).toEqual(`FROM ubuntu:18.10
+  expect(dockerfile).toEqual(`FROM ubuntu:19.10
 USER root
 
 RUN apt-get update \\
@@ -102,7 +102,7 @@ RUN apt-get update \\
       software-properties-common
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
-RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${pkg.datePublished}/bin/linux/ubuntu cosmic-cran35/"
+RUN apt-add-repository "deb https://mran.microsoft.com/snapshot/${pkg.datePublished}/bin/linux/ubuntu eoan-cran35/"
 
 ENV TZ="Etc/UTC"
 

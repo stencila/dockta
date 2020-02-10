@@ -96,6 +96,6 @@ export default class PythonSystemPackageLookup {
       systemPackages = systemVersionMap.get('default')
     }
 
-    return systemPackages || []
+    return systemPackages ?? []
   }
 }

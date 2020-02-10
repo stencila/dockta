@@ -1,4 +1,4 @@
-FROM ubuntu:18.10
+FROM ubuntu:19.10
 USER root
 
 RUN apt-get update \
@@ -10,8 +10,8 @@ RUN apt-get update \
 
 RUN curl -sSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - \
  && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 51716619E084DAB9
-RUN apt-add-repository "deb https://deb.nodesource.com/node_12.x cosmic main" \
- && apt-add-repository "deb https://mran.microsoft.com/snapshot/2019-10-23/bin/linux/ubuntu cosmic-cran35/"
+RUN apt-add-repository "deb https://deb.nodesource.com/node_12.x eoan main" \
+ && apt-add-repository "deb https://mran.microsoft.com/snapshot/2020-02-09/bin/linux/ubuntu eoan-cran35/"
 
 ENV TZ="Etc/UTC"
 

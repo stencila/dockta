@@ -4,7 +4,7 @@ import Generator from './Generator'
 import generators from './generators'
 import UrlFetcher from './IUrlFetcher'
 
-const PREFERRED_UBUNTU_VERSION = '18.10'
+const PREFERRED_UBUNTU_VERSION = '19.10'
 
 /**
  * Compare semantic version numbers

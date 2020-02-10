@@ -209,11 +209,12 @@ WORKDIR /home/${DOCKER_USER}
    * Version of the base image
    */
   baseVersion(): string {
-    return '18.10'
+    return '19.10'
   }
 
   /**
-   * Get the version name for a base image
+   * Get the name of an Ubuntu release
+   *
    * @param baseIdentifier The base image name e.g. `ubuntu:18.04`
    */
   baseVersionName(baseIdentifier: string): string {
@@ -222,7 +223,9 @@ WORKDIR /home/${DOCKER_USER}
       '14.04': 'trusty',
       '16.04': 'xenial',
       '18.04': 'bionic',
-      '18.10': 'cosmic'
+      '18.10': 'cosmic',
+      '19.04': 'disco',
+      '19.10': 'eoan'
     }
     return lookup[version]
   }
