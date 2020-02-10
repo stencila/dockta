@@ -1,3 +1,11 @@
+## [0.16.3](https://github.com/stencila/dockta/compare/v0.16.2...v0.16.3) (2020-02-10)
+
+
+### Bug Fixes
+
+* **Base image:** Upgrade preferred Ubuntu version to 19.10 ([e902a44](https://github.com/stencila/dockta/commit/e902a442eaea8c73b2f79c992b63f2fb2727092a))
+* **Packaging:** Distribute install.R so that it is available within Docker build ([9c7f43e](https://github.com/stencila/dockta/commit/9c7f43ebd171aea6b51f7cdcfdc820aa7435bfff)), closes [/github.com/stencila/dockta/blob/effcf13d4f5561b57ebdea6a3d3af8fdb2e73705/src/RGenerator.ts#L116](https://github.com//github.com/stencila/dockta/blob/effcf13d4f5561b57ebdea6a3d3af8fdb2e73705/src/RGenerator.ts/issues/L116)
+
 ## [0.16.2](https://github.com/stencila/dockta/compare/v0.16.1...v0.16.2) (2019-11-27)
 
 
