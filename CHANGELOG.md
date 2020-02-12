@@ -1,3 +1,10 @@
+## [0.16.4](https://github.com/stencila/dockta/compare/v0.16.3...v0.16.4) (2020-02-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency semver to v7 ([c3ddcd8](https://github.com/stencila/dockta/commit/c3ddcd86cd69560f374016796a3bf68a20a4558f))
+
 ## [0.16.3](https://github.com/stencila/dockta/compare/v0.16.2...v0.16.3) (2020-02-10)
 
 
