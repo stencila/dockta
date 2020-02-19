@@ -41,7 +41,7 @@
   "homepage": "https://github.com/stencila/dockta#readme",
   "devDependencies": {
     "@stencila/dev-config": "1.4.11",
-    "@stencila/logga": "2.0.0",
+    "@stencila/logga": "2.1.0",
     "@types/dockerode": "2.5.20",
     "@types/express": "4.17.2",
     "@types/got": "9.6.9",
