@@ -50,7 +50,7 @@
     "@types/node": "12.12.14",
     "@types/node-persist": "3.0.0",
     "@types/semver": "7.1.0",
-    "@types/tar-fs": "1.16.1",
+    "@types/tar-fs": "1.16.2",
     "@types/tmp": "0.1.0",
     "@types/yargs": "13.0.3",
     "all-contributors-cli": "6.11.0",
