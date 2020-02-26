@@ -78,7 +78,7 @@
     "tar-fs": "^2.0.0",
     "tmp": "0.1.0",
     "yargonaut": "^1.1.4",
-    "yargs": "^15.0.2"
+    "yargs": "^15.1.0"
   },
   "release": {
     "extends": "@stencila/semantic-release-config"
