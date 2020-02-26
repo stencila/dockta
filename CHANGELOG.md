@@ -1,3 +1,10 @@
+## [0.16.5](https://github.com/stencila/dockta/compare/v0.16.4...v0.16.5) (2020-02-26)
+
+
+### Bug Fixes
+
+* **Dependencies:** Update most deps ([1999923](https://github.com/stencila/dockta/commit/19999234aa15c3f31d23ac20c26d912403646463))
+
 ## [0.16.4](https://github.com/stencila/dockta/compare/v0.16.3...v0.16.4) (2020-02-12)
 
 
