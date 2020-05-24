@@ -1,3 +1,17 @@
+## [0.16.6](https://github.com/stencila/dockta/compare/v0.16.5...v0.16.6) (2020-05-24)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency @stencila/schema to ^0.43.0 ([64fde2b](https://github.com/stencila/dockta/commit/64fde2bd1862de92a77d19b53a7dc709f20f8b4e))
+* **dependencies:** update dependency dockerode to ^3.2.0 ([1de8402](https://github.com/stencila/dockta/commit/1de84022c6bd2131274dae0a63ae57485dc4ddd9))
+* **dependencies:** update dependency semver to ^7.3.2 ([c562147](https://github.com/stencila/dockta/commit/c5621475a80cccf5d0425665d699aeb0857280d9))
+* **dependencies:** update dependency tar-fs to ^2.0.1 ([50b3bae](https://github.com/stencila/dockta/commit/50b3baea1e3471c62e47137adc23cd671a182e43))
+* **dependencies:** update dependency yargs to ^15.3.1 ([67cd0ce](https://github.com/stencila/dockta/commit/67cd0cec958b341536653d063bad54a0adf3fb25))
+* **Deps:** Move Logga to dependencies ([e894931](https://github.com/stencila/dockta/commit/e8949317d91ca77f67beed0608b761f9515b7c42)), closes [#136](https://github.com/stencila/dockta/issues/136)
+* **Deps:** npm audit fix ([19eaa14](https://github.com/stencila/dockta/commit/19eaa14b173da5bfea956a5722c5cde4f497e929))
+* **Deps:** Revert to Schema 0.2.4 ([d7fa592](https://github.com/stencila/dockta/commit/d7fa592ed33e19297da5ead2d242d4f1a19ba2b4))
+
 ## [0.16.5](https://github.com/stencila/dockta/compare/v0.16.4...v0.16.5) (2020-02-26)
 
 
