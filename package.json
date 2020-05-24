@@ -41,7 +41,6 @@
   "homepage": "https://github.com/stencila/dockta#readme",
   "devDependencies": {
     "@stencila/dev-config": "1.4.30",
-    "@stencila/logga": "2.2.0",
     "@types/dockerode": "2.5.28",
     "@types/express": "4.17.6",
     "@types/got": "9.6.10",
@@ -62,6 +61,7 @@
     "typescript": "3.8.3"
   },
   "dependencies": {
+    "@stencila/logga": "2.2.0",
     "@stencila/schema": "0.2.4",
     "builtin-modules": "^3.1.0",
     "detective": "^5.1.0",
