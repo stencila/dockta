@@ -312,5 +312,5 @@ export default [
   'zipapp',
   'zipfile',
   'zipimport',
-  'zlib'
+  'zlib',
 ]

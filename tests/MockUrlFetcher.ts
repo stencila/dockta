@@ -34,10 +34,10 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
             platforms: {
               DEB: 'libxml2-dev',
               'OSX/brew': null,
-              RPM: 'libxml2-devel'
-            }
-          }
-        }
+              RPM: 'libxml2-devel',
+            },
+          },
+        },
       ]
     }
 
@@ -46,9 +46,9 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
         {
           gnumake: {
             sysreqs: ['GNU make', 'GNU Make'],
-            platforms: { DEB: 'make', 'OSX/brew': null, RPM: 'make' }
-          }
-        }
+            platforms: { DEB: 'make', 'OSX/brew': null, RPM: 'make' },
+          },
+        },
       ]
     }
 
@@ -60,9 +60,9 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
             platforms: {
               DEB: 'libcurl4-openssl-dev',
               'OSX/brew': null,
-              RPM: 'libcurl-devel'
-            }
-          }
+              RPM: 'libcurl-devel',
+            },
+          },
         },
         {
           openssl: {
@@ -70,10 +70,10 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
             platforms: {
               DEB: 'libssl-dev',
               'OSX/brew': 'openssl@1.1',
-              RPM: 'openssl-devel'
-            }
-          }
-        }
+              RPM: 'openssl-devel',
+            },
+          },
+        },
       ]
     }
 
@@ -88,33 +88,33 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
                   distribution: 'Ubuntu',
                   releases: ['precise', 'trusty', 'vivid', 'wily'],
                   runtime: 'libgsl0ldbl',
-                  buildtime: 'libgsl0-dev'
+                  buildtime: 'libgsl0-dev',
                 },
                 {
                   distribution: 'Ubuntu',
                   runtime: 'libgsl2',
-                  buildtime: 'libgsl-dev'
+                  buildtime: 'libgsl-dev',
                 },
                 {
                   distribution: 'Debian',
                   releases: ['squeeze', 'wheezy', 'jessie'],
                   runtime: 'libgsl0ldbl',
-                  buildtime: 'libgsl0-dev'
+                  buildtime: 'libgsl0-dev',
                 },
                 {
                   distribution: 'Debian',
                   runtime: 'libgsl2',
-                  buildtime: 'libgsl-dev'
-                }
+                  buildtime: 'libgsl-dev',
+                },
               ],
               'OSX/brew': 'gsl',
               RPM: {
                 runtime: 'gsl',
-                buildtime: 'gsl-devel'
-              }
-            }
-          }
-        }
+                buildtime: 'gsl-devel',
+              },
+            },
+          },
+        },
       ]
     }
 
@@ -127,7 +127,7 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
         Package: 'curl',
         Version: '3.2',
         SystemRequirements:
-          'libcurl: libcurl-devel (rpm) or\nlibcurl4-openssl-dev (deb).'
+          'libcurl: libcurl-devel (rpm) or\nlibcurl4-openssl-dev (deb).',
       }
     }
 
@@ -135,7 +135,7 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
       return {
         Package: 'haven',
         Version: '1.1.2',
-        SystemRequirements: 'GNU make'
+        SystemRequirements: 'GNU make',
       }
     }
 
@@ -153,8 +153,8 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
           'data.table': '>= 1.9.8',
           readxl: '>= 0.1.1',
           openxlsx: '*',
-          tibble: '*'
-        }
+          tibble: '*',
+        },
       }
     }
 
@@ -176,8 +176,8 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
           maptools: '*',
           rio: '*',
           lme4: '*',
-          nlme: '*'
-        }
+          nlme: '*',
+        },
       }
     }
 
@@ -188,7 +188,7 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
         Date: '2016-12-14',
         'Date/Publication': '2017-01-05 11:13:10',
         Depends: {
-          R: '>= 2.10.0'
+          R: '>= 2.10.0',
         },
         Description:
           '\nAn R wrapper for the special functions and quasi random number\ngenerators of the Gnu Scientific Library\n(http://www.gnu.org/software/gsl/).  See gsl-package.Rd for details of\noverall package organization, and Misc.Rd for some functions that are\nwidely used in the package, and some tips on installation.',
@@ -203,7 +203,7 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
         Version: '1.9-10.3',
         crandb_file_date: '2017-01-05 10:14:53',
         date: '2017-01-05T10:13:10+00:00',
-        releases: []
+        releases: [],
       }
     }
 
@@ -240,14 +240,14 @@ export default class MockUrlFetcher extends CachingUrlFetcher {
             'Topic :: Database',
             'Topic :: Database :: Front-Ends',
             'Topic :: Software Development',
-            'Topic :: Software Development :: Libraries :: Python Modules'
+            'Topic :: Software Development :: Libraries :: Python Modules',
           ],
           keywords: 'test keywords list',
           license: 'Free Software License',
           long_description:
             'This is the long description that will be used in priority over description',
-          description: "This probably won't be used"
-        }
+          description: "This probably won't be used",
+        },
       }
     }
 

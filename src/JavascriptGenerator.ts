@@ -41,7 +41,7 @@ export default class JavascriptGenerator extends PackageGenerator {
   aptRepos(sysVersion: string): Array<string> {
     const baseVersionName = this.baseVersionName(sysVersion)
     return [
-      `deb https://deb.nodesource.com/node_${this.nodeMajorVersion}.x ${baseVersionName} main`
+      `deb https://deb.nodesource.com/node_${this.nodeMajorVersion}.x ${baseVersionName} main`,
     ]
   }
 
@@ -65,7 +65,7 @@ export default class JavascriptGenerator extends PackageGenerator {
     }
     const pkgjson = {
       name: this.package.name || 'unnamed',
-      dependencies
+      dependencies,
     }
     this.write(PACKAGE_JSON_GENERATED, JSON.stringify(pkgjson, null, ' '))
     return [[PACKAGE_JSON_GENERATED, PACKAGE_JSON]]
@@ -77,7 +77,7 @@ export default class JavascriptGenerator extends PackageGenerator {
 
   projectFiles(): Array<[string, string]> {
     const files = this.glob('**/*.js')
-    return files.map(file => [file, file])
+    return files.map((file) => [file, file])
   }
 
   runCommand(): string | undefined {

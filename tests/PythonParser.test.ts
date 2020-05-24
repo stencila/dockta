@@ -5,7 +5,7 @@ import {
   ComputerLanguage,
   OperatingSystem,
   Person,
-  SoftwarePackage
+  SoftwarePackage,
 } from '@stencila/schema'
 
 import MockUrlFetcher from './MockUrlFetcher'
@@ -44,52 +44,52 @@ describe('PythonParser', () => {
       {
         value: 'Django',
         version: '==1.9.2',
-        type: RequirementType.Named
+        type: RequirementType.Named,
       },
       {
         type: RequirementType.Named,
         value: 'requests',
-        version: '==2.19.1'
+        version: '==2.19.1',
       },
       {
         type: RequirementType.Named,
         value: 'less-than',
-        version: '<1'
+        version: '<1',
       },
       {
         type: RequirementType.Named,
         value: 'greater-than',
-        version: '>2'
+        version: '>2',
       },
       {
         type: RequirementType.Named,
         value: 'less-than-equal',
-        version: '<=3'
+        version: '<=3',
       },
       {
         type: RequirementType.Named,
         value: 'greater-than-equal',
-        version: '>=4'
+        version: '>=4',
       },
       {
         type: RequirementType.Named,
         value: 'multiple-things',
-        version: '>5,<=6'
+        version: '>5,<=6',
       },
       {
         type: RequirementType.Named,
         value: 'squiggly-boye',
-        version: '~=7'
+        version: '~=7',
       },
       {
         type: RequirementType.URL,
-        value: 'svn+http://myrepo/svn/MyApp#egg=MyApp'
+        value: 'svn+http://myrepo/svn/MyApp#egg=MyApp',
       },
       {
         type: RequirementType.Named,
         value: 'final-requirement',
-        version: '==2.4'
-      }
+        version: '==2.4',
+      },
     ]
 
     expect(requirementsContent).toEqual(expected)
@@ -110,13 +110,13 @@ describe('PythonParser', () => {
 
     // This data is populated by the metadata lookup and the `got` mock
     arrowPackage.authors = [
-      Person.fromText('Joe Bloggs <joe.bloggs@example.com>')
+      Person.fromText('Joe Bloggs <joe.bloggs@example.com>'),
     ]
     arrowPackage.operatingSystems = [
       OperatingSystem.windows,
       OperatingSystem.linux,
       OperatingSystem.macos,
-      OperatingSystem.unix
+      OperatingSystem.unix,
     ]
     arrowPackage.codeRepository = 'http://www.example.com/project'
     arrowPackage.applicationCategories = ['Database', 'Software Development']
@@ -143,7 +143,7 @@ describe('PythonParser', () => {
     const environ = await parser.parse()
     expect(environ).not.toBeNull()
     const requirementNames = environ!.softwareRequirements.map(
-      requirement => requirement.name
+      (requirement) => requirement.name
     )
     expect(requirementNames.length).toEqual(2)
     expect(requirementNames).toContain('django')

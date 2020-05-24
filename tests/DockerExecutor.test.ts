@@ -15,7 +15,7 @@ test('execute:stdout', async () => {
   let build = await docker.buildImage(
     {
       context: fixture('dockerfile-execute-stdout'),
-      src: ['Dockerfile']
+      src: ['Dockerfile'],
     },
     { t: 'dockerfile-execute-stdout' }
   )
@@ -32,7 +32,7 @@ test('execute:stderr', async () => {
   let build = await docker.buildImage(
     {
       context: fixture('dockerfile-execute-stderr'),
-      src: ['Dockerfile']
+      src: ['Dockerfile'],
     },
     { t: 'dockerfile-execute-stderr' }
   )

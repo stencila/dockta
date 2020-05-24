@@ -50,6 +50,6 @@ test('generate:packages', async () => {
     'libxml2-dev',
     'python3',
     'python3-pip',
-    'r-base'
+    'r-base',
   ])
 })

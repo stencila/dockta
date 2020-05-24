@@ -10,10 +10,7 @@ import { build, compile, execute, who } from './index'
 
 const VERSION = require('../package').version
 
-yargonaut
-  .style('blue')
-  .helpStyle('green')
-  .errorsStyle('red')
+yargonaut.style('blue').helpStyle('green').errorsStyle('red')
 
 yargs
   .scriptName('dockta')
@@ -30,15 +27,15 @@ yargs
   // Nix global option
   .option('nix', {
     describe: 'Use NixOS base image',
-    type: 'boolean'
+    type: 'boolean',
   })
   .option('from', {
-    describe: 'The base docker image to inherit FROM'
+    describe: 'The base docker image to inherit FROM',
   })
   .option('stencila', {
     describe: 'Add stencila execution hosts',
     default: false,
-    type: 'boolean'
+    type: 'boolean',
   })
 
   // Ensure at least one command
@@ -54,11 +51,11 @@ yargs
   .command(
     'compile [folder]',
     'Compile a project to a software environment',
-    yargs => {
+    (yargs) => {
       folderArg(yargs)
     },
     (args: any) => {
-      compile(args.folder, args.nix, args.stencila, args.from).catch(err =>
+      compile(args.folder, args.nix, args.stencila, args.from).catch((err) =>
         error(err)
       )
     }
@@ -69,11 +66,11 @@ yargs
   .command(
     'build [folder]',
     'Build a Docker image for project',
-    yargs => {
+    (yargs) => {
       folderArg(yargs)
     },
     (args: any) => {
-      build(args.folder, args.nix, args.stencila, args.from).catch(err =>
+      build(args.folder, args.nix, args.stencila, args.from).catch((err) =>
         error(err)
       )
     }
@@ -84,16 +81,16 @@ yargs
   .command(
     'execute [folder] [command]',
     'Execute a project',
-    yargs => {
+    (yargs) => {
       folderArg(yargs)
       yargs.positional('command', {
         type: 'string',
         default: '',
-        describe: 'The command to execute'
+        describe: 'The command to execute',
       })
     },
     (args: any) => {
-      execute(args.folder, args.command, args.nix).catch(err => error(err))
+      execute(args.folder, args.command, args.nix).catch((err) => error(err))
     }
   )
 
@@ -102,17 +99,17 @@ yargs
   .command(
     'who [folder]',
     'List the people your project depends upon',
-    yargs => {
+    (yargs) => {
       folderArg(yargs)
       yargs.option('depth', {
         alias: 'd',
         type: 'number',
         default: 100,
-        describe: 'The maximum dependency recursion depth'
+        describe: 'The maximum dependency recursion depth',
       })
     },
     (args: any) => {
-      who(args.folder, args.depth).catch(err => error(err))
+      who(args.folder, args.depth).catch((err) => error(err))
     }
   )
   .parse()
@@ -126,7 +123,7 @@ function folderArg(yargs: yargs.Argv) {
   yargs.positional('folder', {
     type: 'string',
     default: '.',
-    describe: 'The path to the project folder'
+    describe: 'The path to the project folder',
   })
 }
 

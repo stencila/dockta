@@ -3,7 +3,7 @@ import {
   ComputerLanguage,
   Person,
   SoftwarePackage,
-  SoftwareSourceCode
+  SoftwareSourceCode,
 } from '@stencila/schema'
 import OperatingSystem from '@stencila/schema/dist/OperatingSystem'
 
@@ -81,7 +81,7 @@ function splitStandardRequirementVersion(
   if (firstSplitterIndex !== -1) {
     return [
       requirement.substring(0, firstSplitterIndex),
-      requirement.substring(firstSplitterIndex)
+      requirement.substring(firstSplitterIndex),
     ]
   }
 
@@ -119,7 +119,7 @@ function buildClassifierMap(
  * length as the number of categories, i.e. ["Category", "Secondary Category", "Tertiary Category"]
  */
 function splitTopic(topics: string): Array<string> {
-  return topics.split('::').map(topic => topic.trim())
+  return topics.split('::').map((topic) => topic.trim())
 }
 
 /**
@@ -175,7 +175,7 @@ function parseOperatingSystem(operatingSystem: string): Array<OperatingSystem> {
 
 export enum RequirementType {
   Named,
-  URL
+  URL,
 }
 
 interface PythonRequirement {
@@ -348,7 +348,7 @@ export default class PythonParser extends Parser {
         requirements.push({
           value: requirementName,
           type: RequirementType.Named,
-          version: version
+          version: version,
         })
       }
     }
@@ -361,14 +361,14 @@ export default class PythonParser extends Parser {
    */
   generateRequirementsFromSource(): Array<PythonRequirement> {
     const nonSystemImports = this.findImports().filter(
-      pythonImport => !pythonSystemModules.includes(pythonImport)
+      (pythonImport) => !pythonSystemModules.includes(pythonImport)
     )
 
-    return nonSystemImports.map(nonSystemImport => {
+    return nonSystemImports.map((nonSystemImport) => {
       return {
         value: nonSystemImport,
         type: RequirementType.Named,
-        version: ''
+        version: '',
       }
     })
   }
@@ -408,7 +408,7 @@ export default class PythonParser extends Parser {
       if (
         this.glob([
           fileDirectory + '/' + pkg + '.py',
-          fileDirectory + '/' + pkg + '/__init__.py'
+          fileDirectory + '/' + pkg + '/__init__.py',
         ]).length
       ) {
         continue

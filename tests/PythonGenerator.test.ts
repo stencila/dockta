@@ -24,7 +24,7 @@ test('generate:empty', async () => {
 test('generate:requirements', async () => {
   cleanup([
     'py-generator-generated/.Dockerfile',
-    'py-generator-generated/.requirements.txt'
+    'py-generator-generated/.requirements.txt',
   ])
 
   const arrowPackage = new SoftwarePackage()
@@ -76,7 +76,7 @@ CMD python3 main.py
 
   cleanup([
     'py-generator-generated/.Dockerfile',
-    'py-generator-generated/.requirements.txt'
+    'py-generator-generated/.requirements.txt',
   ])
 })
 
@@ -137,7 +137,7 @@ CMD python main.py
 test('generate:apt-packages', async () => {
   cleanup([
     'py-generator-generated/.Dockerfile',
-    'py-generator-generated/.requirements.txt'
+    'py-generator-generated/.requirements.txt',
   ])
   const pygit2 = new SoftwarePackage()
   pygit2.name = 'pygit2'
@@ -184,6 +184,6 @@ CMD python main.py
 `)
   cleanup([
     'py-generator-generated/.Dockerfile',
-    'py-generator-generated/.requirements.txt'
+    'py-generator-generated/.requirements.txt',
   ])
 })

@@ -40,10 +40,7 @@ CMD nix-shell --pure\n`
  * Builds a Docker image from a nixDockerfile
  */
 async function build(folder: any) {
-  const name = path
-    .basename(folder)
-    .toLocaleLowerCase()
-    .replace(' ', '-')
+  const name = path.basename(folder).toLocaleLowerCase().replace(' ', '-')
 
   // Figure out if a custom default.nix file is present
   const defaultNix = path.join(folder, 'default.nix')
@@ -54,7 +51,7 @@ async function build(folder: any) {
   const build = await docker.buildImage(
     {
       context: folder,
-      src: ['.nixDockerfile', path.basename(nixfile)]
+      src: ['.nixDockerfile', path.basename(nixfile)],
     },
     { t: name, dockerfile: '.nixDockerfile' }
   )
@@ -79,10 +76,7 @@ async function execute(folder: any, command = '') {
     await docker.createVolume({ name: 'nix-store' })
   }
 
-  const name = path
-    .basename(folder)
-    .toLocaleLowerCase()
-    .replace(' ', '-')
+  const name = path.basename(folder).toLocaleLowerCase().replace(' ', '-')
   let args = `run -it --rm -v /tmp:/tmp -v nix-store:/nix ${name}`
   // If there is a user specified command then run that within the Nix shell, otherwise
   // will run the CMD from the Dockerfile
@@ -94,7 +88,7 @@ async function execute(folder: any, command = '') {
   spawnSync('docker', args.split(' '), {
     shell: true,
     cwd: process.cwd(),
-    stdio: 'inherit'
+    stdio: 'inherit',
   })
 }
 

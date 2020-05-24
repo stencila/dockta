@@ -40,7 +40,7 @@ export default class DockerExecutor {
       write(chunk, encoding, callback) {
         out += chunk.toString()
         callback()
-      }
+      },
     })
 
     // Just write errors through to local console error
@@ -48,7 +48,7 @@ export default class DockerExecutor {
       write(chunk, encoding, callback) {
         console.error(chunk.toString())
         callback()
-      }
+      },
     })
 
     // Get and set user:group
@@ -65,11 +65,11 @@ export default class DockerExecutor {
     await docker.run(name, [], [stdout, stderr], {
       Cmd: cmd,
       HostConfig: {
-        Binds: [`${path.resolve(folder)}:/work`]
+        Binds: [`${path.resolve(folder)}:/work`],
       },
       Tty: false,
       User: user,
-      WorkingDir: '/work'
+      WorkingDir: '/work',
     })
 
     // Attempt to parse output as JSON

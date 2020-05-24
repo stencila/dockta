@@ -111,7 +111,7 @@ export default class DockerGenerator extends Generator {
     // @ts-ignore
     return this.generators
       .map(func)
-      .filter(cmd => cmd)
+      .filter((cmd) => cmd)
       .join(sep)
   }
 
@@ -125,8 +125,8 @@ export default class DockerGenerator extends Generator {
     return [PREFERRED_UBUNTU_VERSION]
       .concat(
         this.generators
-          .filter(generator => generator.baseName() === this.baseName()) // filter to generators with matching base name
-          .map(generator => generator.baseVersion())
+          .filter((generator) => generator.baseName() === this.baseName()) // filter to generators with matching base name
+          .map((generator) => generator.baseVersion())
       )
       .sort(versionCompare)[0]
   }

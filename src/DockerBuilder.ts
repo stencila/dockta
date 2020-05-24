@@ -35,10 +35,7 @@ export default class DockerBuilder {
    */
   async build(dir: string, name?: string, dockerfile = 'Dockerfile') {
     if (!name) {
-      const hash = crypto
-        .createHash('md5')
-        .update(dir)
-        .digest('hex')
+      const hash = crypto.createHash('md5').update(dir).digest('hex')
       name = 'dockta-' + hash
     }
 
@@ -75,7 +72,7 @@ export default class DockerBuilder {
 
     // Pack the directory and replace the Dockerfile with the new one
     const tar = tarFs.pack(dir, {
-      ignore: name => {
+      ignore: (name) => {
         const relpath = path.relative(dir, name)
         // Ignore original Dockerfile
         // Ignore the special `snapshot` directory which exists when this
@@ -87,11 +84,11 @@ export default class DockerBuilder {
         )
       },
       finalize: false,
-      finish: pack => {
+      finish: (pack) => {
         // Add new Dockerfile
         pack.entry({ name: 'Dockerfile' }, newContent)
         pack.finalize()
-      }
+      },
     })
     const targz = tar.pipe(zlib.createGzip())
 
@@ -105,7 +102,7 @@ export default class DockerBuilder {
     const stream = await docker.buildImage(targz, {
       // Options to Docker ImageBuild operation
       // See https://docs.docker.com/engine/api/v1.37/#operation/ImageBuild
-      t: name + ':system'
+      t: name + ':system',
     })
 
     // The following catches errors from abovr and turns them into messages but does
@@ -138,7 +135,7 @@ export default class DockerBuilder {
         if (data.error) {
           messages.push({
             level: 'error',
-            message: data.error
+            message: data.error,
           })
           console.error(data.error)
         } else if (data.aux && data.aux.ID) {
@@ -157,11 +154,11 @@ export default class DockerBuilder {
     })
 
     // Check for any error message
-    const errors = messages.filter(message => message.level === 'error')
+    const errors = messages.filter((message) => message.level === 'error')
     if (errors.length)
       throw new Error(
         `There was an error when building the image: ${errors
-          .map(error => error.message)
+          .map((error) => error.message)
           .join(',')}`
       )
 
@@ -192,7 +189,7 @@ export default class DockerBuilder {
     const container = await docker.createContainer({
       Image: layer,
       Tty: true,
-      Cmd: ['/bin/bash']
+      Cmd: ['/bin/bash'],
     })
     await container.start()
 
@@ -217,15 +214,15 @@ export default class DockerBuilder {
           const to = copy.pop() as string
           const pack = tarFs.pack(dir, {
             // Set the destination of each file (last item in `COPY` command)
-            map: function(header) {
+            map: function (header) {
               header.name = to
               return header
             },
             // Ignore any files in the directory that are not in the `COPY` list
-            ignore: name => {
+            ignore: (name) => {
               const relativePath = path.relative(dir, name)
               return !copy.includes(relativePath)
-            }
+            },
           })
           await container.putArchive(pack, { path: workdir })
           break
@@ -238,7 +235,7 @@ export default class DockerBuilder {
             AttachStdout: true,
             AttachStderr: true,
             User: user,
-            Tty: true
+            Tty: true,
           })
           await exec.start()
 
@@ -248,7 +245,7 @@ export default class DockerBuilder {
           while (true) {
             const status = await exec.inspect()
             if (status.Running === false) break
-            await new Promise(resolve => setTimeout(resolve, 100))
+            await new Promise((resolve) => setTimeout(resolve, 100))
           }
           break
         }
@@ -282,8 +279,8 @@ export default class DockerBuilder {
       User: user,
       WorkingDir: workdir,
       Labels: {
-        systemLayer: currentSystemLayer
-      }
+        systemLayer: currentSystemLayer,
+      },
     })
 
     await container.stop()

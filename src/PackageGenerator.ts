@@ -25,9 +25,9 @@ export default class PackageGenerator extends Generator {
     if (this.package.softwareRequirements) {
       return this.package.softwareRequirements
         .filter(
-          req => (req as SoftwarePackage).runtimePlatform === runtimePlatform
+          (req) => (req as SoftwarePackage).runtimePlatform === runtimePlatform
         )
-        .map(req => req as SoftwarePackage)
+        .map((req) => req as SoftwarePackage)
     }
     return []
   }

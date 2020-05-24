@@ -36,12 +36,12 @@ test('parse:r-source', async () => {
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
-  expect(reqs.map(req => req.name)).toEqual([
+  expect(reqs.map((req) => req.name)).toEqual([
     'MASS',
     'digest',
     'dplyr',
     'ggplot2',
-    'lubridate'
+    'lubridate',
   ])
 })
 
@@ -57,7 +57,7 @@ test('parse:r-requirements', async () => {
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
-  expect(reqs.map(req => req.name)).toEqual(['packageone', 'packagetwo'])
+  expect(reqs.map((req) => req.name)).toEqual(['packageone', 'packagetwo'])
 })
 
 /**
@@ -70,12 +70,12 @@ test('parse:r-mixed', async () => {
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
-  expect(reqs.map(req => req.name)).toEqual([
+  expect(reqs.map((req) => req.name)).toEqual([
     'car',
     'coin',
     'ggplot2',
     'httr',
-    'lsmeans'
+    'lsmeans',
   ])
 })
 
@@ -89,9 +89,9 @@ test('parse:r-gsl', async () => {
 
   const reqs = environ.softwareRequirements
   expect(reqs).not.toBeNull()
-  expect(reqs.map(req => req.name)).toEqual(['gsl'])
+  expect(reqs.map((req) => req.name)).toEqual(['gsl'])
 
-  const gsl = reqs.filter(req => req.name === 'gsl')[0]
+  const gsl = reqs.filter((req) => req.name === 'gsl')[0]
   const gslReqs = gsl.softwareRequirements
   expect(gslReqs[0].name).toEqual('libgsl-dev')
   expect(gslReqs[1].name).toEqual('libgsl2')

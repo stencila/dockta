@@ -66,7 +66,7 @@ export default class DockerParser extends Doer {
 
     // Process LABEL instructions
     for (const instruction of instructions.filter(
-      instruction => instruction.name === 'LABEL'
+      (instruction) => instruction.name === 'LABEL'
     )) {
       for (let [key, value] of Object.entries(instruction.args)) {
         // Remove recognised prefixes from key
@@ -98,7 +98,7 @@ export default class DockerParser extends Doer {
 
     // Process MAINTAINER instructions
     for (const instruction of instructions.filter(
-      instruction => instruction.name === 'MAINTAINER'
+      (instruction) => instruction.name === 'MAINTAINER'
     )) {
       let author = ''
       if (typeof instruction.args === 'string') author = instruction.args

@@ -44,7 +44,7 @@ export default abstract class Doer {
   glob(pattern: string | Array<string>): Array<string> {
     try {
       return glob.sync(pattern, {
-        cwd: this.folder
+        cwd: this.folder,
       })
     } catch (error) {
       if (error.code === 'EACCES') {

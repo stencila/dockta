@@ -74,7 +74,7 @@ RUN apt-get update \\
     if (aptKeysCommand) dockerfile += `\nRUN ${aptKeysCommand}`
     if (aptRepos.length)
       dockerfile += `\nRUN ${aptRepos
-        .map(repo => `apt-add-repository "${repo}"`)
+        .map((repo) => `apt-add-repository "${repo}"`)
         .join(' \\\n && ')}\n`
 
     // Set env vars after previous section to improve caching
@@ -226,7 +226,7 @@ WORKDIR /home/${DOCKER_USER}
       '18.10': 'cosmic',
       '19.04': 'disco',
       '19.10': 'eoan',
-      '20.04': 'focal'
+      '20.04': 'focal',
     }
     return lookup[version]
   }

@@ -107,7 +107,7 @@ export default class RParser extends Parser {
     // For each dependency, query https://crandb.r-pkg.org to get a manifest including it's own
     // dependencies and convert it to a `SoftwarePackage`
     pkg.softwareRequirements = await Promise.all(
-      packages.map(name => this.createPackage(name))
+      packages.map((name) => this.createPackage(name))
     )
 
     return pkg
@@ -139,7 +139,7 @@ export default class RParser extends Parser {
         'tools',
         'utils',
         'datasets',
-        'methods'
+        'methods',
       ].includes(name)
     ) {
       return pkg
@@ -209,7 +209,7 @@ export default class RParser extends Parser {
       } else if (Array.isArray(debPackage)) {
         // Handle arrays e.g. curl https://sysreqs.r-hub.io/pkg/gsl
         for (const deb of debPackage.filter(
-          deb => deb.distribution === 'Ubuntu' && deb.releases === undefined
+          (deb) => deb.distribution === 'Ubuntu' && deb.releases === undefined
         )) {
           if (deb.buildtime) {
             const required = new SoftwarePackage()

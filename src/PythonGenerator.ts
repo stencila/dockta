@@ -58,7 +58,7 @@ export default class PythonGenerator extends PackageGenerator {
   aptPackages(sysVersion: string): Array<string> {
     let aptRequirements: Array<string> = []
 
-    this.package.softwareRequirements.map(requirement => {
+    this.package.softwareRequirements.map((requirement) => {
       aptRequirements = aptRequirements.concat(
         this.systemPackageLookup.lookupSystemPackage(
           requirement.name,
@@ -70,14 +70,14 @@ export default class PythonGenerator extends PackageGenerator {
     })
 
     const dedupedRequirements: Array<string> = []
-    aptRequirements.map(aptRequirement => {
+    aptRequirements.map((aptRequirement) => {
       if (!dedupedRequirements.includes(aptRequirement)) {
         dedupedRequirements.push(aptRequirement)
       }
     })
     return [
       `python${this.pythonVersionSuffix()}`,
-      `python${this.pythonVersionSuffix()}-pip`
+      `python${this.pythonVersionSuffix()}-pip`,
     ].concat(dedupedRequirements)
   }
 
@@ -90,7 +90,7 @@ export default class PythonGenerator extends PackageGenerator {
     }
 
     return this.filterPackages('Python')
-      .map(requirement => `${requirement.name}${requirement.version}`)
+      .map((requirement) => `${requirement.name}${requirement.version}`)
       .join('\n')
   }
 
@@ -135,7 +135,7 @@ export default class PythonGenerator extends PackageGenerator {
    */
   projectFiles(): Array<[string, string]> {
     const pyFiles = this.glob('**/*.py')
-    return pyFiles.map(file => [file, file])
+    return pyFiles.map((file) => [file, file])
   }
 
   runCommand(): string | undefined {

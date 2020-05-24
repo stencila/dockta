@@ -40,7 +40,7 @@ describe('JavascriptParser', () => {
     expect(pkg.authors).toEqual([
       Person.fromText(
         'Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)'
-      )
+      ),
     ])
     expect(pkg.codeRepository).toEqual('https://github.com/stencila/dockta/')
     expect(pkg.softwareRequirements.length).toEqual(5)
@@ -49,7 +49,7 @@ describe('JavascriptParser', () => {
       ['mkdirp', '0.5.1'],
       ['rimraf', '2.6.2'],
       ['array-swap', '0.0.2'],
-      ['a-package-that-is-not-on-npm', 'org/repo']
+      ['a-package-that-is-not-on-npm', 'org/repo'],
     ]
 
     for (let index in expecteds) {
@@ -73,7 +73,7 @@ describe('JavascriptParser', () => {
     expect(pkg.authors).toEqual([
       Person.fromText(
         'Jason Bloggs <j.bloggs@example.com> (https://jbloggs.example.com)'
-      )
+      ),
     ])
   })
 

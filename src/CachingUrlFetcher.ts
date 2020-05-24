@@ -29,7 +29,7 @@ export default class CachingUrlFetcher implements UrlFetcher {
           'ENOTFOUND',
           'ECONNRESET',
           'EAI_AGAIN',
-          'DEPTH_ZERO_SELF_SIGNED_CERT'
+          'DEPTH_ZERO_SELF_SIGNED_CERT',
         ].includes(error.code)
       ) {
         // These are usually connection errors
@@ -54,7 +54,7 @@ export default class CachingUrlFetcher implements UrlFetcher {
     if (!REQUEST_CACHE_INITIALISED) {
       await persist.init({
         dir: REQUEST_CACHE_DIR,
-        ttl: 60 * 60 * 1000 // Milliseconds to cache responses for
+        ttl: 60 * 60 * 1000, // Milliseconds to cache responses for
       })
       REQUEST_CACHE_INITIALISED = true
     }

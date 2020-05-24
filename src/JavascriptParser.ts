@@ -25,7 +25,7 @@ export default class JavascriptParser extends Parser {
       if (files.length) {
         const data = {
           name: path.basename(this.folder),
-          dependencies: {}
+          dependencies: {},
         }
         for (const file of files) {
           const code = this.read(file)
@@ -144,8 +144,8 @@ export default class JavascriptParser extends Parser {
               json: true,
               headers: {
                 Accept:
-                  'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
-              }
+                  'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*',
+              },
             }
           )
 
