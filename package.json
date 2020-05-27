@@ -70,7 +70,7 @@
     "express": "^4.17.1",
     "fast-glob": "^3.2.2",
     "got": "^9.6.0",
-    "js-yaml": "^3.13.1",
+    "js-yaml": "^3.14.0",
     "ndjson": "^1.5.0",
     "node-persist": "^3.0.5",
     "rimraf": "^3.0.2",
