@@ -1,3 +1,14 @@
+## [0.16.7](https://github.com/stencila/dockta/compare/v0.16.6...v0.16.7) (2020-06-17)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency detective to ^5.2.0 ([4e0d11c](https://github.com/stencila/dockta/commit/4e0d11c96cdee6bb9538d6f137d6ee01c7f574c7))
+* **dependencies:** update dependency js-yaml to ^3.14.0 ([f1166e6](https://github.com/stencila/dockta/commit/f1166e6bf16460291520ba3734b309e03dccf3ba))
+* **dependencies:** update dependency node-persist to ^3.1.0 ([7d8bfdc](https://github.com/stencila/dockta/commit/7d8bfdc8a4a97571c1e9e85a42a0dd7213de633f))
+* **dependencies:** update dependency tar-fs to ^2.1.0 ([53e5fd9](https://github.com/stencila/dockta/commit/53e5fd9406ffaa5763b2bc016d23356bd60b99e6))
+* **dependencies:** update dependency tmp to v0.2.1 ([8ea9f4a](https://github.com/stencila/dockta/commit/8ea9f4a3afa7a3ed4f03cd230d1c80f69ed659db))
+
 ## [0.16.6](https://github.com/stencila/dockta/compare/v0.16.5...v0.16.6) (2020-05-24)
 
 
