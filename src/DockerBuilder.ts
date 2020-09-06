@@ -236,9 +236,10 @@ export default class DockerBuilder {
             User: user,
             Tty: true,
           })
-          await exec.start()
-
-          exec.output.pipe(process.stdout)
+          await exec.start({}, function (error, stream) {
+            if (error !== null) throw error
+            docker.modem.demuxStream(stream, process.stdout, process.stderr)
+          })
 
           // Wait until the exec has finished running, checking every 100ms
           while (true) {
