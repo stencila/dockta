@@ -1,3 +1,14 @@
+## [0.16.8](https://github.com/stencila/dockta/compare/v0.16.7...v0.16.8) (2020-09-06)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency dockerode to ^3.2.1 ([4468763](https://github.com/stencila/dockta/commit/4468763ede15a03fb2949d1e933d3a364bbfd4a6))
+* **dependencies:** update dependency fast-glob to ^3.2.4 ([8a6fe61](https://github.com/stencila/dockta/commit/8a6fe61a465fb7b004a59424d4101c2bf91cfcb3))
+* **dependencies:** update dependency yargs to ^15.4.1 ([5cceb93](https://github.com/stencila/dockta/commit/5cceb936511d404811b56b077d38040dfc30b9da))
+* **Deps:** Update dependencies ([dd6c6c2](https://github.com/stencila/dockta/commit/dd6c6c2b014e3985928ef0f14155a1e6c292896a))
+* **DockerBuilder:** Adjust for new exec API ([47a0764](https://github.com/stencila/dockta/commit/47a07648eaf38dce2cce82eefb1e221578331f3b))
+
 ## [0.16.7](https://github.com/stencila/dockta/compare/v0.16.6...v0.16.7) (2020-06-17)
 
 
