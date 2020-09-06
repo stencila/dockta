@@ -66,7 +66,7 @@
     "builtin-modules": "^3.1.0",
     "detective": "^5.2.0",
     "docker-file-parser": "^1.0.4",
-    "dockerode": "^3.2.0",
+    "dockerode": "^3.2.1",
     "express": "^4.17.1",
     "fast-glob": "^3.2.4",
     "got": "^9.6.0",
