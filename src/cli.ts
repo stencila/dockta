@@ -8,6 +8,7 @@ import { ApplicationError } from './errors'
 import nix from './cli-nix'
 import { build, compile, execute, who } from './index'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const VERSION = require('../package').version
 
 yargonaut.style('blue').helpStyle('green').errorsStyle('red')

@@ -1,5 +1,6 @@
 import Doer from './Doer'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const VERSION = require('../package').version
 
 /**

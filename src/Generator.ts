@@ -1,6 +1,7 @@
 import Doer from './Doer'
 import UrlFetcher from './IUrlFetcher'
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const VERSION = require('../package').version
 const DOCKER_USER = 'guest'
 

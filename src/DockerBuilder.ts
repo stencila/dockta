@@ -138,7 +138,7 @@ export default class DockerBuilder {
             message: data.error,
           })
           console.error(data.error)
-        } else if (data.aux && data.aux.ID) {
+        } else if (data.aux?.ID) {
           id = data.aux.ID
         } else {
           // We could keep track of data that looks like this
@@ -169,8 +169,7 @@ export default class DockerBuilder {
     try {
       const imageInfo = await image.inspect()
       appLayer = imageInfo.Id
-      lastSystemLayer =
-        imageInfo.Config.Labels && imageInfo.Config.Labels.systemLayer
+      lastSystemLayer = imageInfo.Config.Labels?.systemLayer
     } catch (error) {
       // No existing image, just continue
     }
