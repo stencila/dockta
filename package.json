@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@stencila/logga": "^3.0.0",
-    "@stencila/schema": "0.45.0",
+    "@stencila/schema": "0.46.5",
     "builtin-modules": "^3.1.0",
     "detective": "^5.2.0",
     "docker-file-parser": "^1.0.4",
