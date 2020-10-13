@@ -72,7 +72,7 @@ export default class RParser extends Parser {
       }
     } else {
       // Scan the directory for any R or Rmd files
-      const files = this.glob(['**/*.R', '**/*.Rmd'])
+      const files = this.glob(['**/*.R', '**/*.r', '**/*.Rmd', '**/*.rmd'])
       if (files.length) {
         // Analyse files for `library(<pkg>)`, `require(<pkg>)`, `<pkg>::<member>`, `<pkg>:::<member>`
         // Wondering WTF this regex does? See https://regex101.com/r/hG4iij/4
