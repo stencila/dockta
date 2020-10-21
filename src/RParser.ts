@@ -198,7 +198,7 @@ export default class RParser extends Parser {
           `Expected on one key for each sysreq but got: ${keys.join(',')}`
         )
       const name = keys[0]
-      const debPackage = sysreq[name].platforms.DEB
+      const debPackage = sysreq[name].platforms?.DEB
       // The deb package can be null e.g. `curl https://sysreqs.r-hub.io/pkg/lubridate`
       if (typeof debPackage === 'string') {
         // Handle strings e.g. curl https://sysreqs.r-hub.io/pkg/XML
