@@ -1,3 +1,16 @@
+# [0.17.0](https://github.com/stencila/dockta/compare/v0.16.9...v0.17.0) (2020-10-21)
+
+
+### Bug Fixes
+
+* **Javascript Parser:** Adjust for new got API ([f3ab8bc](https://github.com/stencila/dockta/commit/f3ab8bce946f6f7453d945b1036f7b1e3d43bbe4))
+* **R Parser:** Handle undefined platforms property ([337ebad](https://github.com/stencila/dockta/commit/337ebaddddda998bec5204cc6c905de0ed6fd31d))
+
+
+### Features
+
+* **Images:** Add initial image setup and definitions ([424d58c](https://github.com/stencila/dockta/commit/424d58cb15122b4c7acfbc62ff1ec1bd1ec4c5d2))
+
 ## [0.16.9](https://github.com/stencila/dockta/compare/v0.16.8...v0.16.9) (2020-10-21)
 
 
