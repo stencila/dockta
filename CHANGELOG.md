@@ -1,3 +1,10 @@
+## [0.18.1](https://github.com/stencila/dockta/compare/v0.18.0...v0.18.1) (2020-10-21)
+
+
+### Bug Fixes
+
+* **CachingUrlFetcher:** Handle 500 responses ([546d154](https://github.com/stencila/dockta/commit/546d15453b61bd09afab3997ca00485b1bba0ea3))
+
 # [0.18.0](https://github.com/stencila/dockta/compare/v0.17.0...v0.18.0) (2020-10-21)
 
 
