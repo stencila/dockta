@@ -11,7 +11,7 @@ jest.setTimeout(30 * 60 * 1000)
  * When applied to a Dockerfile with a # dockta comment
  * should produce a staged build
  */
-test('build:py-requests-dockta', async () => {
+test.skip('build:py-requests-dockta', async () => {
   const builder = new DockerBuilder()
   const docker = new Docker()
 
@@ -41,7 +41,7 @@ test('build:py-requests-dockta', async () => {
  * When applied to a Dockerfile *without* a # dockta comment
  * should act just like Docker build
  */
-test('build:py-requests-no-dockta', async () => {
+test.skip('build:py-requests-no-dockta', async () => {
   const builder = new DockerBuilder()
   const docker = new Docker()
 
