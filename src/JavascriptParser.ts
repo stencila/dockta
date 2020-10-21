@@ -141,7 +141,7 @@ export default class JavascriptParser extends Parser {
           const data = await this.fetch(
             `https://registry.npmjs.org/${name}/${version}`,
             {
-              json: true,
+              responseType: 'json',
               headers: {
                 Accept:
                   'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*',
