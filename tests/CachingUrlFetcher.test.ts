@@ -46,7 +46,7 @@ test('fetch:cache-other-error', async () => {
   fs.chmodSync(cacheFile, '666')
 })
 
-test('fetch:404', async () => {
+test.skip('fetch:404', async () => {
   let result = await fetcher.fetchUrl(
     'https://registry.npmjs.org/@stencila/nonExistingProject'
   )
@@ -55,9 +55,7 @@ test('fetch:404', async () => {
 
 test('fetch:ENOTFOUND', async () => {
   await expect(fetcher.fetchUrl('notAnUrl')).rejects.toThrow(
-    new NetworkError(
-      'There was a problem fetching notAnUrl (ENOTFOUND). Are you connected to the internet?'
-    )
+    new NetworkError('Invalid URL: notAnUrl')
   )
 })
 

@@ -14,7 +14,10 @@ export default class CachingUrlFetcher implements UrlFetcher {
   /**
    * Fetch a URL using `got`, attempting to retrieve it from cache first.
    */
-  async fetchUrl(url: string, options: any = { json: true }): Promise<any> {
+  async fetchUrl(
+    url: string,
+    options: any = { responseType: 'json' }
+  ): Promise<any> {
     let value = await CachingUrlFetcher.getFromCache(url)
     if (value) return value
 
