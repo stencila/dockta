@@ -357,10 +357,10 @@ The image `stencila/executa-all` image is the base for other images, each of whi
 
 #### Image versions
 
-All images are built at least nightly (so that they will have the latest versions of packages installed in them) and tagged with a dated build number. See the Docker Hub for the latest versions:
+All images are built at least nightly (so that they have the latest versions of packages installed in them) and tagged with a dated build number. See the Docker Hub for the latest versions:
 
-- [`stencila/executa-all`](https://hub.docker.com/r/stencila/executa-all/tags?ordering=last_updated)
-- [`stencila/executa-midi`](https://hub.docker.com/r/stencila/executa-midi/tags?ordering=last_updated)
+- [`stencila/executa-all`](https://hub.docker.com/r/stencila/executa-all/tags?page=1&ordering=last_updated)
+- [`stencila/executa-midi`](https://hub.docker.com/r/stencila/executa-midi/tags?page=1&ordering=last_updated)
 
 
 #### Getting the images
@@ -401,11 +401,15 @@ There are several ways that you can extend the images, for example to add a pack
 
 The `executa-midi` image is intended to be a fairly comprehensive image containing most of the commonly download packages for R and Python (it is currently still in development so does not include many yet).
 
-If you think that a popular package is missing and should be included then please submit a pull request to add the package to either the `DESCRIPTION` file or the `requirements.txt` file in the [`images/executa-midi`](images/executa-midi) folder.
+If you think that a popular package is missing and should be included then please submit a pull request which adds the package to one of the following files in the [`images/executa-midi`](images/executa-midi) folder:
+
+- `DESCRIPTION` for R packages
+- `requirements.txt` for Python packages
+- `package.json` for Node.js packages
 
 ##### Create your own image
 
-You can create an image with extra packages by creating a new folder with a new `DESCRIPTION` and/or `requirements.txt` that list those extra packages and using the `--from` option e.g.
+You can create an image with extra packages by (a) creating a new folder with a new `DESCRIPTION`, `requirements.txt`, and/or `package.json` file that list those extra packages and (b) using the `--from` option. e.g.
 
 ```bash
 cd my-custom-image/
