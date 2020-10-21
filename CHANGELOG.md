@@ -1,3 +1,19 @@
+## [0.16.9](https://github.com/stencila/dockta/compare/v0.16.8...v0.16.9) (2020-10-21)
+
+
+### Bug Fixes
+
+* **CachingUrlFetcher:** Changes for new got API ([4af0db9](https://github.com/stencila/dockta/commit/4af0db920ffa685d0c00b15e3b2984260a2d33c3))
+* **dependencies:** update dependency @stencila/logga to ^3.0.1 ([9c3ffb5](https://github.com/stencila/dockta/commit/9c3ffb56b7ea843831852f3037712274be5d1664))
+* **dependencies:** update dependency @stencila/schema to v0.45.0 ([76587a0](https://github.com/stencila/dockta/commit/76587a037a7b6682e3284c76c548f88aa3f088ff))
+* **dependencies:** update dependency @stencila/schema to v0.46.5 ([c8692b4](https://github.com/stencila/dockta/commit/c8692b4964eec00a79c99a08b0d2aaab04a7ed65))
+* **dependencies:** update dependency docker-file-parser to ^1.0.5 ([81678f5](https://github.com/stencila/dockta/commit/81678f50c51aa9327384626578790c10b18f259e))
+* **dependencies:** update dependency got to ^11.8.0 ([52994f9](https://github.com/stencila/dockta/commit/52994f9b35a4bde297854047c95645cb272b8184))
+* **dependencies:** update dependency got to v11 ([2a51d84](https://github.com/stencila/dockta/commit/2a51d848bff549e13f38929082de8b40ee558654))
+* **dependencies:** update dependency yargs to ^16.1.0 ([3bcc055](https://github.com/stencila/dockta/commit/3bcc05545eef3b2ac062110bab8172aadf2c9739))
+* **dependencies:** update dependency yargs to v16 ([ad8a3aa](https://github.com/stencila/dockta/commit/ad8a3aa647085600646b32804ac1ff706cb11e12))
+* **Deps:** Revert to Schema 0.2.4 ([a8192c3](https://github.com/stencila/dockta/commit/a8192c3d283ac1216f2444c2c8b4542607596379))
+
 ## [0.16.8](https://github.com/stencila/dockta/compare/v0.16.7...v0.16.8) (2020-09-06)
 
 

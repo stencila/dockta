@@ -1,6 +1,6 @@
 {
   "name": "@stencila/dockta",
-  "version": "0.16.8",
+  "version": "0.16.9",
   "description": "A Docker image builder for researchers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
