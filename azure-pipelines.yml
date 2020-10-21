@@ -1,0 +1,51 @@
+# Azure Pipelines config
+#
+# For docs on building and pushing Docker images
+#   https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+jobs:
+  - job: images
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: 12.x
+        displayName: Install Node.js
+
+      - script: npm install
+        displayName: Install dependencies
+
+      - script: ./images/compile.sh
+        displayName: Compile Dockerfiles
+
+      - task: Docker@2
+        displayName: stencila/executa-all
+        inputs:
+          command: buildAndPush
+          dockerfile: images/executa-all/Dockerfile
+          containerRegistry: DockerHub
+          repository: stencila/executa-all
+          tags: |
+            $(Build.BuildNumber)
+            latest
+
+      - task: Docker@2
+        displayName: stencila/executa-midi
+        inputs:
+          command: buildAndPush
+          dockerfile: images/executa-midi/.Dockerfile
+          containerRegistry: DockerHub
+          repository: stencila/executa-midi
+          tags: |
+            $(Build.BuildNumber)
+            latest
+
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily builds
+    branches:
+      include:
+        - master
+    always: true

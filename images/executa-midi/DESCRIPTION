@@ -1,0 +1,17 @@
+Package: executamidi
+Version: 1.0.0
+Date: 2020-08-14
+Description:
+  A R package for specifying dependencies of the Executa 'Midi' environment.
+Imports:
+  broomExtra,
+  corpcor,
+  cowplot,
+  GGally,
+  lme4,
+  lsmeans,
+  MuMIn,
+  Rcpp,
+  reshape,
+  Rmisc,
+  tidyverse

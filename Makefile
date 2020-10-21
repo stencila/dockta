@@ -1,5 +1,7 @@
 all: lint format cover build docs
 
+# Shortcuts to NPM scripts
+
 setup:
 	npm install
 
@@ -22,8 +24,10 @@ docs:
 	npm run docs
 .PHONY: docs
 
-commit:
-	npm run commit
+# Compile all the Docker image defined in this repo
+images:
+	cd images && ./compile.sh
+.PHONY: images
 
 # Create a demo by running the `demo.sh` file.
 # Generates a `demo.cast` file

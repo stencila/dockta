@@ -1,0 +1,5 @@
+# A Python `pip` file for specifying dependencies of the Executa 'Midi' environment.
+# Please add any additional packages in alphabetical order
+
+matplotlib
+numpy

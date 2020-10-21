@@ -1,0 +1,12 @@
+{
+  "name": "executa-midi",
+  "version": "1.0.0",
+  "description": "A Node.js package for specifying dependencies of the Executa 'Midi' environment",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stencila/sparkla/"
+  },
+  "dependencies": {
+    "simple-statistics": "*"
+  }
+}
