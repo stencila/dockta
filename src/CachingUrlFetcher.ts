@@ -25,7 +25,7 @@ export default class CachingUrlFetcher implements UrlFetcher {
       const response = await got(url, options)
       value = response.body
     } catch (error) {
-      if (error.response?.statusCode === 404) {
+      if ([404, 500].includes(error.response?.statusCode)) {
         value = null
       } else if (
         [
