@@ -1,0 +1,668 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@stencila/dockta</title>
+	<meta name="description" content="Documentation for @stencila/dockta">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@stencila/dockta</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@stencila/dockta</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#dockta-a-container-image-builder-for-researchers" id="dockta-a-container-image-builder-for-researchers" style="color: inherit; text-decoration: none;">
+					<h1>Dockta: a container image builder for researchers</h1>
+				</a>
+				<p><a href="#contributors"><img src="https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square" alt="All Contributors"></a>
+					<a href="https://travis-ci.org/stencila/dockta"><img src="https://travis-ci.org/stencila/dockta.svg?branch=master" alt="Build status"></a>
+					<a href="https://codecov.io/gh/stencila/dockta"><img src="https://codecov.io/gh/stencila/dockta/branch/master/graph/badge.svg" alt="Code coverage"></a>
+					<a href="https://www.npmjs.com/package/@stencila/dockta"><img src="http://img.shields.io/npm/v/@stencila/dockta.svg?style=flat" alt="NPM"></a>
+					<a href="https://stencila.github.io/dockta/"><img src="https://img.shields.io/badge/docs-latest-blue.svg" alt="Docs"></a>
+				<a href="https://gitter.im/stencila/stencila"><img src="https://badges.gitter.im/stencila/stencila.svg" alt="Chat"></a></p>
+				<p>Docker is a useful tool for creating reproducible computing environments. But creating truly reproducible Docker images can be difficult - even if you already know how to write a <code>Dockerfile</code>.</p>
+				<p>Dockta makes it easier for researchers to create Docker images for their research projects. Dockta generates a <code>Dockerfile</code> and builds a image, for <em>your</em> project, based on <em>your</em> source code.</p>
+				<!-- Automatically generated TOC. Don't edit, `make docs` instead>
+
+<!-- toc -->
+				<ul>
+					<li><a href="#features">Features</a><ul>
+							<li><a href="#builds-a-docker-image-based-on-your-source-code">Builds a Docker image based on your source code</a><ul>
+									<li><a href="#r">R</a></li>
+									<li><a href="#python">Python</a></li>
+									<li><a href="#nodejs">Node.js</a></li>
+									<li><a href="#jats">JATS</a></li>
+									<li><a href="#jupyter">Jupyter</a></li>
+								</ul>
+							</li>
+							<li><a href="#automatically-determines-system-requirements">Automatically determines system requirements</a></li>
+							<li><a href="#faster-re-installation-of-language-packages">Faster re-installation of language packages</a></li>
+							<li><a href="#generates-structured-meta-data-for-your-project">Generates structured meta-data for your project</a></li>
+							<li><a href="#easy-to-pick-up-easy-to-throw-away">Easy to pick up, easy to throw away</a></li>
+						</ul>
+					</li>
+					<li><a href="#demo">Demo</a></li>
+					<li><a href="#install">Install</a></li>
+					<li><a href="#use">Use</a><ul>
+							<li><a href="#compile-a-project">Compile a project</a></li>
+							<li><a href="#build-a-docker-image">Build a Docker image</a></li>
+							<li><a href="#execute-a-docker-image">Execute a Docker image</a></li>
+							<li><a href="#docter-who">Docter who?</a></li>
+						</ul>
+					</li>
+					<li><a href="#roadmap">Roadmap</a></li>
+					<li><a href="#contributors">Contributors</a></li>
+					<li><a href="#see-also">See also</a></li>
+					<li><a href="#faq">FAQ</a></li>
+					<li><a href="#acknowledgments">Acknowledgments</a></li>
+				</ul>
+				<!-- tocstop -->
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<blockquote>
+					<p>🦄 Features that are planned, but not yet implemented, are indicated by unicorn emoji. Usually they have a link next to them, like this 🦄 <a href="https://github.com/stencila/dockta/issues/2">#2</a>, indicating the relevant issue where you can help make the feature a reality. It&#39;s <a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">readme driven development</a> with calls to action to chase after mythical vaporware creatures! So hip.</p>
+				</blockquote>
+				<a href="#builds-a-docker-image-based-on-your-source-code" id="builds-a-docker-image-based-on-your-source-code" style="color: inherit; text-decoration: none;">
+					<h3>Builds a Docker image based on your source code</h3>
+				</a>
+				<p>Dockta scans your project and builds a custom Docker image for it. If the the folder already has a <code>Dockerfile</code>, Dockta will build the image from that. If not, Dockta will scan the source code files in the folder and generate one for you. Dockta currently handles R, Python and Node.js source code. A project can have a mix of these languages.</p>
+				<a href="#r" id="r" style="color: inherit; text-decoration: none;">
+					<h4>R</h4>
+				</a>
+				<p>If the folder contains a R package <a href="http://r-pkgs.had.co.nz/description.html"><code>DESCRIPTION</code></a> file then Dockta will install the R packages listed under <code>Imports</code> into the image. e.g.</p>
+				<pre><code><span class="hljs-attr">Package:</span> <span class="hljs-string">myrproject</span>
+<span class="hljs-attr">Version:</span> <span class="hljs-number">1.0</span><span class="hljs-number">.0</span>
+<span class="hljs-attr">Date:</span> <span class="hljs-number">2017-10-01</span>
+<span class="hljs-attr">Imports:</span>
+   <span class="hljs-string">ggplot2</span></code></pre>
+				<p>The <code>Package</code> and <code>Version</code> fields are required in a <code>DESCRIPTION</code> file. The <code>Date</code> field is used to define which CRAN snapshot to use. MRAN daily snapshots began <a href="https://cran.microsoft.com/snapshot/2014-09-08">2014-09-08</a> so the date should be on or after that.</p>
+				<p>If the folder does not contain a <code>DESCRIPTION</code> file then Dockta will scan all the R files (files with the extension <code>.R</code> or <code>.Rmd</code>) in the folder for package import or usage statements, like <code>library(package)</code> and <code>package::function()</code>, and create a <code>.DESCRIPTION</code> file for you.</p>
+				<a href="#python" id="python" style="color: inherit; text-decoration: none;">
+					<h4>Python</h4>
+				</a>
+				<p>If the folder contains a <a href="https://pip.readthedocs.io/en/1.1/requirements.html"><code>requirements.txt</code></a> file, or a 🦄 <a href="https://github.com/stencila/dockta/issues/4">#4</a> <a href="https://github.com/pypa/pipfile"><code>Pipfile</code></a>, Dockta will copy it into the Docker image and use <code>pip</code> to install the specified packages.</p>
+				<p>If the folder does not contain either of those files then Dockta will scan all the folder&#39;s <code>.py</code> files for <code>import</code> statements and create a <code>.requirements.txt</code> file for you.</p>
+				<a href="#nodejs" id="nodejs" style="color: inherit; text-decoration: none;">
+					<h4>Node.js</h4>
+				</a>
+				<p>If the folder contains a <a href="https://docs.npmjs.com/files/package.json"><code>package.json</code></a> file, Dockta will copy it into the Docker image and use <code>npm</code> to install the specified packages.</p>
+				<p>If the folder does not contain a <code>package.json</code> file, Dockta will scan all the folder&#39;s <code>.js</code> files for <code>require</code> calls and create a <code>.package.json</code> file for you.</p>
+				<a href="#jats" id="jats" style="color: inherit; text-decoration: none;">
+					<h4>JATS</h4>
+				</a>
+				<p>If the folder contains any <a href="https://en.wikipedia.org/wiki/Journal_Article_Tag_Suite">JATS</a> files (<code>.xml</code> files with <code>&lt;!DOCTYPE article PUBLIC &quot;-//NLM//DTD JATS (Z39.96) ...</code>), 🦄 <a href="https://github.com/stencila/dockta/issues/52">#52</a> Docker will scan reproducible elements defined in the <a href="https://github.com/substance/dar/blob/master/DarArticle.md">Dar JATS extension</a> for any package import statements (e.g. Python <code>import</code>, R <code>library</code>, or Node.js <code>require</code>) and install the necessary packages into the image.</p>
+				<a href="#jupyter" id="jupyter" style="color: inherit; text-decoration: none;">
+					<h4>Jupyter</h4>
+				</a>
+				<p>If the folder contains any Jupyter <a href="http://jupyter.org/"><code>.ipynb</code></a> files, 🦄 <a href="https://github.com/stencila/dockta/issues/9">#9</a> Dockta will scan the code cells in those files for any package import statements (e.g. Python <code>import</code>, R <code>library</code>, or Node.js <code>require</code>) and install the necessary packages into the image. It will also 🦄 <a href="https://github.com/stencila/dockta/issues/10">#10</a> add the necesary Jupyter kernels to the built Docker image.</p>
+				<a href="#automatically-determines-system-requirements" id="automatically-determines-system-requirements" style="color: inherit; text-decoration: none;">
+					<h3>Automatically determines system requirements</h3>
+				</a>
+				<p>One of the headaches researchers face when hand writing Dockerfiles is figuring out which system dependencies your project needs. Often this involves a lot of trial and error.</p>
+				<p>Dockta automatically checks if any of your dependencies (or dependencies of dependencies, or dependencies of...) requires system packages and installs those into the image. For example, let&#39;s say you have a project with an R script that requires the <code>rgdal</code> package for geospatial analyses,</p>
+				<pre><code class="language-R">library(rgdal)</code></pre>
+				<p>When you run <code>dockta compile</code> in this project, Dockta will generate a <code>Dockerfile</code> with the following section which installs R, plus the three system dependencies required <code>gdal-bin</code>, <code>libgdal-dev</code>, and <code>libproj-dev</code>:</p>
+				<pre><code class="language-Dockerfile"><span class="hljs-comment"># This section installs system packages required for your project</span>
+<span class="hljs-comment"># If you need extra system packages add them here.</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> apt-get update \
+ &amp;&amp; DEBIAN_FRONTEND=noninteractive apt-get install -y \
+      gdal-bin \
+      libgdal-dev \
+      libproj-dev \
+      r-base \
+ &amp;&amp; apt-get autoremove -y \
+ &amp;&amp; apt-get clean \
+ &amp;&amp; rm -rf /var/lib/apt/lists/*</span></code></pre>
+				<p>For R, Dockta does this by querying the <a href="https://sysreqs.r-hub.io/">https://sysreqs.r-hub.io/</a> database. For Python, Dockta includes a mapping of system requirements of packages that users can <a href="CONTRIBUTING.md#python-system-dependencies">contribute to</a>.</p>
+				<p>No more trial and error of build, fail, add dependency, repeat... cycles!</p>
+				<a href="#faster-re-installation-of-language-packages" id="faster-re-installation-of-language-packages" style="color: inherit; text-decoration: none;">
+					<h3>Faster re-installation of language packages</h3>
+				</a>
+				<p>If you have built a Docker image before, you&#39;ll know that it can be frustrating waiting for <em>all</em> your project&#39;s dependencies to reinstall when you simply add or remove one of them.</p>
+				<p>The reason this happens is that, due to Docker&#39;s layered filesystem, when you update a requirements file, Docker throws away all the subsequent layers - including the one where you previously installed your dependencies. That means that all those packages need to get reinstalled.</p>
+				<p>Dockta takes a different approach. It leaves the installation of language packages to the language package managers: Python&#39;s <a href="https://pypi.org/project/pip/"><code>pip</code></a> , Node.js&#39;s <code>npm</code>, and R&#39;s <code>install.packages</code>. These package managers are good at the job they were designed for - to check which packages need to be updated and to only update them. The result is much faster rebuilds, especially for R packages, which often involve compilation.</p>
+				<p>Dockta does this by looking for a special <code># dockta</code> comment in a <code>Dockerfile</code>. Instead of throwing away subsequent image layers, it executes all instructions after this comment in the same layer - thus reusing packages that were previously installed.</p>
+				<p>Here&#39;s a simple motivating <a href="fixtures/tests/py-pandas">example</a>. It&#39;s a Python project with a <code>requirements.txt</code> file which specifies that the project depends upon <code>pandas</code> which, to ensure reproducibility, is pinned to version <code>0.23.0</code>,</p>
+				<pre><code><span class="hljs-attribute">pandas</span>==<span class="hljs-number">0</span>.<span class="hljs-number">23</span>.<span class="hljs-number">0</span></code></pre>
+				<p>The project also has a <code>Dockerfile</code> which specifies which Python version we want to use, copies <code>requirements.txt</code> into the image, and uses <code>pip</code> to install the packages:</p>
+				<pre><code class="language-Dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.7</span>.<span class="hljs-number">0</span>
+
+<span class="hljs-keyword">COPY</span><span class="bash"> requirements.txt .</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install -r requirements.txt</span></code></pre>
+				<p>You could build a Docker image for that project using Docker,</p>
+				<pre><code class="language-bash">docker build .</code></pre>
+				<p>Docker will download the base Python image (if you don&#39;t yet have it), download five packages (<code>pandas</code> and it&#39;s four dependencies) and install them. This took over 9 minutes when we ran it.</p>
+				<p>Now, let&#39;s say that we want to get the latest version of <code>pandas</code> and increment the version in the <code>requirements.txt</code> file,</p>
+				<pre><code><span class="hljs-attribute">pandas</span>==<span class="hljs-number">0</span>.<span class="hljs-number">23</span>.<span class="hljs-number">1</span></code></pre>
+				<p>When we do <code>docker build .</code> again to update the image, Docker notices that the <code>requirements.txt</code> file has changed and so throws away that layer and all subsequent ones. This means that it will download and install <em>all</em> the necessary packages again, including the ones that we previously installed. For a more contrived illustration of this, simply add a space to one of the lines in the <code>requirements.txt</code> file and notice how the package install gets repeated all over again.</p>
+				<p>Now, let&#39;s add a special <code># dockta</code> comment to the Dockerfile before the <code>COPY</code> directive,</p>
+				<pre><code class="language-Dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.7</span>.<span class="hljs-number">0</span>
+
+<span class="hljs-comment"># dockta</span>
+
+<span class="hljs-keyword">COPY</span><span class="bash"> requirements.xt .</span>
+<span class="hljs-keyword">RUN</span><span class="bash"> pip install -r requirements.txt</span></code></pre>
+				<p>The comment is ignored by Docker but tells <code>dockta</code> to run all subsequent instructions in a single filesystem layer,</p>
+				<pre><code class="language-bash">dockta build .</code></pre>
+				<p>Now, if you change the <code>requirements.txt</code> file, instead of reinstalling everything again, <code>pip</code> will only reinstall what it needs to - the updated <code>pandas</code> version. The output looks like:</p>
+				<pre><code>Step <span class="hljs-number">1</span>/<span class="hljs-number">1</span> : FROM python:<span class="hljs-number">3.7</span><span class="hljs-number">.0</span>
+ ---&gt; a9d071760c82
+Successfully built a9d071760c82
+Successfully tagged dockta<span class="hljs-number">-5058f</span>1af8388633f609cadb75a75dc9d:system
+Dockta <span class="hljs-number">1</span>/<span class="hljs-number">2</span> : COPY requirements.txt requirements.txt
+Dockta <span class="hljs-number">2</span>/<span class="hljs-number">2</span> : RUN pip install -r requirements.txt
+Collecting pandas==<span class="hljs-number">0.23</span><span class="hljs-number">.1</span> (<span class="hljs-keyword">from</span> -r requirements.txt (line <span class="hljs-number">1</span>))
+
+  &lt;snip&gt;
+
+Successfully built pandas
+Installing collected packages: pandas
+  Found existing installation: pandas <span class="hljs-number">0.23</span><span class="hljs-number">.0</span>
+    Uninstalling pandas<span class="hljs-number">-0.23</span><span class="hljs-number">.0</span>:
+      Successfully uninstalled pandas<span class="hljs-number">-0.23</span><span class="hljs-number">.0</span>
+Successfully installed pandas<span class="hljs-number">-0.23</span><span class="hljs-number">.1</span>
+</code></pre>
+				<a href="#generates-structured-meta-data-for-your-project" id="generates-structured-meta-data-for-your-project" style="color: inherit; text-decoration: none;">
+					<h3>Generates structured meta-data for your project</h3>
+				</a>
+				<p>Dockta uses <a href="https://json-ld.org/">JSON-LD</a> as it&#39;s internal data structure. When it parses your project&#39;s source code it generates a JSON-LD tree using a vocabularies from <a href="https://schema.org">schema.org</a> and <a href="https://codemeta.github.io/index.html">CodeMeta</a>.</p>
+				<p>For example, It will parse a <code>Dockerfile</code> into a schema.org <a href="https://schema.org/SoftwareSourceCode"><code>SoftwareSourceCode</code></a> node extracting meta-data about the Dockerfile.</p>
+				<p>Dockta also fetches meta data on your project&#39;s dependencies, which could be used to generate a complete software citation for your project.</p>
+				<pre><code class="language-json">{
+  <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;myproject&quot;</span>,
+  <span class="hljs-attr">&quot;datePublished&quot;</span>: <span class="hljs-string">&quot;2017-10-19&quot;</span>,
+  <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;Regression analysis for my data&quot;</span>,
+  <span class="hljs-attr">&quot;softwareRequirements&quot;</span>: [
+    {
+      <span class="hljs-attr">&quot;description&quot;</span>: <span class="hljs-string">&quot;\nFunctions to Accompany J. Fox and S. Weisberg,\nAn R Companion to Applied Regression, Third Edition, Sage, in press.&quot;</span>,
+      <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;car&quot;</span>,
+      <span class="hljs-attr">&quot;urls&quot;</span>: [
+        <span class="hljs-string">&quot;https://r-forge.r-project.org/projects/car/&quot;</span>,
+        <span class="hljs-string">&quot;https://CRAN.R-project.org/package=car&quot;</span>,
+        <span class="hljs-string">&quot;http://socserv.socsci.mcmaster.ca/jfox/Books/Companion/index.html&quot;</span>
+      ],
+      <span class="hljs-attr">&quot;authors&quot;</span>: [
+        {
+          <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;John Fox&quot;</span>,
+          <span class="hljs-attr">&quot;familyNames&quot;</span>: [
+            <span class="hljs-string">&quot;Fox&quot;</span>
+          ],
+          <span class="hljs-attr">&quot;givenNames&quot;</span>: [
+            <span class="hljs-string">&quot;John&quot;</span>
+          ]
+        },</code></pre>
+				<a href="#easy-to-pick-up-easy-to-throw-away" id="easy-to-pick-up-easy-to-throw-away" style="color: inherit; text-decoration: none;">
+					<h3>Easy to pick up, easy to throw away</h3>
+				</a>
+				<p>Dockta is designed to make it easier to get started creating Docker images for your project. But it&#39;s also designed not to get in your way or restrict you from using bare Docker. You can easily, and individually, override any of the steps that Dockta takes to build an image.</p>
+				<ul>
+					<li><p><em>Code analysis</em>: To stop Dockta doing code analysis and take over specifying your project&#39;s package dependencies, just remove the leading &#39;.&#39; from the <code>.DESCRIPTION</code>, <code>.requirements.txt</code> or <code>.package.json</code> file that Dockta generates.</p>
+					</li>
+					<li><p><em>Dockerfile generation</em>: Dockta aims to generate readable Dockerfiles that conform to best practices. They include comments on what each section does and are a good way to start learning how to write your own Dockerfiles. To stop Dockta generating a <code>.Dockerfile</code>, and start editing it yourself, just rename it to <code>Dockerfile</code>.</p>
+					</li>
+					<li><p><em>Image building</em>: Dockta manages incremental builds using a special comment in the <code>Dockerfile</code>, so you can stop using Dockta altogether and build the same image using Docker (it will just take longer if you change you project dependencies).</p>
+					</li>
+				</ul>
+				<a href="#demo" id="demo" style="color: inherit; text-decoration: none;">
+					<h2>Demo</h2>
+				</a>
+				<p><a href="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk?size=medium&cols=120&autoplay=1" target="_blank"><img src="https://asciinema.org/a/pOHpxUqIVkGdA1dqu7bENyxZk.svg" /></a></p>
+				<a href="#install" id="install" style="color: inherit; text-decoration: none;">
+					<h2>Install</h2>
+				</a>
+				<p>Dockta is available as a Node.js package with a command line interface (CLI). If you want to use Dockta to build Docker images, you will need to <a href="https://docs.docker.com/install/">install Docker</a> if you don&#39;t already have it.</p>
+				<pre><code class="language-bash">npm install @stencila/dockta</code></pre>
+				<a href="#use" id="use" style="color: inherit; text-decoration: none;">
+					<h2>Use</h2>
+				</a>
+				<p>The command line tool has three primary commands <code>compile</code>, <code>build</code> and <code>execute</code>. To get an overview of the commands available use the <code>--help</code> option i.e.</p>
+				<pre><code class="language-bash">dockta --<span class="hljs-built_in">help</span></code></pre>
+				<p>To get more detailed help on a particular command, also include the command name e.g</p>
+				<pre><code class="language-bash">dockta compile --<span class="hljs-built_in">help</span></code></pre>
+				<a href="#compile-a-project" id="compile-a-project" style="color: inherit; text-decoration: none;">
+					<h3>Compile a project</h3>
+				</a>
+				<p>The <code>compile</code> command compiles a project folder into a specification of a software environment. It scans the folder for source code and package requirement files, parses them, and creates an <code>.environ.jsonld</code> file. This file contains the information needed to build a Docker image for your project.</p>
+				<p>For example, let&#39;s say your project folder has a single R file, <code>main.R</code> which uses the R package <code>lubridate</code> to print out the current time:</p>
+				<pre><code class="language-R">lubridate::now()</code></pre>
+				<p>Let&#39;s compile that project and inspect the compiled software environment. Change into the project directory and run the <code>compile</code> command.</p>
+				<pre><code class="language-bash">dockta compile</code></pre>
+				<p>You should find three new files in the folder created by Dockta:</p>
+				<ul>
+					<li><p><code>.DESCRIPTION</code>: A R package description file containing a list of the R packages required and other meta-data</p>
+					</li>
+					<li><p><code>.envrion.jsonld</code>: A JSON-LD document containing structure meta-data on your project and all of its dependencies</p>
+					</li>
+					<li><p><code>.Dockerfile</code>: A <code>Dockerfile</code> generated from <code>.environ.jsonld</code></p>
+					</li>
+				</ul>
+				<p>To stop Dockta generating any of these files and start editing it yourself, remove the leading <code>.</code> from the name of the file you want to take over creating.</p>
+				<a href="#build-a-docker-image" id="build-a-docker-image" style="color: inherit; text-decoration: none;">
+					<h3>Build a Docker image</h3>
+				</a>
+				<p>Usually, you&#39;ll compile and build a Docker image for your project in one step using the <code>build</code> command. This command runs the <code>compile</code> command and builds a Docker image from the generated <code>.Dockerfile</code> (or handwritten <code>Dockerfile</code>):</p>
+				<pre><code class="language-bash">dockta build</code></pre>
+				<p>After the image has finished building you should have a new docker image on your machine, called <code>rdate</code>:</p>
+				<pre><code class="language-bash">&gt; docker images
+REPOSITORY        TAG                 IMAGE ID            CREATED              SIZE
+rdate             latest              545aa877bd8d        About a minute ago   766MB</code></pre>
+				<p>If you want to build your image with bare Docker rename <code>.Dockerfile</code> to <code>Dockerfile</code> and run <code>docker build .</code> instead. This might be a good approach when you have finished the exploratory phase of your project (i.e. there is litte or no churn in your package dependencies) and want to create a more final image.</p>
+				<blockquote>
+					<p>🛈 Docker images can get very large (2-3 GB is not unusual for an image with R and/or Python and associated packages).
+						You might want to occasionally do a clean up of &#39;dangling&#39; images using <code>docker image prune</code> to save disk space.
+					See the Docker <a href="https://docs.docker.com/config/pruning/">documentation for more on cleaning up</a> unused images and containers.</p>
+				</blockquote>
+				<a href="#execute-a-docker-image" id="execute-a-docker-image" style="color: inherit; text-decoration: none;">
+					<h3>Execute a Docker image</h3>
+				</a>
+				<p>You can use Docker to run the created image. Or use Dockta&#39;s <code>execute</code> command to compile, build and run your image in one:</p>
+				<pre><code class="language-bash">&gt; dockta execute
+2018-10-23 00:58:39</code></pre>
+				<p>Dockta&#39;s <code>execute</code> also mounts the folder into the container and sets the users and group ids. This allows you to read and write files into the project folder from within the container. It&#39;s equivaluent to running Docker with these arguments:</p>
+				<pre><code class="language-bash">docker run --rm --volume $(<span class="hljs-built_in">pwd</span>):/work --workdir=/work --user=$(id -u):$(id -g) &lt;image&gt;</code></pre>
+				<a href="#docter-who" id="docter-who" style="color: inherit; text-decoration: none;">
+					<h3>Docter who?</h3>
+				</a>
+				<p>Dockta compiles a meta-data tree of all the packages that your project relies on. Use the <code>who</code> command to get a list of the authors of those packages:</p>
+				<pre><code class="language-bash">&gt; dockta who
+Roger Bivand (rgdal, sp), Tim Keitt (rgdal), Barry Rowlingson (rgdal), Edzer Pebesma (sp)</code></pre>
+				<p>Use the <code>depth</code> option to restrict the listing to a particular depth in the dependency tree. For example, to list the authors of the packages that your project directly relies upon use:</p>
+				<pre><code class="language-bash">&gt; dockta who --depth=1</code></pre>
+				<a href="#roadmap" id="roadmap" style="color: inherit; text-decoration: none;">
+					<h2>Roadmap</h2>
+				</a>
+				<ul>
+					<li>Feb 2019: release <a href="https://github.com/stencila/dockta/milestone/2">v1.0</a></li>
+					<li>Apr 2019: release <a href="https://github.com/stencila/dockta/milestone/3">v1.1</a></li>
+				</ul>
+				<a href="#contributors" id="contributors" style="color: inherit; text-decoration: none;">
+					<h2>Contributors</h2>
+				</a>
+				<p>We 💕 contributions! All contributions: ideas 🤔, examples 💡, bug reports 🐛, documentation 📖, code 💻, questions 💬. See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> for more details.</p>
+				<p>This project follows the <a href="https://github.com/kentcdodds/all-contributors">all-contributors</a> specification. Thanks 🙏 to these wonderful ✨ people who have contributed so far 💖!</p>
+				<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+				<!-- prettier-ignore -->
+				<table>
+					<tr>
+						<td align="center"><a href="https://remirampin.com/"><img src="https://avatars3.githubusercontent.com/u/426784?v=4" width="100px;" alt="Remi Rampin"/><br /><sub><b>Remi Rampin</b></sub></a><br /><a href="https://github.com/stencila/dockta/issues?q=author%3Aremram44" title="Bug reports">🐛</a> <a href="https://github.com/stencila/dockta/commits?author=remram44" title="Code">💻</a> <a href="#ideas-remram44" title="Ideas, Planning, & Feedback">🤔</a></td>
+						<td align="center"><a href="http://bbit.co.nz"><img src="https://avatars1.githubusercontent.com/u/292725?v=4" width="100px;" alt="Ben"/><br /><sub><b>Ben</b></sub></a><br /><a href="https://github.com/stencila/dockta/commits?author=beneboy" title="Code">💻</a> <a href="#ideas-beneboy" title="Ideas, Planning, & Feedback">🤔</a></td>
+						<td align="center"><a href="http://stenci.la"><img src="https://avatars2.githubusercontent.com/u/2358535?v=4" width="100px;" alt="Aleksandra Pawlik"/><br /><sub><b>Aleksandra Pawlik</b></sub></a><br /><a href="https://github.com/stencila/dockta/commits?author=apawlik" title="Code">💻</a> <a href="#example-apawlik" title="Examples">💡</a> <a href="https://github.com/stencila/dockta/issues?q=author%3Aapawlik" title="Bug reports">🐛</a></td>
+						<td align="center"><a href="https://github.com/nokome"><img src="https://avatars0.githubusercontent.com/u/1152336?v=4" width="100px;" alt="Nokome Bentley"/><br /><sub><b>Nokome Bentley</b></sub></a><br /><a href="https://github.com/stencila/dockta/commits?author=nokome" title="Code">💻</a> <a href="https://github.com/stencila/dockta/commits?author=nokome" title="Tests">⚠️</a></td>
+						<td align="center"><a href="http://giorgiosironi.com"><img src="https://avatars3.githubusercontent.com/u/160299?v=4" width="100px;" alt="Giorgio Sironi"/><br /><sub><b>Giorgio Sironi</b></sub></a><br /><a href="#review-giorgiosironi" title="Reviewed Pull Requests">👀</a> <a href="https://github.com/stencila/dockta/issues?q=author%3Agiorgiosironi" title="Bug reports">🐛</a> <a href="#ideas-giorgiosironi" title="Ideas, Planning, & Feedback">🤔</a> <a href="#question-giorgiosironi" title="Answering Questions">💬</a></td>
+						<td align="center"><a href="http://bmpvieira.com"><img src="https://avatars3.githubusercontent.com/u/263386?v=4" width="100px;" alt="Bruno Vieira"/><br /><sub><b>Bruno Vieira</b></sub></a><br /><a href="https://github.com/stencila/dockta/commits?author=bmpvieira" title="Code">💻</a> <a href="#ideas-bmpvieira" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/stencila/dockta/commits?author=bmpvieira" title="Tests">⚠️</a></td>
+						<td align="center"><a href="https://gliptak.github.io/"><img src="https://avatars0.githubusercontent.com/u/50109?v=4" width="100px;" alt="Gábor Lipták"/><br /><sub><b>Gábor Lipták</b></sub></a><br /><a href="#infra-gliptak" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/stencila/dockta/issues?q=author%3Agliptak" title="Bug reports">🐛</a></td>
+					</tr>
+				</table>
+				<!-- ALL-CONTRIBUTORS-LIST:END -->
+				<a href="#see-also" id="see-also" style="color: inherit; text-decoration: none;">
+					<h2>See also</h2>
+				</a>
+				<p>There are several other projects that create Docker images from source code and/or requirements files including:</p>
+				<ul>
+					<li><a href="https://github.com/alibaba/derrick"><code>alibaba/derrick</code></a></li>
+					<li><a href="https://github.com/jupyter/repo2docker"><code>jupyter/repo2docker</code></a></li>
+					<li><a href="https://github.com/Gueils/whales"><code>Gueils/whales</code></a></li>
+					<li><a href="https://github.com/o2r-project/containerit"><code>o2r-project/containerit</code></a></li>
+					<li><a href="https://github.com/openshift/source-to-image"><code>openshift/source-to-image</code></a></li>
+					<li><a href="https://github.com/ViDA-NYU/reprozip%5D"><code>ViDA-NYU/reprozip</code></a></li>
+				</ul>
+				<p>Dockta is similar to <code>repo2docker</code>, <code>containerit</code>, and <code>reprozip</code> in that it is aimed at researchers doing data analysis (and supports R) whereas most other tools are aimed at software developers (and don&#39;t support R). Dockta differs to these projects principally in that it:</p>
+				<ul>
+					<li><p>performs static code analysis for multiple languages to determine package requirements.</p>
+					</li>
+					<li><p>uses package databases to determine package system dependencies and generate linked meta-data (<code>containerit</code> does this for R).</p>
+					</li>
+					<li><p>quicker installation of language package dependencies (which can be useful during research projects where dependencies often change).</p>
+					</li>
+					<li><p>by default, but optionally, installs Stencila packages so that Stencila client interfaces can execute code in the container.</p>
+					</li>
+				</ul>
+				<p>The approach taken in Dockta to building Docker images is a mix of Dockerfile generation, as in <code>repo2docker</code>, and code injection and incremental builds as in <code>source-to-image</code>.</p>
+				<p><code>reprozip</code> and its extension <code>reprounzip-docker</code> may be a better choice if you want to share your existing local environment as a Docker image with someone else.</p>
+				<p><code>containerit</code> might suit you better if you only need support for R and don&#39;t want managed packaged installation.</p>
+				<p><code>repo2docker</code> is probably a better choice if you want to run Jupyter notebooks or RStudio in your container and don&#39;t need source code scanning to detect your requirements.</p>
+				<p><code>source-to-image</code> might suit you better if your focus is on web development (e.g. Ruby, Node.js) and want a more stable, feature complete implementation of incremental builds.</p>
+				<p>If you don&#39;t want to build a Docker image and just want a tool that helps determining the package dependencies of your source code check out:</p>
+				<ul>
+					<li>Node.js: <a href="https://github.com/browserify/detective"><code>detective</code></a></li>
+					<li>Python: <a href="https://docs.python.org/3.7/library/modulefinder.html"><code>modulefinder</code></a></li>
+					<li>R: <a href="https://github.com/hadley/requirements"><code>requirements</code></a></li>
+				</ul>
+				<a href="#faq" id="faq" style="color: inherit; text-decoration: none;">
+					<h2>FAQ</h2>
+				</a>
+				<p><em>Why go to the effort of generating a JSON-LD intermediate representation instead of writing a Dockerfile directly?</em></p>
+				<p>Having an intermediate representation of the software environment allows this data to be used for other purposes (e.g. software citations, publishing, archiving). It also allows us to reuse much of this code for build targets other than Docker (e.g. Nix) and sources other than code files (e.g. a GUI).</p>
+				<p><em>Why is Dockta a Node.js package?</em></p>
+				<p>We&#39;ve implemented this as a Node.js package for easier integration into Stencila&#39;s Node.js based desktop and cloud deployments. We already had familiarity with using <code>dockerode</code> the Node.js package that we use to talk to Docker for incremental builds and container execution.</p>
+				<p><em>Why is Dockta implemented in Typescript?</em></p>
+				<p>Typescript&#39;s type-checking and type-annotations can reduce the number of runtime errors and improves developer experience. For this particular project, we wanted to use the Typescript type definitions for <code>SoftwarePackage</code>, <code>CreativeWork</code>, <code>Person</code> etc that are defined in <a href="https://github.com/stencila/schema">stencila/schema</a>.</p>
+				<p><em>Why didn&#39;t you use, and contribute to, an existing project rather than creating a new tool</em></p>
+				<p>When existing projects don&#39;t take the approach or provide the features you want, it&#39;s often a difficult decision to make whether to invest the time to understand and refactor an existing code base or to start fresh. In this case, we chose to start fresh for the reasons and differences outlined above. We felt it would take too much refactoring of existing projects to shoehorn in the approach we wanted to take. We also wanted to be able to reuse much of the code developed here in a sister project, <a href="https://github.com/stencila/nixster">Nixster</a>, which aims to make it easier for researchers to build Nix environments.</p>
+				<p><em>I&#39;d love to help out! Where do I start?</em></p>
+				<p>See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> (OK, so this isn&#39;t asked <em>that</em> frequently. But it&#39;s worth a try eh :woman_shrugging:.)</p>
+				<a href="#acknowledgments" id="acknowledgments" style="color: inherit; text-decoration: none;">
+					<h2>Acknowledgments</h2>
+				</a>
+				<p>Dockta was inspired by, and combines ideas from, several similar tools including <a href="https://github.com/binder-project/binder"><code>binder</code></a>, <a href="https://github.com/jupyter/repo2docker"><code>repo2docker</code></a>, <a href="https://github.com/openshift/source-to-image"><code>source-to-image</code></a> and <a href="https://github.com/o2r-project/containerit"><code>containerit</code></a>. It relies on many great open source projects, in particular:</p>
+				<ul>
+					<li><a href="https://codemeta.github.io/">CodeMeta</a></li>
+					<li><a href="https://github.com/metacran/crandb"><code>crandb</code></a></li>
+					<li><a href="https://www.npmjs.com/package/dockerode"><code>dockerode</code></a></li>
+					<li><a href="https://www.npmjs.com/package/docker-file-parser"><code>docker-file-parser</code></a></li>
+					<li><a href="https://github.com/npm/registry"><code>npm/registry</code></a></li>
+					<li><a href="https://warehouse.pypa.io"><code>pypa</code></a></li>
+					<li><a href="https://github.com/r-hub/sysreqsdb"><code>sysreqsdb</code></a></li>
+					<li>and of course, <a href="https://www.docker.com/">Docker</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum">
+						<a href="enums/requirementtype.html" class="tsd-kind-icon">Requirement<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/applicationerror.html" class="tsd-kind-icon">Application<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/cachingurlfetcher.html" class="tsd-kind-icon">Caching<wbr>Url<wbr>Fetcher</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/dockerbuilder.html" class="tsd-kind-icon">Docker<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/dockercompiler.html" class="tsd-kind-icon">Docker<wbr>Compiler</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/dockerexecutor.html" class="tsd-kind-icon">Docker<wbr>Executor</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/dockergenerator.html" class="tsd-kind-icon">Docker<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/dockerparser.html" class="tsd-kind-icon">Docker<wbr>Parser</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/doer.html" class="tsd-kind-icon">Doer</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/generator.html" class="tsd-kind-icon">Generator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/javascriptgenerator.html" class="tsd-kind-icon">Javascript<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/javascriptparser.html" class="tsd-kind-icon">Javascript<wbr>Parser</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/networkerror.html" class="tsd-kind-icon">Network<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/nixgenerator.html" class="tsd-kind-icon">Nix<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/packagegenerator.html" class="tsd-kind-icon">Package<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/parser.html" class="tsd-kind-icon">Parser</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/permissionerror.html" class="tsd-kind-icon">Permission<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pythongenerator.html" class="tsd-kind-icon">Python<wbr>Generator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pythonparser.html" class="tsd-kind-icon">Python<wbr>Parser</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/pythonsystempackagelookup.html" class="tsd-kind-icon">Python<wbr>System<wbr>Package<wbr>Lookup</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/rgenerator.html" class="tsd-kind-icon">RGenerator</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="classes/rparser.html" class="tsd-kind-icon">RParser</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/dockermessage.html" class="tsd-kind-icon">Docker<wbr>Message</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/pythonrequirement.html" class="tsd-kind-icon">Python<wbr>Requirement</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="interfaces/urlfetcher.html" class="tsd-kind-icon">Url<wbr>Fetcher</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="globals.html#pythonsystempackagelookupmap" class="tsd-kind-icon">Python<wbr>System<wbr>Package<wbr>Lookup<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#docker_user" class="tsd-kind-icon">DOCKER_<wbr>USER</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#generated_requirements_file" class="tsd-kind-icon">GENERATED_<wbr>REQUIREMENTS_<wbr>FILE</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#package_json" class="tsd-kind-icon">PACKAGE_<wbr>JSON</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#package_json_generated" class="tsd-kind-icon">PACKAGE_<wbr>JSON_<wbr>GENERATED</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#preferred_ubuntu_version" class="tsd-kind-icon">PREFERRED_<wbr>UBUNTU_<wbr>VERSION</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#request_cache_dir" class="tsd-kind-icon">REQUEST_<wbr>CACHE_<wbr>DIR</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#request_cache_initialised" class="tsd-kind-icon">REQUEST_<wbr>CACHE_<wbr>INITIALISED</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#requirements_comment_regex" class="tsd-kind-icon">REQUIREMENTS_<wbr>COMMENT_<wbr>REGEX</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#requirements_editable_source_regex" class="tsd-kind-icon">REQUIREMENTS_<wbr>EDITABLE_<wbr>SOURCE_<wbr>REGEX</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#requirements_file_name" class="tsd-kind-icon">REQUIREMENTS_<wbr>FILE_<wbr>NAME</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#requirements_include_path_regex" class="tsd-kind-icon">REQUIREMENTS_<wbr>INCLUDE_<wbr>PATH_<wbr>REGEX</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#requirements_standard_regex" class="tsd-kind-icon">REQUIREMENTS_<wbr>STANDARD_<wbr>REGEX</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#version" class="tsd-kind-icon">VERSION</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#app" class="tsd-kind-icon">app</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#compiler" class="tsd-kind-icon">compiler</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#docker" class="tsd-kind-icon">docker</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#generator" class="tsd-kind-icon">generator</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#logger" class="tsd-kind-icon">logger</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#router" class="tsd-kind-icon">router</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#applyregex" class="tsd-kind-icon">apply<wbr>Regex</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#build" class="tsd-kind-icon">build</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#buildclassifiermap" class="tsd-kind-icon">build<wbr>Classifier<wbr>Map</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#compile" class="tsd-kind-icon">compile</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#error" class="tsd-kind-icon">error</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#execute" class="tsd-kind-icon">execute</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#extracteditablesource" class="tsd-kind-icon">extract<wbr>Editable<wbr>Source</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#extractincludedrequirementspath" class="tsd-kind-icon">extract<wbr>Included<wbr>Requirements<wbr>Path</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#extractstandardrequirements" class="tsd-kind-icon">extract<wbr>Standard<wbr>Requirements</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#folderarg" class="tsd-kind-icon">folder<wbr>Arg</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#lineiscomment" class="tsd-kind-icon">line<wbr>IsComment</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#loggingerrorhandler" class="tsd-kind-icon">logging<wbr>Error<wbr>Handler</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#output" class="tsd-kind-icon">output</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parseoperatingsystem" class="tsd-kind-icon">parse<wbr>Operating<wbr>System</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#parsetopics" class="tsd-kind-icon">parse<wbr>Topics</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#run" class="tsd-kind-icon">run</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splitstandardrequirementversion" class="tsd-kind-icon">split<wbr>Standard<wbr>Requirement<wbr>Version</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#splittopic" class="tsd-kind-icon">split<wbr>Topic</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#stringifynode" class="tsd-kind-icon">stringify<wbr>Node</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#valuetomap" class="tsd-kind-icon">value<wbr>ToMap</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#versioncompare" class="tsd-kind-icon">version<wbr>Compare</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#who" class="tsd-kind-icon">who</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
