@@ -1,3 +1,15 @@
+# [0.18.0](https://github.com/stencila/dockta/compare/v0.17.0...v0.18.0) (2020-10-21)
+
+
+### Bug Fixes
+
+* **CachingUrlFetcher:** Handle 404s properly ([53e3a33](https://github.com/stencila/dockta/commit/53e3a33eff12766753a9957386d51bcade6c26a9))
+
+
+### Features
+
+* **Images:** Add R and Python packages to executa-midi ([bed62e9](https://github.com/stencila/dockta/commit/bed62e9e2c4b02e82da6fd74223fb20bbadfbd47))
+
 # [0.17.0](https://github.com/stencila/dockta/compare/v0.16.9...v0.17.0) (2020-10-21)
 
 
