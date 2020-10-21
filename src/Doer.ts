@@ -80,7 +80,10 @@ export default abstract class Doer {
    * @param url The URL to fetch
    * @param options Request options
    */
-  async fetch(url: string, options: any = { responseType: 'json' }): Promise<any> {
+  async fetch(
+    url: string,
+    options: any = { responseType: 'json' }
+  ): Promise<any> {
     return this.urlFetcher.fetchUrl(url, options)
   }
 }
