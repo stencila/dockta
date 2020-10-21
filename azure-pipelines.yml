@@ -67,6 +67,7 @@ jobs:
         displayName: 'Release docs and package'
 
   - job: images
+    dependsOn: [release]
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     pool:
       vmImage: ubuntu-latest
