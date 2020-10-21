@@ -101,9 +101,15 @@
 							<li><a href="#build-a-docker-image">Build a Docker image</a></li>
 							<li><a href="#execute-a-docker-image">Execute a Docker image</a></li>
 							<li><a href="#docter-who">Docter who?</a></li>
+							<li><a href="#docker-images">Docker images</a><ul>
+									<li><a href="#getting-the-image">Getting the image</a></li>
+									<li><a href="#running-the-image">Running the image</a></li>
+									<li><a href="#environment-images">Environment images</a></li>
+									<li><a href="#image-versions">Image versions</a></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
-					<li><a href="#roadmap">Roadmap</a></li>
 					<li><a href="#contributors">Contributors</a></li>
 					<li><a href="#see-also">See also</a></li>
 					<li><a href="#faq">FAQ</a></li>
@@ -322,12 +328,41 @@ rdate             latest              545aa877bd8d        About a minute ago   7
 Roger Bivand (rgdal, sp), Tim Keitt (rgdal), Barry Rowlingson (rgdal), Edzer Pebesma (sp)</code></pre>
 				<p>Use the <code>depth</code> option to restrict the listing to a particular depth in the dependency tree. For example, to list the authors of the packages that your project directly relies upon use:</p>
 				<pre><code class="language-bash">&gt; dockta who --depth=1</code></pre>
-				<a href="#roadmap" id="roadmap" style="color: inherit; text-decoration: none;">
-					<h2>Roadmap</h2>
+				<a href="#docker-images" id="docker-images" style="color: inherit; text-decoration: none;">
+					<h3>Docker images</h3>
 				</a>
+				<p>The base <a href="Dockerfile"><code>Dockerfile</code></a> installs all known executor packages (e.g. <code>basha</code>, <code>pyla</code>) into a container so that they can be easily tested for API compatibility (with one another, and clients). It is built, with the latest versions of those packages, and pushed to <a href="https://hub.docker.com/repository/docker/stencila/executa">Docker Hub</a>, on each push to master and daily at midnight UTC.</p>
+				<a href="#getting-the-image" id="getting-the-image" style="color: inherit; text-decoration: none;">
+					<h4>Getting the image</h4>
+				</a>
+				<p>You can get the latest version using</p>
+				<pre><code class="language-bash">docker pull stencila/executa</code></pre>
+				<p>Or, grab a particular, date stamped, build e.g. the first build on 2020-02-10:</p>
+				<pre><code class="language-bash">docker pull stencila/executa:20200210.1</code></pre>
+				<p>Alternatively, you can build the image locally:</p>
+				<pre><code class="language-bash">npm run docker:build</code></pre>
+				<p>Or, to <em>force</em> the latest version of all executor packages to be installed:</p>
+				<pre><code class="language-bash">npm run docker:build:latest</code></pre>
+				<a href="#running-the-image" id="running-the-image" style="color: inherit; text-decoration: none;">
+					<h4>Running the image</h4>
+				</a>
+				<p>Run the image using:</p>
+				<pre><code class="language-bash">npm run docker:run</code></pre>
+				<p>That will serve Executa from within the container and make it available at <a href="http://localhost:9000">http://localhost:9000</a> and ws://localhost:9000.</p>
+				<a href="#environment-images" id="environment-images" style="color: inherit; text-decoration: none;">
+					<h4>Environment images</h4>
+				</a>
+				<p>The <code>stencila/executa</code> image is the base for other images, each of which add popular packages for various programming languages. See the <a href="envs"><code>env</code></a> folder for the definitions of those environments. To run one of those, use the <code>docker:run-image</code> command followed by the name of the image:</p>
+				<pre><code class="language-bash">npm run docker:run-image stencila/executa-midi</code></pre>
+				<p>Or, if you don&#39;t have <code>npm</code> installed:</p>
+				<pre><code class="language-bash">docker run -it --init --rm --cap-add=SYS_ADMIN -p 9000:9000 <span class="hljs-string">&quot;stencila/executa-midi&quot;</span></code></pre>
+				<a href="#image-versions" id="image-versions" style="color: inherit; text-decoration: none;">
+					<h4>Image versions</h4>
+				</a>
+				<p>All images are built at least nightly (so that they will have the latest versions of packages installed in them) and tagged with a dated build number. See the Docker Hub for the latest versions:</p>
 				<ul>
-					<li>Feb 2019: release <a href="https://github.com/stencila/dockta/milestone/2">v1.0</a></li>
-					<li>Apr 2019: release <a href="https://github.com/stencila/dockta/milestone/3">v1.1</a></li>
+					<li><a href="https://hub.docker.com/r/stencila/executa/tags?ordering=last_updated"><code>stencila/executa</code></a></li>
+					<li><a href="https://hub.docker.com/r/stencila/executa-midi/tags?ordering=last_updated"><code>stencila/executa-midi</code></a></li>
 				</ul>
 				<a href="#contributors" id="contributors" style="color: inherit; text-decoration: none;">
 					<h2>Contributors</h2>
