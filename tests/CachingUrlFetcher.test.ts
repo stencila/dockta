@@ -46,7 +46,7 @@ test('fetch:cache-other-error', async () => {
   fs.chmodSync(cacheFile, '666')
 })
 
-test.skip('fetch:404', async () => {
+test('fetch:404', async () => {
   let result = await fetcher.fetchUrl(
     'https://registry.npmjs.org/@stencila/nonExistingProject'
   )
