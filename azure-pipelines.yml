@@ -79,7 +79,7 @@ jobs:
       - script: npm install -g @stencila/dockta
         displayName: Install latest version
 
-      - script: ./images/compile.sh
+      - script: cd images && ./compile.sh
         displayName: Compile Dockerfiles
 
       - task: Docker@2
