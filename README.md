@@ -16,28 +16,27 @@ Dockta makes it easier for researchers to create Docker images for their researc
 <!-- toc -->
 
 - [Features](#features)
-  * [Builds a Docker image based on your source code](#builds-a-docker-image-based-on-your-source-code)
-    + [R](#r)
-    + [Python](#python)
-    + [Node.js](#nodejs)
-    + [JATS](#jats)
-    + [Jupyter](#jupyter)
-  * [Automatically determines system requirements](#automatically-determines-system-requirements)
-  * [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
-  * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
-  * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
+  - [Builds a Docker image based on your source code](#builds-a-docker-image-based-on-your-source-code)
+    - [R](#r)
+    - [Python](#python)
+    - [Node.js](#nodejs)
+    - [JATS](#jats)
+    - [Jupyter](#jupyter)
+  - [Automatically determines system requirements](#automatically-determines-system-requirements)
+  - [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
+  - [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
+  - [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
 - [Demo](#demo)
 - [Install](#install)
 - [Use](#use)
-  * [Compile a project](#compile-a-project)
-  * [Build a Docker image](#build-a-docker-image)
-  * [Execute a Docker image](#execute-a-docker-image)
-  * [Docter who?](#docter-who)
-  * [Docker images](#docker-images)
-    + [Getting the image](#getting-the-image)
-    + [Running the image](#running-the-image)
-    + [Environment images](#environment-images)
-    + [Image versions](#image-versions)
+  - [Compile a project](#compile-a-project)
+  - [Build a Docker image](#build-a-docker-image)
+  - [Execute a Docker image](#execute-a-docker-image)
+  - [Docter who?](#docter-who)
+  - [Docker images](#docker-images)
+    - [Getting the images](#getting-the-images)
+    - [Running the images](#running-the-images)
+    - [Image versions](#image-versions)
 - [Contributors](#contributors)
 - [See also](#see-also)
 - [FAQ](#faq)
@@ -349,63 +348,47 @@ Use the `depth` option to restrict the listing to a particular depth in the depe
 
 ### Docker images
 
-The base [`Dockerfile`](Dockerfile) installs all known executor packages (e.g. `basha`, `pyla`) into a container so that they can be easily tested for API compatibility (with one another, and clients). It is built, with the latest versions of those packages, and pushed to [Docker Hub](https://hub.docker.com/repository/docker/stencila/executa), on each push to master and daily at midnight UTC.
+This repository defines a number of compute environments that can be built using Dockta.
 
-#### Getting the image
+The `stencila/executa-all` image installs all known executor packages (e.g. `basha`, `pyla`) into a container. It is built, with the latest versions of those packages, and pushed to [Docker Hub](https://hub.docker.com/repository/docker/stencila/executa), on each push to master and daily at midnight UTC.
 
-You can get the latest version using
+The image `stencila/executa-all` image is the base for other images, each of which add popular packages for various programming languages. See the [`images`](images) folder for the definitions of those environments.
 
-```bash
-docker pull stencila/executa
-```
+#### Getting the images
 
-Or, grab a particular, date stamped, build e.g. the first build on 2020-02-10:
+You can get the latest version using `docker pull` e.g.
 
 ```bash
-docker pull stencila/executa:20200210.1
+docker pull stencila/executa-all
 ```
 
-Alternatively, you can build the image locally:
+Or, grab a particular, date stamped, build e.g. the first build on 2020-10-22:
 
 ```bash
-npm run docker:build
+docker pull stencila/executa-all:20202022.1
 ```
 
-Or, to _force_ the latest version of all executor packages to be installed:
+Alternatively, you can build the image locally using `dockta`:
 
 ```bash
-npm run docker:build:latest
+dockta build images/executa-all
 ```
 
-#### Running the image
+#### Running the images
 
-Run the image using:
-
-```bash
-npm run docker:run
-```
-
-That will serve Executa from within the container and make it available at http://localhost:9000 and ws://localhost:9000.
-
-#### Environment images
-
-The `stencila/executa` image is the base for other images, each of which add popular packages for various programming languages. See the [`env`](envs) folder for the definitions of those environments. To run one of those, use the `docker:run-image` command followed by the name of the image:
-
-```bash
-npm run docker:run-image stencila/executa-midi
-```
-
-Or, if you don't have `npm` installed:
+To run the images you need to supply some extra options to `docker run`,
 
 ```bash
 docker run -it --init --rm --cap-add=SYS_ADMIN -p 9000:9000 "stencila/executa-midi"
 ```
 
+That will serve Executa from within the container and make it available at http://localhost:9000 and ws://localhost:9000.
+
 #### Image versions
 
 All images are built at least nightly (so that they will have the latest versions of packages installed in them) and tagged with a dated build number. See the Docker Hub for the latest versions:
 
-- [`stencila/executa`](https://hub.docker.com/r/stencila/executa/tags?ordering=last_updated)
+- [`stencila/executa-all`](https://hub.docker.com/r/stencila/executa-all/tags?ordering=last_updated)
 - [`stencila/executa-midi`](https://hub.docker.com/r/stencila/executa-midi/tags?ordering=last_updated)
 
 ## Contributors
