@@ -10,6 +10,7 @@ Imports:
   GGally,
   lme4,
   lsmeans,
+  multcomp,
   MuMIn,
   Rcpp,
   reshape,
