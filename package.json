@@ -65,7 +65,7 @@
     "@stencila/schema": "0.45.0",
     "builtin-modules": "^3.1.0",
     "detective": "^5.2.0",
-    "docker-file-parser": "^1.0.4",
+    "docker-file-parser": "^1.0.5",
     "dockerode": "^3.2.1",
     "express": "^4.17.1",
     "fast-glob": "^3.2.4",
