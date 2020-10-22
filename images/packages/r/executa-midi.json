@@ -1,0 +1,41 @@
+{
+  "dest": "../../executa-midi/DESCRIPTION",
+  "stats": "./stats.tsv",
+  "number": 25,
+  "exclude": [
+    "askpass",
+    "aws.ec2metadata",
+    "aws.s3",
+    "aws.signature",
+    "clipr",
+    "gmailr",
+    "htmlwidgets",
+    "httpuv",
+    "rJava",
+    "rsconnect",
+    "rstudioapi",
+    "shiny",
+    "shinycssloaders",
+    "shinydashboard",
+    "shinyjs",
+    "shinystan",
+    "shinythemes",
+    "shinyWidgets",
+    "sparklyr"
+  ],
+  "include" : [
+    "broomExtra",
+    "corpcor",
+    "cowplot",
+    "GGally",
+    "lme4",
+    "lsmeans",
+    "multcomp",
+    "multcompView",
+    "MuMIn",
+    "Rcpp",
+    "reshape",
+    "Rmisc",
+    "tidyverse"
+  ]
+}

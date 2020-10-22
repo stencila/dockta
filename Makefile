@@ -26,7 +26,9 @@ docs:
 
 # Compile all the Docker image defined in this repo
 images:
-	cd images && ./compile.sh
+	cd images \
+	 && ./generate.sh \
+	 && ./compile.sh
 .PHONY: images
 
 # Create a demo by running the `demo.sh` file.

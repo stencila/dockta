@@ -1,0 +1,2 @@
+pandas-gbq
+pydata-google-auth

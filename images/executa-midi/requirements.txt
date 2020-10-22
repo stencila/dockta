@@ -1,6 +1,28 @@
 # A Python `pip` file for specifying Python dependencies of the Executa 'Midi' environment.
 # Please add any additional Python packages in alphabetical order
 
+attrs
+certifi
+cffi
+chardet
+colorama
+docutils
+idna
+jmespath
+markupsafe
 matplotlib
 numpy
 pandas
+pip
+protobuf
+pyasn1
+pycparser
+python-dateutil
+pytz
+pyyaml
+requests
+rsa
+setuptools
+six
+urllib3
+wheel
