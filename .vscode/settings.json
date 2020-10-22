@@ -26,5 +26,6 @@
     "typescript",
     "typescriptreact",
     "yml"
-  ]
+  ],
+  "python.formatting.provider": "black"
 }
