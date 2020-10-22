@@ -1,11 +1,13 @@
-import UrlFetcher from './IUrlFetcher'
-
-import { NetworkError } from './errors'
-import persist from 'node-persist'
+import { getLogger } from '@stencila/logga'
 import got from 'got'
+import persist from 'node-persist'
+import { NetworkError } from './errors'
+import UrlFetcher from './IUrlFetcher'
 
 export const REQUEST_CACHE_DIR = '/tmp/dockta-request-cache'
 let REQUEST_CACHE_INITIALISED = false
+
+const log = getLogger('dockta')
 
 /**
  * The default URL fetcher that Dockta uses. Fetches using `got` and caches results using `persist`
@@ -27,6 +29,9 @@ export default class CachingUrlFetcher implements UrlFetcher {
     } catch (error) {
       if ([404, 500].includes(error.response?.statusCode)) {
         value = null
+        log.warn(
+          `Error response from server when attempting to get ${url}: ${error.response?.statusCode} ${error.response?.message}`
+        )
       } else if (
         [
           'ENOTFOUND',
