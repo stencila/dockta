@@ -1,3 +1,16 @@
+# [0.19.0](https://github.com/stencila/dockta/compare/v0.18.1...v0.19.0) (2020-10-22)
+
+
+### Bug Fixes
+
+* **Python Parser:** Handle no package metadata ([a70e22c](https://github.com/stencila/dockta/commit/a70e22c9f3f387cdadbcb6f5672a3738a9058b0c))
+
+
+### Features
+
+* **CachingUrlFetcher:** Warn on error ([404f25f](https://github.com/stencila/dockta/commit/404f25f654f3e5deb9a2269c827be6143f4a3400))
+* **Packages:** Add packages based on download stats ([16aa48f](https://github.com/stencila/dockta/commit/16aa48fc47dfc92b0bf3d503c6ebacae4069033b))
+
 ## [0.18.1](https://github.com/stencila/dockta/compare/v0.18.0...v0.18.1) (2020-10-21)
 
 
