@@ -31,6 +31,7 @@ test('generate:packages', async () => {
 
   const generator = new RGenerator(urlFetcher, pkg2)
   expect(await generator.generate(false)).toEqual(`FROM ubuntu:19.10
+
 USER root
 
 RUN apt-get update \\
@@ -52,7 +53,7 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash guest
+RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1000 -s /bin/bash guest
 WORKDIR /home/guest
 
 # dockta
@@ -92,6 +93,7 @@ test('generate:r-xml2', async () => {
     false
   )
   expect(dockerfile).toEqual(`FROM ubuntu:19.10
+
 USER root
 
 RUN apt-get update \\
@@ -114,7 +116,7 @@ RUN apt-get update \\
  && apt-get clean \\
  && rm -rf /var/lib/apt/lists/*
 
-RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash guest
+RUN id -u guest >/dev/null 2>&1 || useradd --create-home --uid 1000 -s /bin/bash guest
 WORKDIR /home/guest
 
 # dockta

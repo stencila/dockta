@@ -49,10 +49,14 @@ export default class Generator extends Doer {
 
     if (!this.applies()) return dockerfile
 
+    // In case the base image has a USER other than root, ensure
+    // that we are running as root
+    if (comments)
+      dockerfile += '\n# All installation commands are run as the root user'
+    dockerfile += '\nUSER root\n'
+
     const aptRepos = this.aptRepos(baseIdentifier)
     const aptKeysCommand = this.aptKeysCommand(baseIdentifier)
-
-    dockerfile += 'USER root\n' // in case the Dockerfile it inherits from drops down to a different user
 
     if (aptRepos.length || aptKeysCommand) {
       if (comments)
@@ -121,10 +125,10 @@ RUN apt-get update \\
     if (comments) {
       dockerfile += `
 # It's good practice to run Docker images as a non-root user.
-# This section creates a new user and its home directory as the default working directory.`
+# This section creates a guest user (if necessary) and sets its home directory as the default working directory.`
     }
     dockerfile += `
-RUN id -u ${DOCKER_USER} >/dev/null 2>&1 || useradd --create-home --uid 1001 -s /bin/bash ${DOCKER_USER}
+RUN id -u ${DOCKER_USER} >/dev/null 2>&1 || useradd --create-home --uid 1000 -s /bin/bash ${DOCKER_USER}
 WORKDIR /home/${DOCKER_USER}
 `
 
