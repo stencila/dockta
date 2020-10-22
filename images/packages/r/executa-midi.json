@@ -23,7 +23,7 @@
     "shinyWidgets",
     "sparklyr"
   ],
-  "include" : [
+  "include": [
     "broomExtra",
     "corpcor",
     "cowplot",

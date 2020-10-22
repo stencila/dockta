@@ -35,7 +35,11 @@ const packages = fs
   }, [])
   .slice(0, spec.number - spec.include.length)
   .concat(spec.include)
-  .reduce((prev: string[], curr: string) => (prev.includes(curr) ? prev : [...prev, curr]), [])
+  .reduce(
+    (prev: string[], curr: string) =>
+      prev.includes(curr) ? prev : [...prev, curr],
+    []
+  )
   .sort((a, b) => a.localeCompare(b))
 
 if (destFile.endsWith('/DESCRIPTION')) {

@@ -362,7 +362,6 @@ All images are built at least nightly (so that they have the latest versions of 
 - [`stencila/executa-all`](https://hub.docker.com/r/stencila/executa-all/tags?page=1&ordering=last_updated)
 - [`stencila/executa-midi`](https://hub.docker.com/r/stencila/executa-midi/tags?page=1&ordering=last_updated)
 
-
 #### Getting the images
 
 You can get the latest version using `docker pull` e.g.
@@ -428,7 +427,6 @@ RUN install.packages("somePackage", repos="https://mran.microsoft.com/snapshot/2
 
 USER guest
 ```
-
 
 ## Contributors
 

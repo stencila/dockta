@@ -74,8 +74,5 @@
     "zope-event",
     "zope-interface"
   ],
-  "include" : [
-    "matplotlib",
-    "pandas"
-  ]
+  "include": ["matplotlib", "pandas"]
 }
