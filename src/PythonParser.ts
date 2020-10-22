@@ -254,7 +254,7 @@ export default class PythonParser extends Parser {
       `https://pypi.org/pypi/${softwarePackage.name}/json`
     )
 
-    if (pyPiMetadata.info) {
+    if (pyPiMetadata?.info) {
       if (pyPiMetadata.info.author) {
         softwarePackage.authors.push(
           Person.fromText(
