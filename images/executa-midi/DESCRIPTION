@@ -1,32 +1,56 @@
 Package: executamidi
 Version: 1.0.0
-Date: 2020-08-14
+Date: 2020-10-20
 Description:
   A R package for specifying dependencies of the Executa 'Midi' environment.
   Please add any additional R packages in alphabetical order.
 Imports:
   broomExtra,
+  callr,
+  cli,
   corpcor,
   cowplot,
+  cpp11,
   devtools,
+  digest,
   dplyr,
+  ellipsis,
+  fansi,
   fs,
   GGally,
   ggplot2,
   glue,
+  Hmisc,
   jsonlite,
+  knitr,
   lifecycle,
   lme4,
   lsmeans,
   magrittr,
+  markdown,
+  metafor,
   multcomp,
   multcompView,
   MuMIn,
+  pillar,
+  pkgbuild,
+  pkgload,
+  processx,
+  ps,
+  purrr,
   Rcpp,
   reshape,
   rlang,
+  rmarkdown,
   Rmisc,
+  stringi,
+  stringr,
+  testthat,
   tibble,
+  tidyselect,
   tidyverse,
+  tinytex,
   usethis,
-  vctrs
+  vctrs,
+  withr,
+  xfun

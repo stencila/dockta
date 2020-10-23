@@ -1,7 +1,7 @@
 {
   "dest": "../../executa-midi/DESCRIPTION",
   "stats": "./stats.tsv",
-  "number": 25,
+  "number": 50,
   "exclude": [
     "askpass",
     "aws.ec2metadata",
@@ -30,6 +30,7 @@
     "GGally",
     "lme4",
     "lsmeans",
+    "metafor",
     "multcomp",
     "multcompView",
     "MuMIn",
