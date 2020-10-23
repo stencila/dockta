@@ -1,3 +1,15 @@
+# [0.20.0](https://github.com/stencila/dockta/compare/v0.19.0...v0.20.0) (2020-10-23)
+
+
+### Bug Fixes
+
+* **Generator:** Use guest uid 1000; add note about using root ([475fcad](https://github.com/stencila/dockta/commit/475fcadd5a09d8621c1765823c71a45b92392f6d))
+
+
+### Features
+
+* **Images:** Increase the number of packages; add more to `include` ([747853f](https://github.com/stencila/dockta/commit/747853fc043b6bbdd2319e8418d3868f2ded3e3a))
+
 # [0.19.0](https://github.com/stencila/dockta/compare/v0.18.1...v0.19.0) (2020-10-22)
 
 
