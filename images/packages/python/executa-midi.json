@@ -1,7 +1,7 @@
 {
   "dest": "../../executa-midi/requirements.txt",
   "stats": "./stats.tsv",
-  "number": 50,
+  "number": 100,
   "exclude": [
     "aws-sam-translator",
     "aws-xray-sdk",
