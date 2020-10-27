@@ -1,3 +1,10 @@
+# [0.21.0](https://github.com/stencila/dockta/compare/v0.20.0...v0.21.0) (2020-10-27)
+
+
+### Features
+
+* **Images:** Increase number of packages in executa-midi image ([2bac678](https://github.com/stencila/dockta/commit/2bac67844ca39891907f7549338c08ba9415fabd))
+
 # [0.20.0](https://github.com/stencila/dockta/compare/v0.19.0...v0.20.0) (2020-10-23)
 
 
