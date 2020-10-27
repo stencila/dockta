@@ -71,6 +71,7 @@ jobs:
     condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
     pool:
       vmImage: ubuntu-latest
+    timeoutInMinutes: 0
     steps:
       - task: NodeTool@0
         inputs:
