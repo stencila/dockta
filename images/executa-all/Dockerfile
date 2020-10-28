@@ -41,7 +41,8 @@ RUN echo "Forcing install of latest executors: ${EXECUTORS_LATEST}"
 RUN npm install --global @stencila/executa
 RUN npm install --global @stencila/encoda
 RUN npm install --global @stencila/basha
-RUN pip3 install stencila-pyla
+RUN npm install --global @stencila/jupita
+RUN python3 -m pip install ipykernel
 RUN R -e 'install.packages("remotes"); remotes::install_github("stencila/rasta")'
 
 # Temporary fix. Install Typscript to avoid this
@@ -57,7 +58,7 @@ USER guest
 # Register executors so that they can be discovered by Executa
 RUN basha register
 RUN node /usr/lib/node_modules/@stencila/encoda/dist/encoda.js register
-RUN python3 -m stencila.pyla register
+RUN jupita register
 RUN R -e 'rasta::register()'
 
 # Serve Executa on external address so that host can connect
