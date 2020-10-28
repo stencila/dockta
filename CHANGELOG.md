@@ -1,3 +1,10 @@
+# [0.22.0](https://github.com/stencila/dockta/compare/v0.21.0...v0.22.0) (2020-10-28)
+
+
+### Features
+
+* **Images:** Use Jupita instead of Pyla as a Python executor ([bbe68f0](https://github.com/stencila/dockta/commit/bbe68f0f93f9f1663cbe2f3f79c280be3b0f88da))
+
 # [0.21.0](https://github.com/stencila/dockta/compare/v0.20.0...v0.21.0) (2020-10-27)
 
 
