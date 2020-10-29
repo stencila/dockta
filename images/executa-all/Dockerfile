@@ -42,13 +42,15 @@ RUN npm install --global @stencila/executa
 RUN npm install --global @stencila/encoda
 RUN npm install --global @stencila/basha
 RUN npm install --global @stencila/jupita
-RUN python3 -m pip install ipykernel
 RUN R -e 'install.packages("remotes"); remotes::install_github("stencila/rasta")'
 
 # Temporary fix. Install Typscript to avoid this
 # https://dev.azure.com/stencila/stencila/_build/results?buildId=2035&view=logs&j=1b7bf37f-59a6-5457-eae3-62ce29cb19a4&t=9d3843fb-f716-59bf-683b-829e70871150&l=3860
 # which seems to be caused by TS being a peer dependency of Typedoc
 RUN npm install --global typescript
+
+# Install Jupyter kernels
+RUN python3 -m pip install ipykernel
 
 # Setup container user prior to registering executors
 RUN useradd --create-home guest
@@ -60,6 +62,9 @@ RUN basha register
 RUN node /usr/lib/node_modules/@stencila/encoda/dist/encoda.js register
 RUN jupita register
 RUN R -e 'rasta::register()'
+
+# Register Jupyter kernels so that they can be discovered by Jupita
+RUN python3 -m ipykernel install --user
 
 # Serve Executa on external address so that host can connect
 CMD executa serve --ws=0.0.0.0:9000 --debug
