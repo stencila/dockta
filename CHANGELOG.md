@@ -1,3 +1,10 @@
+## [0.22.1](https://github.com/stencila/dockta/compare/v0.22.0...v0.22.1) (2020-10-29)
+
+
+### Bug Fixes
+
+* **Image:** Ensure Jupyter kernel is "installed" as guest user ([f3e337e](https://github.com/stencila/dockta/commit/f3e337e947c78e624f84da7620361a001dd2e905))
+
 # [0.22.0](https://github.com/stencila/dockta/compare/v0.21.0...v0.22.0) (2020-10-28)
 
 
