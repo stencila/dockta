@@ -1,3 +1,10 @@
+## [0.22.3](https://github.com/stencila/dockta/compare/v0.22.2...v0.22.3) (2020-10-30)
+
+
+### Bug Fixes
+
+* **IMages:** Commit generated files on release ([a012b05](https://github.com/stencila/dockta/commit/a012b0550d2561a4de72cbf3081f371e50afaecf))
+
 ## [0.22.2](https://github.com/stencila/dockta/compare/v0.22.1...v0.22.2) (2020-10-30)
 
 
