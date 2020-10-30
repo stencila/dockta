@@ -1,3 +1,10 @@
+## [0.22.4](https://github.com/stencila/dockta/compare/v0.22.3...v0.22.4) (2020-10-30)
+
+
+### Bug Fixes
+
+* **PythonGenerator:** Do not generate .requirements.txt file if requirements.txt file is already present ([f436eca](https://github.com/stencila/dockta/commit/f436eca6f0a6fca4ab00a195d6b58e2c489247da))
+
 ## [0.22.3](https://github.com/stencila/dockta/compare/v0.22.2...v0.22.3) (2020-10-30)
 
 
