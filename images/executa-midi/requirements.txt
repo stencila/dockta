@@ -1,5 +1,6 @@
 # A Python `pip` file for specifying Python dependencies of the Executa 'Midi' environment.
-# Please add any additional Python packages in alphabetical order
+# The following list is generated from ../packages/python/executa-midi.json.
+# Please add any additional Python packages to the "include" section of that file.
 
 absl-py
 aiohttp
@@ -58,7 +59,6 @@ protobuf
 psutil
 ptyprocess
 py
-pyarrow
 pyasn1
 pyasn1-modules
 pycparser
@@ -79,6 +79,7 @@ rpy2
 rsa
 scikit-learn
 scipy
+seaborn
 setuptools
 simplejson
 six

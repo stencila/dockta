@@ -56,6 +56,7 @@ jobs:
           npm ci
           npm run docs
           npm run build
+          npm run images
           npx semantic-release
         env:
           GIT_AUTHOR_NAME: Stencila CI Bot
@@ -73,17 +74,6 @@ jobs:
       vmImage: ubuntu-latest
     timeoutInMinutes: 0
     steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: 14.x
-        displayName: Install Node.js
-
-      - script: npm install -g @stencila/dockta
-        displayName: Install latest version
-
-      - script: cd images && ./compile.sh
-        displayName: Compile Dockerfiles
-
       - task: Docker@2
         displayName: stencila/executa-all
         inputs:

@@ -24,11 +24,8 @@ docs:
 	npm run docs
 .PHONY: docs
 
-# Compile all the Docker image defined in this repo
 images:
-	cd images \
-	 && ./generate.sh \
-	 && ./compile.sh
+	npm run images
 .PHONY: images
 
 # Create a demo by running the `demo.sh` file.

@@ -1,9 +1,10 @@
 Package: executamidi
-Version: 1.0.0
-Date: 2020-10-27
+Version: 0.19.1
+Date: 2020-10-28
 Description:
   A R package for specifying dependencies of the Executa 'Midi' environment.
-  Please add any additional R packages in alphabetical order.
+  The following list is generated from ../packages/r/executa-midi.json.
+  Please add any additional R packages to the "include" section of that file.
 Imports:
   assertthat,
   backports,
