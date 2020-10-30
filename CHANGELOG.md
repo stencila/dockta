@@ -1,3 +1,10 @@
+## [0.22.2](https://github.com/stencila/dockta/compare/v0.22.1...v0.22.2) (2020-10-30)
+
+
+### Bug Fixes
+
+* **Images:** Add seaborn to executa-midi image ([a50be0d](https://github.com/stencila/dockta/commit/a50be0dfe91db609f0ade65e4951ceb0d9f34774))
+
 ## [0.22.1](https://github.com/stencila/dockta/compare/v0.22.0...v0.22.1) (2020-10-29)
 
 
