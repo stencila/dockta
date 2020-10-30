@@ -64,7 +64,7 @@ WORKDIR /home/guest
 
 # This section copies package requirement files into the image
 COPY package.json package.json
-COPY .requirements.txt requirements.txt
+COPY requirements.txt requirements.txt
 COPY DESCRIPTION DESCRIPTION
 
 # This section runs commands to install the packages specified in the requirement file/s

@@ -72,13 +72,6 @@ USER guest
 
 CMD python3 main.py
 `)
-
-  expectedFixture(fixture('py-generator-generated'), '.requirements.txt')
-
-  cleanup([
-    'py-generator-generated/.Dockerfile',
-    'py-generator-generated/.requirements.txt',
-  ])
 })
 
 /**
