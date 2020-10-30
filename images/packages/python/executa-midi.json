@@ -74,5 +74,5 @@
     "zope-event",
     "zope-interface"
   ],
-  "include": ["matplotlib", "pandas", "plotly", "rpy2", "xlrd"]
+  "include": ["matplotlib", "pandas", "plotly", "rpy2", "seaborn", "xlrd"]
 }
