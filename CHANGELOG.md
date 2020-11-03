@@ -1,3 +1,10 @@
+# [0.23.0](https://github.com/stencila/dockta/compare/v0.22.4...v0.23.0) (2020-11-03)
+
+
+### Features
+
+* **Images:** Increase number of R and Python packages ([89cc4a6](https://github.com/stencila/dockta/commit/89cc4a61e8e0a16a9557b0ddc9e98391a2a12e36))
+
 ## [0.22.4](https://github.com/stencila/dockta/compare/v0.22.3...v0.22.4) (2020-10-30)
 
 
