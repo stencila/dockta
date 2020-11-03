@@ -1,7 +1,7 @@
 {
   "dest": "../../executa-midi/requirements.txt",
   "stats": "./stats.tsv",
-  "number": 100,
+  "number": 150,
   "exclude": [
     "aws-sam-translator",
     "aws-xray-sdk",
@@ -74,5 +74,5 @@
     "zope-event",
     "zope-interface"
   ],
-  "include": ["matplotlib", "pandas", "plotly", "rpy2", "seaborn", "xlrd"]
+  "include": ["matplotlib", "networkx", "pandas", "plotly", "rpy2", "seaborn", "xlrd"]
 }
