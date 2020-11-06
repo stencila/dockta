@@ -42,7 +42,7 @@
   "homepage": "https://github.com/stencila/dockta#readme",
   "devDependencies": {
     "@semantic-release/exec": "5.0.0",
-    "@stencila/dev-config": "1.4.93",
+    "@stencila/dev-config": "1.4.95",
     "@types/dockerode": "3.2.0",
     "@types/express": "4.17.8",
     "@types/got": "9.6.11",
@@ -55,7 +55,7 @@
     "@types/tmp": "0.2.0",
     "@types/yargs": "15.0.9",
     "all-contributors-cli": "6.19.0",
-    "jest": "26.6.2",
+    "jest": "26.6.3",
     "markdown-toc": "1.2.0",
     "ts-jest": "26.4.3",
     "ts-node": "9.0.0",
