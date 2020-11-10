@@ -384,13 +384,13 @@ dockta build images/executa-all
 
 #### Running the images
 
-To run the images you need to supply some extra options to `docker run`,
+Run the images like this,
 
 ```bash
-docker run -it --init --rm --cap-add=SYS_ADMIN -p 9000:9000 "stencila/executa-midi"
+docker run -it --rm -p 9000:9000 stencila/executa-midi
 ```
 
-That will serve Executa from within the container and make it available at http://localhost:9000 and ws://localhost:9000.
+That will serve Executa from within the container and make it available at ws://localhost:9000.
 
 #### Extending the images
 
