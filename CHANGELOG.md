@@ -1,3 +1,10 @@
+## [0.23.1](https://github.com/stencila/dockta/compare/v0.23.0...v0.23.1) (2020-11-10)
+
+
+### Bug Fixes
+
+* **Images:** Add dependency for Puppeteer and remove user namespace cloning ([2b2c1bb](https://github.com/stencila/dockta/commit/2b2c1bb40836c73532be33c000259a21fa32818f))
+
 # [0.23.0](https://github.com/stencila/dockta/compare/v0.22.4...v0.23.0) (2020-11-03)
 
 
