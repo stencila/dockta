@@ -19,9 +19,7 @@
     "build": "tsc && cp ./src/*.json dist",
     "images": "cd images && ./compile.sh",
     "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
-    "cli": "ts-node src/cli.ts",
-    "server": "ts-node src/server.ts",
-    "start": "node dist/server.js"
+    "cli": "ts-node src/cli.ts"
   },
   "repository": {
     "type": "git",
@@ -44,7 +42,6 @@
     "@semantic-release/exec": "5.0.0",
     "@stencila/dev-config": "1.4.112",
     "@types/dockerode": "3.2.1",
-    "@types/express": "4.17.9",
     "@types/got": "9.6.11",
     "@types/jest": "26.0.18",
     "@types/js-yaml": "3.12.5",
@@ -69,13 +66,11 @@
     "detective": "^5.2.0",
     "docker-file-parser": "^1.0.5",
     "dockerode": "^3.2.1",
-    "express": "^4.17.1",
     "fast-glob": "^3.2.4",
     "got": "^11.8.0",
     "js-yaml": "^3.14.1",
     "ndjson": "^2.0.0",
     "node-persist": "^3.1.0",
-    "rimraf": "^3.0.2",
     "semver": "^7.3.4",
     "tar-fs": "^2.1.1",
     "tmp": "0.2.1",
