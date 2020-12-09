@@ -1,3 +1,18 @@
+# [0.24.0](https://github.com/stencila/dockta/compare/v0.23.1...v0.24.0) (2020-12-09)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency js-yaml to ^3.14.1 ([dea162f](https://github.com/stencila/dockta/commit/dea162fa8fc12550481ef26b029903b39261d2ee))
+* **dependencies:** update dependency semver to ^7.3.4 ([c440a96](https://github.com/stencila/dockta/commit/c440a96bfd6f0d1ad600778451e91463253cc1f5))
+* **dependencies:** update dependency tar-fs to ^2.1.1 ([78778ef](https://github.com/stencila/dockta/commit/78778ef232f6fa781c7a1af0d984ebc318b07066))
+* **dependencies:** update dependency yargs to ^16.2.0 ([cc9f7f1](https://github.com/stencila/dockta/commit/cc9f7f14c6ae1eead3d4a6606f09781388979306))
+
+
+### Features
+
+* **Server:** Remove server ([aae2445](https://github.com/stencila/dockta/commit/aae244567327ea05ecd6092edd850ad87e16746a))
+
 ## [0.23.1](https://github.com/stencila/dockta/compare/v0.23.0...v0.23.1) (2020-11-10)
 
 
