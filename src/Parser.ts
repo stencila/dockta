@@ -18,5 +18,5 @@ export default abstract class Parser extends Doer {
   /**
    * Parse the project folder
    */
-  abstract async parse(): Promise<SoftwarePackage | null>
+  abstract parse(): Promise<SoftwarePackage | null>
 }
