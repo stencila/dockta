@@ -1,3 +1,11 @@
+## [0.24.1](https://github.com/stencila/dockta/compare/v0.24.0...v0.24.1) (2020-12-14)
+
+
+### Bug Fixes
+
+* Update to Ubuntu 20.04, R 4.0 and Node 14 ([b6f2870](https://github.com/stencila/dockta/commit/b6f28702cd6f478fc73dc965c0440b373db3c15d))
+* **Images:** Update to Ubuntu 20.04, R 4.0, Node 14 and updated top packages list ([3093a1a](https://github.com/stencila/dockta/commit/3093a1ad9d697b486f1e57d97e85181b99d976d4))
+
 # [0.24.0](https://github.com/stencila/dockta/compare/v0.23.1...v0.24.0) (2020-12-09)
 
 
