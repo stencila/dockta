@@ -1,3 +1,10 @@
+## [0.24.2](https://github.com/stencila/dockta/compare/v0.24.1...v0.24.2) (2020-12-14)
+
+
+### Bug Fixes
+
+* **Images:** Add Python module statsmodels ([26cddd2](https://github.com/stencila/dockta/commit/26cddd2dc55161bbdfbc871bb32b4d66cbc7bbf1))
+
 ## [0.24.1](https://github.com/stencila/dockta/compare/v0.24.0...v0.24.1) (2020-12-14)
 
 

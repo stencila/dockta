@@ -6,7 +6,6 @@ absl-py
 adal
 aiohttp
 appdirs
-argparse
 async-generator
 async-timeout
 attrs
@@ -129,6 +128,7 @@ smmap
 soupsieve
 sqlalchemy
 sqlparse
+statsmodels
 tabulate
 tensorflow
 testpath
