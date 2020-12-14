@@ -1,15 +1,15 @@
-all: lint format cover build docs
+all: format lint cover build docs
 
 # Shortcuts to NPM scripts
 
 setup:
 	npm install
 
-lint:
-	npm run lint
-
 format:
 	npm run format
+
+lint:
+	npm run lint
 
 test:
 	npm test
