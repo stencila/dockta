@@ -49,7 +49,7 @@ test('compile:multi-lang', async () => {
   )
 
   // Remove the date from the MRAN line to allow for changing date of test v expected
-  const aptAddMRAN = /(apt-add-repository "deb https:\/\/mran.microsoft.com\/snapshot)\/([\d-]+)\/(bin\/linux\/ubuntu eoan-cran35\/)"/
+  const aptAddMRAN = /(apt-add-repository "deb https:\/\/mran.microsoft.com\/snapshot)\/([\d-]+)\/(bin\/linux\/ubuntu focal-cran40\/)"/
   const actual = fs
     .readFileSync(fixture('multi-lang/.Dockerfile'), 'utf8')
     .replace(aptAddMRAN, '$1/YYYY-MM-DD/$3')

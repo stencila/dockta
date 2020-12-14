@@ -23,7 +23,7 @@ export default class JavascriptGenerator extends PackageGenerator {
     urlFetcher: UrlFetcher,
     pkg: SoftwarePackage,
     folder?: string,
-    nodeMajorVersion = 12
+    nodeMajorVersion = 14
   ) {
     super(urlFetcher, pkg, folder)
 

@@ -12,7 +12,7 @@ const urlFetcher = new MockUrlFetcher()
 test('generate:empty', async () => {
   const environ = new SoftwareEnvironment()
   const generator = new DockerGenerator(urlFetcher, environ)
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:19.10
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:20.04
 
 USER root
 

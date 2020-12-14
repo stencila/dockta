@@ -14,7 +14,7 @@ const urlFetcher = new MockUrlFetcher()
 test('generate:empty', async () => {
   const pkg = new SoftwarePackage()
   const generator = new PythonGenerator(urlFetcher, pkg)
-  expect(await generator.generate(false)).toEqual('FROM ubuntu:19.10\n')
+  expect(await generator.generate(false)).toEqual('FROM ubuntu:20.04\n')
 })
 
 /**
@@ -42,7 +42,7 @@ test('generate:requirements', async () => {
     fixture('py-generator-generated')
   )
 
-  expect(await generator.generate(false, true)).toEqual(`FROM ubuntu:19.10
+  expect(await generator.generate(false, true)).toEqual(`FROM ubuntu:20.04
 
 USER root
 
@@ -90,7 +90,7 @@ test('generate:requirements-file', async () => {
     2
   )
 
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:19.10
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:20.04
 
 USER root
 
@@ -150,7 +150,7 @@ test('generate:apt-packages', async () => {
     2
   )
 
-  expect(await generator.generate(false)).toEqual(`FROM ubuntu:19.10
+  expect(await generator.generate(false)).toEqual(`FROM ubuntu:20.04
 
 USER root
 
