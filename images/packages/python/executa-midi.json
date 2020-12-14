@@ -81,6 +81,7 @@
     "plotly",
     "rpy2",
     "seaborn",
+    "statsmodels",
     "xlrd"
   ]
 }
