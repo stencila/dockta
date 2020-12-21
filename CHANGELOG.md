@@ -1,3 +1,10 @@
+## [0.24.3](https://github.com/stencila/dockta/compare/v0.24.2...v0.24.3) (2020-12-21)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency got to ^11.8.1 ([dd5c925](https://github.com/stencila/dockta/commit/dd5c925224d0a33c222af13967c0d5ce1e8bb2e0))
+
 ## [0.24.2](https://github.com/stencila/dockta/compare/v0.24.1...v0.24.2) (2020-12-14)
 
 
