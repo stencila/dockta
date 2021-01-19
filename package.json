@@ -40,13 +40,13 @@
   "homepage": "https://github.com/stencila/dockta#readme",
   "devDependencies": {
     "@semantic-release/exec": "5.0.0",
-    "@stencila/dev-config": "1.4.119",
-    "@types/dockerode": "3.2.1",
+    "@stencila/dev-config": "1.4.131",
+    "@types/dockerode": "3.2.2",
     "@types/got": "9.6.11",
-    "@types/jest": "26.0.19",
-    "@types/js-yaml": "3.12.5",
-    "@types/node": "14.14.14",
-    "@types/node-persist": "3.1.0",
+    "@types/jest": "26.0.20",
+    "@types/js-yaml": "3.12.6",
+    "@types/node": "14.14.22",
+    "@types/node-persist": "3.1.1",
     "@types/semver": "7.3.4",
     "@types/tar-fs": "2.0.0",
     "@types/tmp": "0.2.0",
@@ -56,7 +56,7 @@
     "markdown-toc": "1.2.0",
     "ts-jest": "26.4.4",
     "ts-node": "9.1.1",
-    "typedoc": "0.19.2",
+    "typedoc": "0.20.16",
     "typescript": "4.1.3"
   },
   "dependencies": {
