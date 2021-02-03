@@ -50,13 +50,13 @@
     "@types/semver": "7.3.4",
     "@types/tar-fs": "2.0.0",
     "@types/tmp": "0.2.0",
-    "@types/yargs": "15.0.12",
+    "@types/yargs": "15.0.13",
     "all-contributors-cli": "6.19.0",
     "jest": "26.6.3",
     "markdown-toc": "1.2.0",
-    "ts-jest": "26.4.4",
+    "ts-jest": "26.5.0",
     "ts-node": "9.1.1",
-    "typedoc": "0.20.19",
+    "typedoc": "0.20.20",
     "typescript": "4.1.3"
   },
   "dependencies": {
