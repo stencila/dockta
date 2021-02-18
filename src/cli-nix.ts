@@ -104,7 +104,7 @@ function output(object: any, format = 'json') {
   if (object)
     console.log(
       format === 'yaml'
-        ? yaml.safeDump(object, { lineWidth: 120 })
+        ? yaml.dump(object, { lineWidth: 120 })
         : JSON.stringify(object, null, '  ')
     )
 }

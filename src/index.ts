@@ -35,7 +35,7 @@ function stringifyNode(object: any, format: string): string {
   }
 
   return format === 'yaml'
-    ? yaml.safeDump(object, { lineWidth: 120 })
+    ? yaml.dump(object, { lineWidth: 120 })
     : JSON.stringify(object, null, '  ')
 }
 
