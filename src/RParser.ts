@@ -156,7 +156,7 @@ export default class RParser extends Parser {
 
     // schema:CreativeWork
     if (crandb.Author) {
-      crandb.Author.split(',\n').map((author: string) => {
+      crandb.Author.split(',\n').forEach((author: string) => {
         const match = author.match(/^([^[]+?) \[([^\]]+)\]/)
         if (match) {
           const name = match[1]

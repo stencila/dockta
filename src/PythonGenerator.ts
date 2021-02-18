@@ -56,7 +56,7 @@ export default class PythonGenerator extends PackageGenerator {
   aptPackages(sysVersion: string): Array<string> {
     let aptRequirements: Array<string> = []
 
-    this.package.softwareRequirements.map((requirement) => {
+    this.package.softwareRequirements.forEach((requirement) => {
       aptRequirements = aptRequirements.concat(
         this.systemPackageLookup.lookupSystemPackage(
           requirement.name,
@@ -68,7 +68,7 @@ export default class PythonGenerator extends PackageGenerator {
     })
 
     const dedupedRequirements: Array<string> = []
-    aptRequirements.map((aptRequirement) => {
+    aptRequirements.forEach((aptRequirement) => {
       if (!dedupedRequirements.includes(aptRequirement)) {
         dedupedRequirements.push(aptRequirement)
       }
