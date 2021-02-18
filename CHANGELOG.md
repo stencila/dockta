@@ -1,3 +1,12 @@
+## [0.24.4](https://github.com/stencila/dockta/compare/v0.24.3...v0.24.4) (2021-02-18)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency @stencila/logga to v4 ([0ba75d1](https://github.com/stencila/dockta/commit/0ba75d1804cccb70e632373a4ee48dde9052adb7))
+* **dependencies:** update dependency js-yaml to v4 ([d4bb103](https://github.com/stencila/dockta/commit/d4bb1033c29d5342f6c7ba7305d9dd9bed70d305))
+* **Deps:** Upgrades for js-yaml v4 ([f8dd852](https://github.com/stencila/dockta/commit/f8dd85249dc14ee88da9de1c836a56ff61cdb0ce))
+
 ## [0.24.3](https://github.com/stencila/dockta/compare/v0.24.2...v0.24.3) (2020-12-21)
 
 
