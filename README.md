@@ -15,33 +15,37 @@ Dockta makes it easier for researchers to create Docker images for their researc
 
 <!-- toc -->
 
-- [Features](#features)
-  * [Builds a Docker image based on your source code](#builds-a-docker-image-based-on-your-source-code)
-    + [R](#r)
-    + [Python](#python)
-    + [Node.js](#nodejs)
-    + [JATS](#jats)
-    + [Jupyter](#jupyter)
-  * [Automatically determines system requirements](#automatically-determines-system-requirements)
-  * [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
-  * [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
-  * [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
-- [Demo](#demo)
-- [Install](#install)
-- [Use](#use)
-  * [Compile a project](#compile-a-project)
-  * [Build a Docker image](#build-a-docker-image)
-  * [Execute a Docker image](#execute-a-docker-image)
-  * [Docter who?](#docter-who)
-  * [Predefined images](#predefined-images)
-    + [Image versions](#image-versions)
-    + [Getting the images](#getting-the-images)
-    + [Running the images](#running-the-images)
-    + [Extending the images](#extending-the-images)
-- [Contributors](#contributors)
-- [See also](#see-also)
-- [FAQ](#faq)
-- [Acknowledgments](#acknowledgments)
+- [Dockta: a container image builder for researchers](#dockta-a-container-image-builder-for-researchers)
+  - [Features](#features)
+    - [Builds a Docker image based on your source code](#builds-a-docker-image-based-on-your-source-code)
+      - [R](#r)
+      - [Python](#python)
+      - [Node.js](#nodejs)
+      - [JATS](#jats)
+      - [Jupyter](#jupyter)
+    - [Automatically determines system requirements](#automatically-determines-system-requirements)
+    - [Faster re-installation of language packages](#faster-re-installation-of-language-packages)
+    - [Generates structured meta-data for your project](#generates-structured-meta-data-for-your-project)
+    - [Easy to pick up, easy to throw away](#easy-to-pick-up-easy-to-throw-away)
+  - [Demo](#demo)
+  - [Install](#install)
+  - [Use](#use)
+    - [Compile a project](#compile-a-project)
+    - [Build a Docker image](#build-a-docker-image)
+    - [Execute a Docker image](#execute-a-docker-image)
+    - [Docter who?](#docter-who)
+    - [Predefined images](#predefined-images)
+      - [Image versions](#image-versions)
+      - [Getting the images](#getting-the-images)
+      - [Running the images](#running-the-images)
+      - [Extending the images](#extending-the-images)
+        - [Make a pull request](#make-a-pull-request)
+        - [Create your own image](#create-your-own-image)
+        - [Write your own `Dockerfile`](#write-your-own-dockerfile)
+  - [Contributors](#contributors)
+  - [See also](#see-also)
+  - [FAQ](#faq)
+  - [Acknowledgments](#acknowledgments)
 
 <!-- tocstop -->
 
@@ -398,13 +402,16 @@ There are several ways that you can extend the images, for example to add a pack
 
 ##### Make a pull request
 
-The `executa-midi` image is intended to be a fairly comprehensive image containing most of the commonly download packages for R and Python (it is currently still in development so does not include many yet).
+The `executa-midi` image is intended to be a fairly comprehensive image containing most of the commonly download packages for R and Python. We regularly query download stats from [CRAN](https://cran.r-project.org/) and [PyPI](https://pypi.org/) and take the top 150 most downloaded packages (minus some exclusions, plus some inclusions). The list of current packages are:
 
-If you think that a popular package is missing and should be included then please submit a pull request which adds the package to one of the following files in the [`images/executa-midi`](images/executa-midi) folder:
+- [`DESCRIPTION`](images/executa-midi/DESCRIPTION) for R packages
+- [`requirements.txt`](images/executa-midi/requirements.txt) for Python packages
+- [`package.json`](images/executa-midi/package.json) for Node.js packages
 
-- `DESCRIPTION` for R packages
-- `requirements.txt` for Python packages
-- `package.json` for Node.js packages
+If you think that a popular package is missing and should be included then please submit a pull request which adds the package to one of the following files:
+
+- [`images/packages/r/executa-midi.json`](images/packages/r/executa-midi.json) for R packages
+- [`images/packages/python/executa-midi.json`](images/packages/python/executa-midi.json) for R packages
 
 ##### Create your own image
 
@@ -417,16 +424,25 @@ dockta build --from stencila/executa-midi
 
 ##### Write your own `Dockerfile`
 
-If you want the most control (and responsibility ;) you can always write your own `Dockerfile` using one of the images in the `FROM` directive e.g.
+If you want the most control (and responsibility ;) you can always write your own `Dockerfile` using one of our images in the `FROM` directive e.g.
 
 ```Dockerfile
 FROM stencila/executa-midi
 
+# Use `root` user for installing new packages
 USER root
+
+# Install a Python package
+RUN python3 -m pip install some-package
+
+# Install a R package from a particular date
 RUN install.packages("somePackage", repos="https://mran.microsoft.com/snapshot/2020-10-21")
 
+# Go back to `guest` user for better security when the container is run
 USER guest
 ```
+
+You can run `docker build` on this Dockerfile, push it to a Docker container registry, and then specify it as image to use for your project on Stencila Hub.
 
 ## Contributors
 
