@@ -18,7 +18,7 @@
     "contributors:generate": "all-contributors generate",
     "build": "tsc && cp ./src/*.json dist",
     "images": "cd images && ./compile.sh",
-    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --mode file --out ./docs ./src",
+    "docs": "markdown-toc -i --maxdepth=4 README.md && typedoc --readme README.md --out ./docs ./src",
     "cli": "ts-node src/cli.ts"
   },
   "repository": {
