@@ -1,3 +1,10 @@
+## [0.24.5](https://github.com/stencila/dockta/compare/v0.24.4...v0.24.5) (2021-02-19)
+
+
+### Bug Fixes
+
+* **Images:** Add deps for Encoda ([cae6c29](https://github.com/stencila/dockta/commit/cae6c29763bf5ce64795bb7c71932b039a909cba))
+
 ## [0.24.4](https://github.com/stencila/dockta/compare/v0.24.3...v0.24.4) (2021-02-18)
 
 
