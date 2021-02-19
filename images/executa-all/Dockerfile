@@ -14,20 +14,36 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash \
  && apt-get install -y nodejs \
  && npm config --global set user root
 
-# Config for Puppeteer to run in Docker (for Encoda)
-# Alternative approaches may be possible in the future
-# See https://github.com/stencila/encoda/blob/master/Dockerfile
-RUN curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
- && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
- && apt-get update \
- && apt-get install -y --no-install-recommends google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
- && rm -rf /var/lib/apt/lists/*
-
 # Install recent R from CRAN
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 \
  && add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/' \
  && apt-get update \
  && apt-get install -y r-base \
+ && rm -rf /var/lib/apt/lists/*
+
+# Install necessary libs for Encoda
+# See https://github.com/stencila/encoda/blob/master/Dockerfile
+RUN apt-get update \
+ && apt-get install -y \
+      libasound2 \
+      libatk-bridge2.0-0 \
+      libatk1.0-0 \
+      libcups2 \
+      libgbm1 \
+      libgconf-2-4 \
+      libgtk-3-0 \
+      libgtk2.0-0 \
+      libnotify-dev \
+      libnss3 \
+      libpangocairo-1.0-0 \
+      libxcomposite1 \
+      libxrandr2 \
+      libxss1 \
+      libxtst6 \
+      xauth \
+      xvfb \
+ && apt-get autoremove -y \
+ && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 # Install executors
