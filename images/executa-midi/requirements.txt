@@ -5,6 +5,7 @@
 absl-py
 adal
 aiohttp
+altair
 appdirs
 async-generator
 async-timeout
@@ -131,7 +132,6 @@ sqlparse
 statsmodels
 tabulate
 tensorflow
-testpath
 toml
 tqdm
 traitlets
