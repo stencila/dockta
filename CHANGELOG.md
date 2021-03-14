@@ -1,3 +1,10 @@
+# [0.25.0](https://github.com/stencila/dockta/compare/v0.24.5...v0.25.0) (2021-03-14)
+
+
+### Features
+
+* **Image:** Add altair to midi image ([f909a88](https://github.com/stencila/dockta/commit/f909a882df1fe959d43037b32bb974c96aa70d2e))
+
 ## [0.24.5](https://github.com/stencila/dockta/compare/v0.24.4...v0.24.5) (2021-02-19)
 
 
