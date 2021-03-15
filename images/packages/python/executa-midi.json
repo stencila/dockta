@@ -76,13 +76,18 @@
   ],
   "include": [
     "altair",
+    "fooof",
+    "ipywidgets",
     "matplotlib",
     "networkx",
+    "neurodsp",
+    "nibabel",
     "pandas",
     "plotly",
+    "pysurfer",
     "rpy2",
     "seaborn",
     "statsmodels",
-    "xlrd"
+    "xlrd",    
   ]
 }
