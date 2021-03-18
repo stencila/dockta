@@ -1,3 +1,10 @@
+## [0.25.1](https://github.com/stencila/dockta/compare/v0.25.0...v0.25.1) (2021-03-18)
+
+
+### Bug Fixes
+
+* **Image:**  Remove not widely used packages ([4696abc](https://github.com/stencila/dockta/commit/4696abc4a9a5648cc29768ca06958d042b1f8a75))
+
 # [0.25.0](https://github.com/stencila/dockta/compare/v0.24.5...v0.25.0) (2021-03-14)
 
 
