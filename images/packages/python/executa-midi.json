@@ -76,6 +76,7 @@
   ],
   "include": [
     "altair",
+    "ipywidgets",
     "matplotlib",
     "networkx",
     "pandas",
