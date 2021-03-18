@@ -3,7 +3,6 @@
 # Please add any additional Python packages to the "include" section of that file.
 
 absl-py
-adal
 aiohttp
 altair
 appdirs
@@ -46,6 +45,7 @@ importlib-metadata
 iniconfig
 ipython
 ipython-genutils
+ipywidgets
 isodate
 isort
 itsdangerous
