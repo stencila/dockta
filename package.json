@@ -43,7 +43,7 @@
     "@stencila/dev-config": "2.0.18",
     "@types/dockerode": "3.2.6",
     "@types/got": "9.6.12",
-    "@types/jest": "26.0.24",
+    "@types/jest": "27.0.1",
     "@types/js-yaml": "4.0.2",
     "@types/node": "14.17.5",
     "@types/node-persist": "3.1.2",
