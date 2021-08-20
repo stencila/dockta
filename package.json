@@ -50,7 +50,7 @@
     "@types/semver": "7.3.8",
     "@types/tar-fs": "2.0.1",
     "@types/tmp": "0.2.1",
-    "@types/yargs": "16.0.4",
+    "@types/yargs": "17.0.2",
     "all-contributors-cli": "6.20.0",
     "jest": "27.0.6",
     "markdown-toc": "1.2.0",
@@ -62,20 +62,20 @@
   "dependencies": {
     "@stencila/logga": "^4.0.0",
     "@stencila/schema": "^0.2.4",
-    "builtin-modules": "^3.1.0",
+    "builtin-modules": "^3.2.0",
     "detective": "^5.2.0",
     "docker-file-parser": "^1.0.5",
-    "dockerode": "^3.2.1",
-    "fast-glob": "^3.2.4",
-    "got": "^11.8.1",
-    "js-yaml": "^4.0.0",
+    "dockerode": "^3.3.0",
+    "fast-glob": "^3.2.7",
+    "got": "^11.8.2",
+    "js-yaml": "^4.1.0",
     "ndjson": "^2.0.0",
     "node-persist": "^3.1.0",
-    "semver": "^7.3.4",
+    "semver": "^7.3.5",
     "tar-fs": "^2.1.1",
     "tmp": "0.2.1",
     "yargonaut": "^1.1.4",
-    "yargs": "^16.2.0"
+    "yargs": "^17.1.1"
   },
   "commitlint": {
     "extends": [

@@ -114,6 +114,7 @@ yargs
     }
   )
   .parse()
+  .catch((err: any) => error(err))
 
 /**
  * Specify the [folder] argument settings
