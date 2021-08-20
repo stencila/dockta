@@ -1,3 +1,10 @@
+## [0.25.2](https://github.com/stencila/dockta/compare/v0.25.1...v0.25.2) (2021-08-20)
+
+
+### Bug Fixes
+
+* **Dependencies:** Upgrade ([a65c395](https://github.com/stencila/dockta/commit/a65c395d1ccb3a406e837c925a432534fbc8b780))
+
 ## [0.25.1](https://github.com/stencila/dockta/compare/v0.25.0...v0.25.1) (2021-03-18)
 
 
