@@ -29,14 +29,14 @@ export default class RParser extends Parser {
       const desc = this.read('DESCRIPTION')
 
       // Get `name`
-      const matchName = desc.match(/^Package:\s*(.+)/m)
+      const matchName = /^Package:\s*(.+)/m.exec(desc)
       if (matchName) {
         name = matchName[1]
       }
 
       // Get `date`, if no date then use yesterday's date to ensure
       // packages are available on MRAN
-      const matchDate = desc.match(/^Date:\s*(.+)/m)
+      const matchDate = /^Date:\s*(.+)/m.exec(desc)
       if (matchDate) {
         const dateNum = Date.parse(matchDate[1])
         if (isNaN(dateNum)) {
@@ -52,16 +52,16 @@ export default class RParser extends Parser {
       const start = /^Imports:[ \t]*\n/gm.exec(desc)
       if (start) {
         // Find next un-indented line or use end of string
-        const match = desc
-          .substring(start.index + start[0].length)
-          .match(/\n^\w/m)
+        const match = /\n^\w/m.exec(
+          desc.substring(start.index + start[0].length)
+        )
         let end
         if (match) end = match.index
         else end = desc.length - 1
         const imports = desc.substring(start.index + start[0].length, end)
         for (const imported of imports.split(',')) {
           let pkg
-          const match = imported.match(/^\s*(\w+).*/)
+          const match = /^\s*(\w+).*/.exec(imported)
           if (match) {
             pkg = match[1]
           } else {
@@ -76,7 +76,8 @@ export default class RParser extends Parser {
       if (files.length) {
         // Analyse files for `library(<pkg>)`, `require(<pkg>)`, `<pkg>::<member>`, `<pkg>:::<member>`
         // Wondering WTF this regex does? See https://regex101.com/r/hG4iij/4
-        const regex = /(?:(?:library|require)\s*\(\s*(?:(?:\s*(\w+)\s*)|(?:"([^"]*)")|(?:'([^']*)'))\s*\))|(?:(\w+):::?\w+)/g
+        const regex =
+          /(?:(?:library|require)\s*\(\s*(?:(?:\s*(\w+)\s*)|(?:"([^"]*)")|(?:'([^']*)'))\s*\))|(?:(\w+):::?\w+)/g
         for (const file of files) {
           const code = this.read(file)
           let match = regex.exec(code)
@@ -157,7 +158,7 @@ export default class RParser extends Parser {
     // schema:CreativeWork
     if (crandb.Author) {
       crandb.Author.split(',\n').forEach((author: string) => {
-        const match = author.match(/^([^[]+?) \[([^\]]+)\]/)
+        const match = /^([^[]+?) \[([^\]]+)\]/.exec(author)
         if (match) {
           const name = match[1]
           const person = Person.fromText(name)

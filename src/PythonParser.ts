@@ -154,19 +154,19 @@ function parseTopics(
  * description may map to multiple `OperatingSystems`, e.g. "Unix" => Linux and macOS.
  */
 function parseOperatingSystem(operatingSystem: string): Array<OperatingSystem> {
-  if (operatingSystem.match(/windows/i)) {
+  if (/windows/i.exec(operatingSystem)) {
     return [OperatingSystem.windows]
   }
 
-  if (operatingSystem.match(/unix/i)) {
+  if (/unix/i.exec(operatingSystem)) {
     return [OperatingSystem.linux, OperatingSystem.macos, OperatingSystem.unix]
   }
 
-  if (operatingSystem.match(/linux/i)) {
+  if (/linux/i.exec(operatingSystem)) {
     return [OperatingSystem.linux]
   }
 
-  if (operatingSystem.match(/macos/i) || operatingSystem.match(/mac os/i)) {
+  if (/macos/i.exec(operatingSystem) || /mac os/i.exec(operatingSystem)) {
     return [OperatingSystem.macos]
   }
 
@@ -342,9 +342,8 @@ export default class PythonParser extends Parser {
 
       const standardRequirement = extractStandardRequirements(line)
       if (standardRequirement !== null) {
-        const [requirementName, version] = splitStandardRequirementVersion(
-          standardRequirement
-        )
+        const [requirementName, version] =
+          splitStandardRequirementVersion(standardRequirement)
         requirements.push({
           value: requirementName,
           type: RequirementType.Named,

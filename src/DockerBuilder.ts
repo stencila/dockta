@@ -57,7 +57,7 @@ export default class DockerBuilder {
         user = instruction.args as string
       } else if (instruction.name === 'COMMENT') {
         const arg = instruction.args as string
-        if (arg.match(/^# *dockt(a|er)/)) {
+        if (/^# *dockt(a|er)/.exec(arg)) {
           instructions = instructions.slice(index + 1)
           docktarize = true
           break
@@ -238,6 +238,7 @@ export default class DockerBuilder {
           })
           await exec.start({}, function (error, stream) {
             if (error !== null) throw error
+            if (stream === undefined) throw new Error('Stream is undefined')
             docker.modem.demuxStream(stream, process.stdout, process.stderr)
           })
 

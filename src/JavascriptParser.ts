@@ -123,8 +123,8 @@ export default class JavascriptParser extends Parser {
           if (versionRange !== 'latest' && versionRange !== '*') {
             const range = semver.validRange(versionRange as string)
             if (range) {
-              const match = range.match(
-                /(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/
+              const match = /(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)/.exec(
+                range
               )
               if (match) version = match[0]
             }

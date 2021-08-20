@@ -70,9 +70,8 @@ export default class DockerParser extends Doer {
     )) {
       for (let [key, value] of Object.entries(instruction.args)) {
         // Remove recognised prefixes from key
-        const match = key.match(
-          /^(org\.opencontainers\.image|org\.label-schema)\.([^ ]+)$/
-        )
+        const match =
+          /^(org\.opencontainers\.image|org\.label-schema)\.([^ ]+)$/.exec(key)
         if (match) key = match[2]
 
         // Unquote value if necessary
