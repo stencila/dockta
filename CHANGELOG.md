@@ -1,3 +1,10 @@
+## [0.25.3](https://github.com/stencila/dockta/compare/v0.25.2...v0.25.3) (2021-08-25)
+
+
+### Bug Fixes
+
+* **Images:** Pin to Encoda 0.116.1 ([2e39e04](https://github.com/stencila/dockta/commit/2e39e043d8724f91805e60c29beb881ab81ee941))
+
 ## [0.25.2](https://github.com/stencila/dockta/compare/v0.25.1...v0.25.2) (2021-08-20)
 
 
