@@ -49,12 +49,12 @@ RUN apt-get update \
 # Install executors
 # The EXECUTORS_LATEST argument can be set at the current time e.g.
 #    docker build --build-arg EXECUTORS_LATEST=$(date --iso=seconds) ...
-# to force a reinstall of the latest version of all executors
+# to force a reinstall of the latest version of executors where the version is not pinned
 # (by busting the Docker cache with a new RUN layer)
 ARG EXECUTORS_LATEST=false
 RUN echo "Forcing install of latest executors: ${EXECUTORS_LATEST}"
 RUN npm install --global @stencila/executa
-RUN npm install --global @stencila/encoda
+RUN npm install --global @stencila/encoda@0.116.1
 RUN npm install --global @stencila/basha
 RUN npm install --global @stencila/jupita
 RUN R -e 'install.packages("remotes"); remotes::install_github("stencila/rasta")'
