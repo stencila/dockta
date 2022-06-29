@@ -407,7 +407,7 @@ The `executa-midi` image is intended to be a fairly comprehensive image containi
 If you think that a popular package is missing and should be included then please submit a pull request which adds the package to one of the following files:
 
 - [`images/packages/r/executa-midi.json`](images/packages/r/executa-midi.json) for R packages
-- [`images/packages/python/executa-midi.json`](images/packages/python/executa-midi.json) for R packages
+- [`images/packages/python/executa-midi.json`](images/packages/python/executa-midi.json) for python packages
 
 ##### Create your own image
 
