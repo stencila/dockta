@@ -1,3 +1,10 @@
+## [0.25.6](https://github.com/stencila/dockta/compare/v0.25.5...v0.25.6) (2023-03-29)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency docker-file-parser to v1.0.7 ([d258592](https://github.com/stencila/dockta/commit/d2585921c2053ad99136c07dd359d905ca933ee1))
+
 ## [0.25.5](https://github.com/stencila/dockta/compare/v0.25.4...v0.25.5) (2023-03-29)
 
 

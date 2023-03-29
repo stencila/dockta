@@ -1,5 +1,5 @@
 Package: executamidi
-Version: 0.25.5
+Version: 0.25.6
 Date: 2023-03-27
 Description:
   A R package for specifying dependencies of the Executa 'Midi' environment.
