@@ -1,3 +1,10 @@
+## [0.25.5](https://github.com/stencila/dockta/compare/v0.25.4...v0.25.5) (2023-03-29)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency detective to v5.2.1 ([b46a3f6](https://github.com/stencila/dockta/commit/b46a3f6d6ffa8179ebe4db76a280a279a699c29c))
+
 ## [0.25.4](https://github.com/stencila/dockta/compare/v0.25.3...v0.25.4) (2023-03-26)
 
 
