@@ -1,3 +1,10 @@
+## [0.25.7](https://github.com/stencila/dockta/compare/v0.25.6...v0.25.7) (2023-03-30)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency dockerode to v3.3.5 ([0d962f0](https://github.com/stencila/dockta/commit/0d962f072845ed57478dbd5e467907e32c3e8882))
+
 ## [0.25.6](https://github.com/stencila/dockta/compare/v0.25.5...v0.25.6) (2023-03-29)
 
 
