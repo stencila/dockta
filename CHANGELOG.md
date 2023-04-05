@@ -1,3 +1,10 @@
+## [0.25.10](https://github.com/stencila/dockta/compare/v0.25.9...v0.25.10) (2023-04-05)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency node-persist to v3.1.3 ([e5e16c8](https://github.com/stencila/dockta/commit/e5e16c8dfce9e07e1fa81df32adf9aa31a6c2279))
+
 ## [0.25.9](https://github.com/stencila/dockta/compare/v0.25.8...v0.25.9) (2023-04-05)
 
 
