@@ -1,3 +1,10 @@
+## [0.25.12](https://github.com/stencila/dockta/compare/v0.25.11...v0.25.12) (2023-04-06)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency builtin-modules to v3.3.0 ([5cc2158](https://github.com/stencila/dockta/commit/5cc215844b39705ec5bde3473ae91ad539c8b0a2))
+
 ## [0.25.11](https://github.com/stencila/dockta/compare/v0.25.10...v0.25.11) (2023-04-05)
 
 
