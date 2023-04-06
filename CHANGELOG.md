@@ -1,3 +1,10 @@
+## [0.25.13](https://github.com/stencila/dockta/compare/v0.25.12...v0.25.13) (2023-04-06)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency yargs to v17.7.1 ([7a56657](https://github.com/stencila/dockta/commit/7a56657ce43ad4d3afaff6256cffa646b5fac842))
+
 ## [0.25.12](https://github.com/stencila/dockta/compare/v0.25.11...v0.25.12) (2023-04-06)
 
 
