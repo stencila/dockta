@@ -1,3 +1,10 @@
+## [0.25.20](https://github.com/stencila/dockta/compare/v0.25.19...v0.25.20) (2023-07-05)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency fast-glob to v3.3.0 ([0e74272](https://github.com/stencila/dockta/commit/0e74272157a5655ee7e8d7d7c1a1371420d5b7ad))
+
 ## [0.25.19](https://github.com/stencila/dockta/compare/v0.25.18...v0.25.19) (2023-06-28)
 
 
