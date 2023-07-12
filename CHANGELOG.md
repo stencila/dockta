@@ -1,3 +1,10 @@
+## [0.25.21](https://github.com/stencila/dockta/compare/v0.25.20...v0.25.21) (2023-07-12)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency semver to v7.5.4 ([2be9ffb](https://github.com/stencila/dockta/commit/2be9ffb7e1de9d6ec70dc44d54d8ad56f210d684))
+
 ## [0.25.20](https://github.com/stencila/dockta/compare/v0.25.19...v0.25.20) (2023-07-05)
 
 
