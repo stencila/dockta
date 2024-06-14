@@ -87,7 +87,7 @@ If the folder contains any [JATS](https://en.wikipedia.org/wiki/Journal_Article_
 
 #### Jupyter
 
-If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockta/issues/9) Dockta will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also 🦄 [#10](https://github.com/stencila/dockta/issues/10) add the necesary Jupyter kernels to the built Docker image.
+If the folder contains any Jupyter [`.ipynb`](http://jupyter.org/) files, 🦄 [#9](https://github.com/stencila/dockta/issues/9) Dockta will scan the code cells in those files for any package import statements (e.g. Python `import`, R `library`, or Node.js `require`) and install the necessary packages into the image. It will also 🦄 [#10](https://github.com/stencila/dockta/issues/10) add the necessary Jupyter kernels to the built Docker image.
 
 ### Automatically determines system requirements
 
