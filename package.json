@@ -40,7 +40,7 @@
   "homepage": "https://github.com/stencila/dockta#readme",
   "devDependencies": {
     "@semantic-release/exec": "5.0.0",
-    "@stencila/dev-config": "2.0.18",
+    "@stencila/dev-config": "3.0.4",
     "@types/dockerode": "3.2.7",
     "@types/got": "9.6.12",
     "@types/jest": "27.0.1",
