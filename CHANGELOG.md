@@ -1,3 +1,10 @@
+## [0.25.35](https://github.com/stencila/dockta/compare/v0.25.34...v0.25.35) (2025-09-24)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency tar-fs to v2.1.4 ([#305](https://github.com/stencila/dockta/issues/305)) ([58b90a2](https://github.com/stencila/dockta/commit/58b90a224c53dbb46e8a2dad30bbb96e8d2602c8))
+
 ## [0.25.34](https://github.com/stencila/dockta/compare/v0.25.33...v0.25.34) (2025-09-17)
 
 
