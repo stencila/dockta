@@ -1,6 +1,6 @@
 Package: executamidi
-Version: 0.25.36
-Date: 2026-05-25
+Version: 0.25.37
+Date: 2026-06-16
 Description:
   A R package for specifying dependencies of the Executa 'Midi' environment.
   The following list is generated from ../packages/r/executa-midi.json.

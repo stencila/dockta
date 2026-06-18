@@ -1,3 +1,10 @@
+## [0.25.37](https://github.com/stencila/dockta/compare/v0.25.36...v0.25.37) (2026-06-18)
+
+
+### Bug Fixes
+
+* **dependencies:** update dependency tmp to v0.2.7 [security] ([#323](https://github.com/stencila/dockta/issues/323)) ([9718cec](https://github.com/stencila/dockta/commit/9718cec70fd06ec1832df79b25f95d76b2589149))
+
 ## [0.25.36](https://github.com/stencila/dockta/compare/v0.25.35...v0.25.36) (2026-05-27)
 
 
